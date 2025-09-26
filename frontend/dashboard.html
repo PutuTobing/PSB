@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .navbar .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .navbar .username {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .welcome-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .welcome-card h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-card p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .recent-activity {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .recent-activity h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .activity-item {
+            padding: 1rem;
+            border-left: 4px solid #667eea;
+            margin-bottom: 1rem;
+            background: #f8f9fa;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .activity-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .activity-time {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Dashboard</h1>
+        <div class="user-info">
+            <span class="username" id="username">Welcome, User!</span>
+            <button class="logout-btn" id="logoutBtn">
+                <i class="logout-icon">🚪</i> Logout
+            </button>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading dashboard...</p>
+        </div>
+
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+        <div id="dashboardContent" style="display: none;">
+            <div class="welcome-card">
+                <h2>Welcome to Your Dashboard!</h2>
+                <p>You have successfully logged in. This is your personal dashboard where you can manage your account and view your activities.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Login Sessions</h3>
+                    <p id="loginCount">1</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Account Status</h3>
+                    <p style="color: #28a745; font-size: 1.2rem;">Active</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Last Login</h3>
+                    <p style="font-size: 1rem;" id="lastLogin">Today</p>
+                </div>
+            </div>
+
+            <div class="recent-activity">
+                <h3>Recent Activity</h3>
+                <div class="activity-item">
+                    <strong>Successful Login</strong>
+                    <div class="activity-time" id="loginTime">Just now</div>
+                </div>
+                <div class="activity-item">
+                    <strong>Account Created</strong>
+                    <div class="activity-time">When you registered</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const usernameElement = document.getElementById('username');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('errorMessage');
+        const dashboardContent = document.getElementById('dashboardContent');
+        const loginTime = document.getElementById('loginTime');
+        const lastLogin = document.getElementById('lastLogin');
+
+        // API base URL
+        const API_BASE_URL = 'http://localhost:3000/api';
+
+        // Check authentication and load dashboard
+        async function loadDashboard() {
+            const token = localStorage.getItem('authToken');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Show loading
+            loading.style.display = 'block';
+
+            try {
+                // Verify token with backend
+                const response = await fetch(`${API_BASE_URL}/dashboard`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Update username
+                    usernameElement.textContent = `Welcome, ${user.email || data.user.email}!`;
+                    
+                    // Update login time
+                    const now = new Date();
+                    loginTime.textContent = now.toLocaleString();
+                    lastLogin.textContent = now.toLocaleDateString();
+                    
+                    // Show dashboard content
+                    loading.style.display = 'none';
+                    dashboardContent.style.display = 'block';
+                } else {
+                    throw new Error('Invalid token');
+                }
+            } catch (error) {
+                console.error('Dashboard error:', error);
+                
+                // Show error message
+                loading.style.display = 'none';
+                errorMessage.textContent = 'Failed to load dashboard. Please login again.';
+                errorMessage.style.display = 'block';
+                
+                // Clear local storage and redirect after 2 seconds
+                setTimeout(() => {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('user');
+                    window.location.href = 'login.html';
+                }, 2000);
+            }
+        }
+
+        // Logout function
+        async function logout() {
+            const token = localStorage.getItem('authToken');
+            
+            try {
+                // Call logout endpoint
+                await fetch(`${API_BASE_URL}/logout`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+            } finally {
+                // Clear local storage regardless of API call result
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Event listeners
+        logoutBtn.addEventListener('click', logout);
+
+        // Load dashboard on page load
+        loadDashboard();
+
+        // Auto-refresh token (optional - for better security)
+        setInterval(() => {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                // You could implement token refresh logic here
+                console.log('Token still valid');
+            }
+        }, 300000); // Check every 5 minutes
+    </script>
+</body>
+</html>
