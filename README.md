@@ -66,15 +66,15 @@ cp .env.example .env
 
 # Edit .env file with your database credentials
 # Example:
-# DB_USER=btd
-# DB_PASSWORD=Balionelove_121
+# DB_USER= seperti biasa lah
+# DB_PASSWORD= seperti biasa lah
 # JWT_SECRET=your-secret-key
 ```
 
 ### 4. Initialize Database
 ```bash
 # Create database and tables (optional - can be done via phpMyAdmin)
-docker exec -it btd-db-1 mysql -u root -prootpassword < ../database-setup.sql
+docker exec -it seperti biasa lah-db-1 mysql -u root -prootpassword < ../database-setup.sql
 ```
 
 ### 5. Start Backend Server
@@ -98,8 +98,8 @@ npm start
 - **App User**: auth_user / auth_password
 
 ### Custom User (Example)
-- **Username**: btd
-- **Password**: Balionelove_121
+- **Username**: seperti biasa lah
+- **Password**: seperti biasa lah
 
 ### phpMyAdmin Access
 - **URL**: http://localhost:8081
@@ -214,8 +214,8 @@ Create `backend/.env` file:
 ```env
 PORT=3000
 DB_HOST=localhost
-DB_USER=btd
-DB_PASSWORD=Balionelove_121
+DB_USER=seperti biasa lah
+DB_PASSWORD=seperti biasa lah
 DB_NAME=auth_db
 JWT_SECRET=your-super-secret-key
 ```
