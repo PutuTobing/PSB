@@ -202,8 +202,8 @@
         const messageDiv = document.getElementById('message');
         const loadingDiv = document.getElementById('loading');
 
-        // API base URL
-        const API_BASE_URL = 'http://localhost:3000/api';
+        // API base URL - dynamically set based on current host
+        const API_BASE_URL = `${window.location.protocol}//${window.location.host}/api`;
 
         // Switch between forms
         showRegisterLink.addEventListener('click', (e) => {
@@ -263,7 +263,7 @@
                     
                     // Redirect to dashboard after 1 second
                     setTimeout(() => {
-                        window.location.href = 'dashboard.html';
+                        window.location.href = '/pages/dashboard.html';
                     }, 1000);
                 } else {
                     showMessage(data.message, 'error');
@@ -317,10 +317,14 @@
             }
         });
 
-        // Check if user is already logged in
-        if (localStorage.getItem('authToken')) {
-            window.location.href = 'dashboard.html';
-        }
+        // Check if user is already logged in on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                console.log('User already logged in, redirecting to dashboard...');
+                window.location.href = '/pages/dashboard.html';
+            }
+        });
     </script>
 </body>
 </html>

@@ -3,6 +3,7 @@ const mysql = require('mysql2');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -11,7 +12,44 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('../frontend'));
+
+// Root route - FIRST PRIORITY - always redirect to login
+app.get('/', (req, res) => {
+    console.log('Root access - redirecting to login');
+    res.redirect('/login.html');
+});
+
+// Login route - serve login page
+app.get('/login.html', (req, res) => {
+    console.log('Serving login page');
+    res.sendFile(path.join(__dirname, '../frontend/login.html'));
+});
+
+// Dashboard route - serve dashboard page
+app.get('/pages/dashboard.html', (req, res) => {
+    console.log('Serving dashboard page');
+    res.sendFile(path.join(__dirname, '../frontend/pages/dashboard.html'));
+});
+
+// Alternative dashboard route for convenience
+app.get('/dashboard', (req, res) => {
+    console.log('Dashboard access - redirecting to /pages/dashboard.html');
+    res.redirect('/pages/dashboard.html');
+});
+
+// Handle index.html redirect for backward compatibility
+app.get('/index.html', (req, res) => {
+    console.log('index.html access - redirecting to /pages/dashboard.html');
+    res.redirect('/pages/dashboard.html');
+});
+
+// Static files middleware (AFTER route handlers)
+app.use('/css', express.static(path.join(__dirname, '../frontend/css')));
+app.use('/js', express.static(path.join(__dirname, '../frontend/js')));
+app.use('/components', express.static(path.join(__dirname, '../frontend/components')));
+app.use('/pages', express.static(path.join(__dirname, '../frontend/pages')));
+app.use('/assets', express.static(path.join(__dirname, '../frontend/assets')));
+app.use('/image', express.static(path.join(__dirname, '../frontend/image')));
 
 // Database connection
 const db = mysql.createConnection({
@@ -30,10 +68,10 @@ db.connect((err) => {
     console.log('Connected to MySQL database');
 });
 
-// JWT Secret (in production, use environment variable)
+// JWT Secret
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
-// Routes
+// API Routes
 
 // Register route
 app.post('/api/register', async (req, res) => {
@@ -129,7 +167,7 @@ app.post('/api/login', (req, res) => {
     });
 });
 
-// Logout route (client-side will handle token removal)
+// Logout route
 app.post('/api/logout', (req, res) => {
     res.json({ message: 'Logout successful' });
 });
@@ -153,13 +191,22 @@ app.get('/api/dashboard', (req, res) => {
     }
 });
 
+// Catch-all route for unknown paths
+app.get('*', (req, res) => {
+    console.log(`Unknown route accessed: ${req.path} - redirecting to login`);
+    res.redirect('/login.html');
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ message: 'Something went wrong!' });
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Start server - BIND TO ALL INTERFACES
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`📍 Local access: http://localhost:${PORT}`);
+    console.log(`🌐 Network access: http://172.16.31.11:${PORT}`);
+    console.log(`✅ Server bound to all interfaces (0.0.0.0)`);
 });

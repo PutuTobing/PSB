@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Projek SR-16</title>
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <meta name="description" content="Dashboard Projek SR-16 - Database Login System">
+    <meta name="theme-color" content="#3b82f6">
+</head>
+<body>
+    <!-- Sidebar Container -->
+    <div id="sidebar-container"></div>
+    
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Page Header -->
+        <header class="header fade-in">
+            <div class="header-left">
+                <h1 id="pageTitle">Dashboard</h1>
+                <p id="dateTime">Loading...</p>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <p class="welcome-text">Welcome,</p>
+                    <p class="user-name" id="userName">Loading...</p>
+                </div>
+                <button class="logout-btn" id="logoutBtn">
+                    🚪 Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Welcome Banner -->
+        <div class="welcome-banner fade-in">
+            <h2>Welcome to Your Dashboard!</h2>
+            <p>You have successfully logged in. This is your personal dashboard where you can manage your account and view your activities.</p>
+        </div>
+
+        <!-- Statistics Grid -->
+        <div class="stats-grid fade-in">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Login Sessions</span>
+                    <span class="stat-icon">🔐</span>
+                </div>
+                <div class="stat-value" id="loginSessions">1</div>
+                <div class="stat-label">Active Sessions</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Account Status</span>
+                    <span class="stat-icon">✅</span>
+                </div>
+                <div class="status-active" id="accountStatus">Active</div>
+                <div class="stat-label">Current Status</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Last Login</span>
+                    <span class="stat-icon">⏰</span>
+                </div>
+                <div class="stat-value" style="font-size: 1.5rem;" id="lastLogin">Today</div>
+                <div class="stat-label">Last Activity</div>
+            </div>
+        </div>
+
+        <!-- Recent Activity Section -->
+        <div class="activity-section fade-in">
+            <div class="activity-header">
+                <h3 class="activity-title">Recent Activity</h3>
+            </div>
+            <div id="activityContainer">
+                <div class="activity-item">
+                    <div class="activity-indicator"></div>
+                    <div class="activity-content">
+                        <div class="activity-type">Successful Login</div>
+                        <div class="activity-time" id="loginTime">Just now</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-indicator"></div>
+                    <div class="activity-content">
+                        <div class="activity-type">Account Created</div>
+                        <div class="activity-time" id="accountCreated">When you registered</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading" id="loadingState" style="display: none;">
+            <div class="spinner"></div>
+            Loading dashboard data...
+        </div>
+
+        <!-- Error State -->
+        <div class="error-message" id="errorMessage" style="display: none;">
+            Failed to load dashboard data. Please try again.
+        </div>
+
+        <!-- Watermark -->
+        <div class="watermark">
+            Activate Windows<br>
+            Go to Settings to activate Windows.
+        </div>
+    </main>
+
+    <!-- JavaScript Files -->
+    <script src="../js/sidebar.js"></script>
+    <script src="../js/dashboard.js"></script>
+    
+    <!-- Initialize Application -->
+    <script>
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load sidebar component first
+            SidebarManager.init().then(() => {
+                // Initialize dashboard after sidebar is loaded
+                DashboardApp.init();
+            }).catch(error => {
+                console.error('Failed to initialize application:', error);
+                // Show error message
+                const errorMsg = document.getElementById('errorMessage');
+                if (errorMsg) {
+                    errorMsg.style.display = 'block';
+                    errorMsg.textContent = 'Failed to load application components.';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
