@@ -3,133 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Projek SR-16</title>
+    <title>Dashboard - BTD System</title>
     <link rel="stylesheet" href="../css/sidebar.css">
     <link rel="stylesheet" href="../css/main.css">
-    <meta name="description" content="Dashboard Projek SR-16 - Database Login System">
+    <meta name="description" content="Dashboard BTD System - Management Dashboard">
     <meta name="theme-color" content="#3b82f6">
 </head>
 <body>
-    <!-- Sidebar Container -->
-    <div id="sidebar-container"></div>
-    
-    <!-- Main Content -->
-    <main class="main-content" id="mainContent">
-        <!-- Page Header -->
-        <header class="header fade-in">
-            <div class="header-left">
-                <h1 id="pageTitle">Dashboard</h1>
-                <p id="dateTime">Loading...</p>
-            </div>
-            <div class="header-right">
-                <div class="user-info">
-                    <p class="welcome-text">Welcome,</p>
-                    <p class="user-name" id="userName">Loading...</p>
+    <div class="app-layout">
+        <!-- Sidebar Container -->
+        <div id="sidebar-container"></div>
+        
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Page Header -->
+            <header class="header fade-in">
+                <div class="header-left">
+                    <h1 id="pageTitle">Dashboard</h1>
+                    <p id="dateTime">Loading...</p>
                 </div>
-                <button class="logout-btn" id="logoutBtn">
-                    🚪 Logout
-                </button>
-            </div>
-        </header>
-
-        <!-- Welcome Banner -->
-        <div class="welcome-banner fade-in">
-            <h2>Welcome to Your Dashboard!</h2>
-            <p>You have successfully logged in. This is your personal dashboard where you can manage your account and view your activities.</p>
-        </div>
-
-        <!-- Statistics Grid -->
-        <div class="stats-grid fade-in">
-            <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-title">Login Sessions</span>
-                    <span class="stat-icon">🔐</span>
+                <div class="header-right">
+                    <div class="user-info">
+                        <p class="welcome-text">Selamat datang,</p>
+                        <p class="user-name" id="userName">Loading...</p>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">
+                        🚪 Logout
+                    </button>
                 </div>
-                <div class="stat-value" id="loginSessions">1</div>
-                <div class="stat-label">Active Sessions</div>
-            </div>
+            </header>
 
-            <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-title">Account Status</span>
-                    <span class="stat-icon">✅</span>
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner fade-in">
+                    <h2>Selamat Datang di Dashboard BTD System!</h2>
+                    <p>Anda telah berhasil login. Ini adalah dashboard pribadi Anda di mana Anda dapat mengelola akun dan melihat aktivitas Anda.</p>
                 </div>
-                <div class="status-active" id="accountStatus">Active</div>
-                <div class="stat-label">Current Status</div>
-            </div>
 
-            <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-title">Last Login</span>
-                    <span class="stat-icon">⏰</span>
-                </div>
-                <div class="stat-value" style="font-size: 1.5rem;" id="lastLogin">Today</div>
-                <div class="stat-label">Last Activity</div>
-            </div>
-        </div>
+                <!-- Statistics Grid -->
+                <div class="stats-grid fade-in">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Sesi Login</span>
+                            <span class="stat-icon">🔐</span>
+                        </div>
+                        <div class="stat-value" id="loginSessions">1</div>
+                        <div class="stat-label">Sesi Aktif</div>
+                    </div>
 
-        <!-- Recent Activity Section -->
-        <div class="activity-section fade-in">
-            <div class="activity-header">
-                <h3 class="activity-title">Recent Activity</h3>
-            </div>
-            <div id="activityContainer">
-                <div class="activity-item">
-                    <div class="activity-indicator"></div>
-                    <div class="activity-content">
-                        <div class="activity-type">Successful Login</div>
-                        <div class="activity-time" id="loginTime">Just now</div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Status Akun</span>
+                            <span class="stat-icon">✅</span>
+                        </div>
+                        <div class="status-active" id="accountStatus">Aktif</div>
+                        <div class="stat-label">Status Saat Ini</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Login Terakhir</span>
+                            <span class="stat-icon">⏰</span>
+                        </div>
+                        <div class="stat-value" style="font-size: 1.5rem;" id="lastLogin">Hari ini</div>
+                        <div class="stat-label">Aktivitas Terakhir</div>
                     </div>
                 </div>
-                <div class="activity-item">
-                    <div class="activity-indicator"></div>
-                    <div class="activity-content">
-                        <div class="activity-type">Account Created</div>
-                        <div class="activity-time" id="accountCreated">When you registered</div>
+
+                <!-- Recent Activity Section -->
+                <div class="activity-section fade-in">
+                    <div class="activity-header">
+                        <h3 class="activity-title">Aktivitas Terkini</h3>
+                    </div>
+                    <div id="activityContainer">
+                        <div class="activity-item">
+                            <div class="activity-indicator"></div>
+                            <div class="activity-content">
+                                <div class="activity-type">Login Berhasil</div>
+                                <div class="activity-time" id="loginTime">Baru saja</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-indicator"></div>
+                            <div class="activity-content">
+                                <div class="activity-type">Akun Dibuat</div>
+                                <div class="activity-time" id="accountCreated">Saat pendaftaran</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Loading State -->
-        <div class="loading" id="loadingState" style="display: none;">
-            <div class="spinner"></div>
-            Loading dashboard data...
-        </div>
+            <!-- Loading State -->
+            <div class="loading" id="loadingState" style="display: none;">
+                <div class="spinner"></div>
+                Memuat data dashboard...
+            </div>
 
-        <!-- Error State -->
-        <div class="error-message" id="errorMessage" style="display: none;">
-            Failed to load dashboard data. Please try again.
-        </div>
-
-        <!-- Watermark -->
-        <div class="watermark">
-            Activate Windows<br>
-            Go to Settings to activate Windows.
-        </div>
-    </main>
+            <!-- Error State -->
+            <div class="error-message" id="errorMessage" style="display: none;">
+                Gagal memuat data dashboard. Silakan coba lagi.
+            </div>
+        </main>
+    </div>
 
     <!-- JavaScript Files -->
     <script src="../js/sidebar.js"></script>
-    <script src="../js/dashboard.js"></script>
-    
-    <!-- Initialize Application -->
     <script>
-        // Initialize app when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load sidebar component first
-            SidebarManager.init().then(() => {
-                // Initialize dashboard after sidebar is loaded
-                DashboardApp.init();
-            }).catch(error => {
+        // Dashboard functionality
+        class DashboardApp {
+            constructor() {
+                this.user = null;
+                this.currentTime = new Date();
+            }
+
+            async init() {
+                try {
+                    // Check authentication
+                    if (!this.checkAuth()) {
+                        return;
+                    }
+
+                    // Load user info
+                    this.loadUserInfo();
+                    
+                    // Setup real-time clock
+                    this.setupClock();
+                    
+                    // Setup logout functionality
+                    this.setupLogout();
+                    
+                    // Update last login time
+                    this.updateLastLogin();
+                    
+                    console.log('✅ Dashboard initialized successfully');
+                } catch (error) {
+                    console.error('❌ Dashboard initialization failed:', error);
+                    this.showError('Gagal menginisialisasi dashboard');
+                }
+            }
+
+            checkAuth() {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    console.log('❌ No auth token found, redirecting to login');
+                    window.location.href = '/login.html';
+                    return false;
+                }
+                return true;
+            }
+
+            loadUserInfo() {
+                try {
+                    this.user = JSON.parse(localStorage.getItem('user') || '{}');
+                    
+                    const userName = document.getElementById('userName');
+                    if (userName && this.user.email) {
+                        const username = this.user.email.split('@')[0];
+                        userName.textContent = username.charAt(0).toUpperCase() + username.slice(1);
+                    }
+                } catch (error) {
+                    console.error('Error loading user info:', error);
+                    const userName = document.getElementById('userName');
+                    if (userName) userName.textContent = 'User';
+                }
+            }
+
+            setupClock() {
+                this.updateDateTime();
+                // Update every second
+                setInterval(() => {
+                    this.updateDateTime();
+                }, 1000);
+            }
+
+            updateDateTime() {
+                const now = new Date();
+                const options = {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    timeZone: 'Asia/Jakarta'
+                };
+                
+                const dateTimeString = now.toLocaleDateString('id-ID', options);
+                const dateTimeElement = document.getElementById('dateTime');
+                if (dateTimeElement) {
+                    dateTimeElement.textContent = dateTimeString;
+                }
+            }
+
+            setupLogout() {
+                const logoutBtn = document.getElementById('logoutBtn');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', async () => {
+                        try {
+                            // Clear local storage
+                            localStorage.removeItem('authToken');
+                            localStorage.removeItem('user');
+                            
+                            // Optional: Call logout API
+                            try {
+                                await fetch('/api/logout', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }
+                                });
+                            } catch (e) {
+                                // Ignore API errors for logout
+                            }
+                            
+                            console.log('🚪 User logged out successfully');
+                            window.location.href = '/login.html';
+                        } catch (error) {
+                            console.error('Logout error:', error);
+                            // Force redirect even if there's an error
+                            window.location.href = '/login.html';
+                        }
+                    });
+                }
+            }
+
+            updateLastLogin() {
+                const lastLoginElement = document.getElementById('lastLogin');
+                const loginTimeElement = document.getElementById('loginTime');
+                
+                if (lastLoginElement) {
+                    lastLoginElement.textContent = 'Hari ini';
+                }
+                
+                if (loginTimeElement) {
+                    loginTimeElement.textContent = 'Baru saja';
+                }
+            }
+
+            showError(message) {
+                const errorElement = document.getElementById('errorMessage');
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.style.display = 'block';
+                }
+            }
+        }
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Initialize sidebar first
+                const sidebarManager = await SidebarManager.init();
+                
+                if (sidebarManager) {
+                    // Initialize dashboard
+                    const dashboardApp = new DashboardApp();
+                    await dashboardApp.init();
+                }
+            } catch (error) {
                 console.error('Failed to initialize application:', error);
-                // Show error message
                 const errorMsg = document.getElementById('errorMessage');
                 if (errorMsg) {
                     errorMsg.style.display = 'block';
-                    errorMsg.textContent = 'Failed to load application components.';
+                    errorMsg.textContent = 'Gagal memuat komponen aplikasi.';
                 }
-            });
+            }
         });
     </script>
 </body>

@@ -1,6 +1,6 @@
 /**
- * Sidebar Manager - Projek SR-16
- * Handles sidebar functionality, navigation, and responsive behavior
+ * Sidebar Manager - BTD System
+ * Handles sidebar functionality, navigation, authentication, and responsive behavior
  */
 
 class SidebarManager {
@@ -24,11 +24,31 @@ class SidebarManager {
      */
     static async init() {
         const manager = new SidebarManager();
+        
+        // Check authentication first
+        if (!manager.checkAuth()) {
+            return null;
+        }
+        
         await manager.loadSidebarComponent();
         manager.setupEventListeners();
         manager.setupNavigation();
         manager.checkMobileState();
+        manager.loadUserInfo();
         return manager;
+    }
+
+    /**
+     * Check authentication
+     */
+    checkAuth() {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            console.log('❌ No auth token found, redirecting to login');
+            window.location.href = '/login.html';
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -138,8 +158,14 @@ class SidebarManager {
         
         const link = e.currentTarget;
         const page = link.getAttribute('data-page');
+        const href = link.getAttribute('href');
         
         if (!page) return;
+
+        // Check authentication before navigation
+        if (!this.checkAuth()) {
+            return;
+        }
 
         // Update active state
         this.setActivePage(page);
@@ -147,6 +173,12 @@ class SidebarManager {
         // Close mobile sidebar after navigation
         if (this.isMobile) {
             this.closeMobileSidebar();
+        }
+
+        // Navigate to actual page
+        if (href && href !== '#') {
+            window.location.href = href;
+            return;
         }
 
         // Dispatch navigation event for other components to listen
@@ -281,6 +313,57 @@ class SidebarManager {
         const targetLink = document.querySelector(`[data-page="${page}"]`);
         if (targetLink) {
             targetLink.click();
+        }
+    }
+
+    /**
+     * Load user information into sidebar
+     */
+    loadUserInfo() {
+        try {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            // Update sidebar user info
+            const sidebarUserName = document.getElementById('sidebarUserName');
+            const sidebarUserEmail = document.getElementById('sidebarUserEmail');
+
+            if (sidebarUserName) {
+                if (user.email) {
+                    const username = user.email.split('@')[0];
+                    sidebarUserName.textContent = username.charAt(0).toUpperCase() + username.slice(1);
+                } else {
+                    sidebarUserName.textContent = 'User';
+                }
+            }
+
+            if (sidebarUserEmail) {
+                sidebarUserEmail.textContent = user.email || 'user@example.com';
+            }
+        } catch (error) {
+            console.error('Error loading user info for sidebar:', error);
+            // Set default values if error
+            const sidebarUserName = document.getElementById('sidebarUserName');
+            const sidebarUserEmail = document.getElementById('sidebarUserEmail');
+            
+            if (sidebarUserName) sidebarUserName.textContent = 'User';
+            if (sidebarUserEmail) sidebarUserEmail.textContent = 'user@example.com';
+        }
+    }
+
+    /**
+     * Update user information
+     */
+    updateUserInfo(user) {
+        const sidebarUserName = document.getElementById('sidebarUserName');
+        const sidebarUserEmail = document.getElementById('sidebarUserEmail');
+
+        if (sidebarUserName && user.email) {
+            const username = user.email.split('@')[0];
+            sidebarUserName.textContent = username.charAt(0).toUpperCase() + username.slice(1);
+        }
+
+        if (sidebarUserEmail && user.email) {
+            sidebarUserEmail.textContent = user.email;
         }
     }
 

@@ -275,6 +275,17 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 📝 Changelog
 
+### Version 2.0.0 (Current)
+- ✅ Modern sidebar navigation system
+- ✅ Dashboard with real-time clock and user info
+- ✅ Daftar Pemasangan page with data table
+- ✅ Manajemen Akun page with profile settings
+- ✅ Responsive design for mobile and desktop
+- ✅ Indonesian localization
+- ✅ Enhanced UI with gradients and animations
+- ✅ Authentication integration across all pages
+- ✅ Logout functionality on all pages
+
 ### Version 1.0.0
 - Initial release
 - Basic authentication system
