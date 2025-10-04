@@ -3,7 +3,6 @@ const mysql = require('mysql2');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -13,43 +12,10 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Root route - FIRST PRIORITY - always redirect to login
+// Root route - API info
 app.get('/', (req, res) => {
-    console.log('Root access - redirecting to login');
-    res.redirect('/login.html');
+    res.json({ message: 'Database Login API Server', version: '1.0.0' });
 });
-
-// Login route - serve login page
-app.get('/login.html', (req, res) => {
-    console.log('Serving login page');
-    res.sendFile(path.join(__dirname, '../frontend/login.html'));
-});
-
-// Dashboard route - serve dashboard page
-app.get('/pages/dashboard.html', (req, res) => {
-    console.log('Serving dashboard page');
-    res.sendFile(path.join(__dirname, '../frontend/pages/dashboard.html'));
-});
-
-// Alternative dashboard route for convenience
-app.get('/dashboard', (req, res) => {
-    console.log('Dashboard access - redirecting to /pages/dashboard.html');
-    res.redirect('/pages/dashboard.html');
-});
-
-// Handle index.html redirect for backward compatibility
-app.get('/index.html', (req, res) => {
-    console.log('index.html access - redirecting to /pages/dashboard.html');
-    res.redirect('/pages/dashboard.html');
-});
-
-// Static files middleware (AFTER route handlers)
-app.use('/css', express.static(path.join(__dirname, '../frontend/css')));
-app.use('/js', express.static(path.join(__dirname, '../frontend/js')));
-app.use('/components', express.static(path.join(__dirname, '../frontend/components')));
-app.use('/pages', express.static(path.join(__dirname, '../frontend/pages')));
-app.use('/assets', express.static(path.join(__dirname, '../frontend/assets')));
-app.use('/image', express.static(path.join(__dirname, '../frontend/image')));
 
 // Database connection
 const db = mysql.createConnection({
@@ -193,8 +159,7 @@ app.get('/api/dashboard', (req, res) => {
 
 // Catch-all route for unknown paths
 app.get('*', (req, res) => {
-    console.log(`Unknown route accessed: ${req.path} - redirecting to login`);
-    res.redirect('/login.html');
+    res.status(404).json({ message: 'API endpoint not found' });
 });
 
 // Error handling middleware
@@ -205,7 +170,7 @@ app.use((err, req, res, next) => {
 
 // Start server - BIND TO ALL INTERFACES
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`🚀 API Server running on port ${PORT}`);
     console.log(`📍 Local access: http://localhost:${PORT}`);
     console.log(`🌐 Network access: http://172.16.31.11:${PORT}`);
     console.log(`✅ Server bound to all interfaces (0.0.0.0)`);

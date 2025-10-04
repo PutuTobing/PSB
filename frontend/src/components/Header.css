@@ -1,0 +1,528 @@
+/* Header Styles */
+.app-header {
+  background: white;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  animation: slideDown 0.4s ease-out;
+  flex-wrap: wrap;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header Left - Date & Time */
+.header-left {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Page Info */
+.page-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  animation: slideRight 0.4s ease-out;
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.page-info i {
+  font-size: 24px;
+  color: white;
+}
+
+.page-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.date-time-container {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.date-display,
+.time-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.date-display:hover,
+.time-display:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.date-display i,
+.time-display i {
+  font-size: 18px;
+  color: #667eea;
+}
+
+.date-display span,
+.time-display span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+.time-text {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+  font-size: 14px !important;
+}
+
+/* Header Right - User Section */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.welcome-text {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.user-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  text-transform: capitalize;
+}
+
+/* User Dropdown */
+.user-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.user-dropdown:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.user-avatar-header {
+  font-size: 28px;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-icon {
+  color: white;
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+.dropdown-icon.rotate {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  min-width: 240px;
+  overflow: hidden;
+  animation: dropdownSlide 0.3s ease-out;
+  z-index: 1000;
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: #333;
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: #f5f7fa;
+}
+
+.dropdown-item i {
+  font-size: 16px;
+  color: #667eea;
+}
+
+.user-info-item {
+  cursor: default;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+}
+
+.user-info-item:hover {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+}
+
+.time-info-item {
+  cursor: default;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.time-info-item:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.time-info-item i {
+  color: white;
+}
+
+.dropdown-time {
+  font-weight: 700;
+  color: white;
+  font-size: 14px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+}
+
+.dropdown-date {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 2px;
+}
+
+.dropdown-name {
+  font-weight: 700;
+  color: #1e293b;
+  text-transform: capitalize;
+  font-size: 14px;
+}
+
+.dropdown-email {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 5px 0;
+}
+
+.logout-item {
+  color: #ef4444;
+}
+
+.logout-item i {
+  color: #ef4444;
+}
+
+.logout-item:hover {
+  background: #fee2e2;
+}
+
+/* Logout Button */
+.btn-logout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.btn-logout:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+.btn-logout i {
+  font-size: 16px;
+}
+
+/* Tablet Responsive */
+@media (max-width: 1024px) {
+  .app-header {
+    padding: 0 20px;
+  }
+
+  .date-time-container {
+    gap: 10px;
+  }
+
+  .date-display,
+  .time-display {
+    padding: 7px 12px;
+  }
+
+  .user-name {
+    font-size: 14px;
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .app-header {
+    padding: 8px 12px;
+    min-height: auto;
+    gap: 8px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-left {
+    flex: 1;
+    min-width: auto;
+    order: 1;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .page-info {
+    padding: 6px 10px;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .page-info i {
+    font-size: 18px;
+  }
+
+  .page-title {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .date-time-container {
+    display: none;
+  }
+
+  .header-right {
+    order: 2;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .user-welcome {
+    display: none;
+  }
+
+  .user-dropdown {
+    padding: 4px 8px;
+    min-width: auto;
+  }
+
+  .user-avatar-header {
+    font-size: 22px;
+  }
+
+  .dropdown-icon {
+    font-size: 10px;
+  }
+
+  .btn-logout {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .btn-logout span {
+    display: none;
+  }
+
+  .btn-logout i {
+    font-size: 15px;
+  }
+
+  .dropdown-menu {
+    right: 0;
+    min-width: 220px;
+  }
+
+  /* Tambahkan info waktu di dropdown */
+  .dropdown-menu::before {
+    content: attr(data-time);
+    display: block;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+    font-size: 11px;
+    color: #667eea;
+    font-weight: 600;
+    border-bottom: 1px solid #e5e7eb;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .app-header {
+    padding: 6px 10px;
+    min-height: 48px;
+    gap: 6px;
+  }
+
+  .header-left {
+    flex: 1;
+    gap: 8px;
+  }
+
+  .page-info {
+    padding: 5px 8px;
+    gap: 6px;
+  }
+
+  .page-info i {
+    font-size: 16px;
+  }
+
+  .page-title {
+    font-size: 12px;
+  }
+
+  .user-section {
+    gap: 6px;
+  }
+
+  .user-dropdown {
+    padding: 3px 6px;
+  }
+
+  .user-avatar-header {
+    font-size: 20px;
+  }
+
+  .dropdown-icon {
+    font-size: 9px;
+  }
+
+  .btn-logout {
+    width: 32px;
+    height: 32px;
+  }
+
+  .btn-logout i {
+    font-size: 14px;
+  }
+
+  .dropdown-menu {
+    min-width: 200px;
+  }
+
+  .dropdown-item {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+}
+
+/* iOS Safe Area */
+@supports (padding-top: env(safe-area-inset-top)) {
+  @media (max-width: 768px) {
+    .app-header {
+      padding-top: calc(12px + env(safe-area-inset-top));
+    }
+  }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .app-header {
+    min-height: 60px;
+    padding: 8px 15px;
+    padding-left: 70px;
+  }
+
+  .date-time-container {
+    gap: 6px;
+  }
+
+  .date-display,
+  .time-display {
+    padding: 5px 8px;
+  }
+}
