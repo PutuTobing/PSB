@@ -157,6 +157,137 @@ app.get('/api/dashboard', (req, res) => {
     }
 });
 
+// Token verification middleware
+const verifyToken = (req, res, next) => {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    
+    if (!token) {
+        return res.status(401).json({ message: 'Access denied. No token provided.' });
+    }
+    
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        res.status(401).json({ message: 'Invalid token' });
+    }
+};
+
+// Pemasangan API Routes
+
+// Get all pemasangan data
+app.get('/api/pemasangan', (req, res) => {
+    const query = `
+        SELECT id, nama, telepon, alamat, tanggal_daftar, tanggal_pasang, 
+               status, teknisi, catatan, jam_pasang
+        FROM pemasangan 
+        ORDER BY tanggal_daftar DESC
+    `;
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        res.json(results);
+    });
+});
+
+// Add new pelanggan
+app.post('/api/pemasangan', (req, res) => {
+    const { nama, telepon, alamat } = req.body;
+    
+    if (!nama || !telepon || !alamat) {
+        return res.status(400).json({ message: 'Nama, telepon, dan alamat harus diisi' });
+    }
+    
+    const query = `
+        INSERT INTO pemasangan (nama, telepon, alamat, tanggal_daftar, status)
+        VALUES (?, ?, ?, CURDATE(), 'menunggu')
+    `;
+    
+    db.query(query, [nama, telepon, alamat], (err, result) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        res.status(201).json({ 
+            message: 'Pelanggan berhasil ditambahkan',
+            id: result.insertId 
+        });
+    });
+});
+
+// Update pemasangan status (konfirmasi)
+app.put('/api/pemasangan/:id/konfirmasi', (req, res) => {
+    const { id } = req.params;
+    const { tanggal_pasang, jam_pasang, teknisi, catatan } = req.body;
+    
+    if (!tanggal_pasang || !teknisi) {
+        return res.status(400).json({ message: 'Tanggal pasang dan teknisi harus diisi' });
+    }
+    
+    const query = `
+        UPDATE pemasangan 
+        SET tanggal_pasang = ?, jam_pasang = ?, teknisi = ?, catatan = ?, status = 'terpasang'
+        WHERE id = ?
+    `;
+    
+    db.query(query, [tanggal_pasang, jam_pasang, teknisi, catatan, id], (err, result) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Pelanggan tidak ditemukan' });
+        }
+        
+        res.json({ message: 'Pemasangan berhasil dikonfirmasi' });
+    });
+});
+
+// Delete pelanggan
+app.delete('/api/pemasangan/:id', (req, res) => {
+    const { id } = req.params;
+    
+    const query = 'DELETE FROM pemasangan WHERE id = ?';
+    
+    db.query(query, [id], (err, result) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Pelanggan tidak ditemukan' });
+        }
+        
+        res.json({ message: 'Pelanggan berhasil dihapus' });
+    });
+});
+
+// Get pemasangan statistics
+app.get('/api/pemasangan/stats', verifyToken, (req, res) => {
+    const query = `
+        SELECT 
+            COUNT(*) as total,
+            SUM(CASE WHEN status = 'menunggu' THEN 1 ELSE 0 END) as menunggu,
+            SUM(CASE WHEN status = 'terpasang' THEN 1 ELSE 0 END) as terpasang
+        FROM pemasangan
+    `;
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        res.json(results[0]);
+    });
+});
+
 // Catch-all route for unknown paths
 app.get('*', (req, res) => {
     res.status(404).json({ message: 'API endpoint not found' });
