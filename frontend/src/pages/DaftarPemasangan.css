@@ -68,6 +68,24 @@
   font-size: 16px;
 }
 
+.period-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.period-badge i {
+  font-size: 14px;
+}
+
 .header-actions .btn {
   padding: 12px 24px;
   background: rgba(255, 255, 255, 0.2);
@@ -178,6 +196,7 @@
   position: relative;
   flex: 1;
   max-width: 400px;
+  min-width: 250px;
 }
 
 .search-box i {
@@ -202,6 +221,53 @@
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Date Filters */
+.date-filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 10px 15px;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.filter-group:hover {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.filter-group i {
+  color: #667eea;
+  font-size: 16px;
+}
+
+.date-select {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  outline: none;
+  padding: 2px 5px;
+  min-width: 100px;
+}
+
+.date-select option {
+  background: white;
+  color: #1e293b;
+  padding: 10px;
 }
 
 .filter-buttons {
@@ -333,6 +399,29 @@
   color: #64748b;
 }
 
+/* Agen Cell */
+.agen-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #6366f1;
+}
+
+.agen-cell i {
+  font-size: 16px;
+  color: #8b5cf6;
+}
+
+.agen-name {
+  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4338ca;
+}
+
 /* Status Badge */
 .status-badge {
   display: inline-flex;
@@ -352,6 +441,71 @@
 .status-badge.terpasang {
   background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
   color: #166534;
+}
+
+/* Komisi Status */
+.komisi-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.komisi-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.komisi-badge.dibayar {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+}
+
+.komisi-badge.belum {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #991b1b;
+}
+
+.komisi-badge.pending {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  color: #6b7280;
+  font-style: italic;
+}
+
+.komisi-btn {
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.komisi-btn.mark-paid {
+  color: #16a34a;
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.komisi-btn.mark-paid:hover {
+  background: rgba(34, 197, 94, 0.2);
+  transform: scale(1.1);
+}
+
+.komisi-btn.mark-unpaid {
+  color: #dc2626;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.komisi-btn.mark-unpaid:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: scale(1.1);
 }
 
 /* Action Buttons */
@@ -513,6 +667,31 @@
   min-height: 80px;
 }
 
+/* Agen Select Styling */
+.agen-select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 14px;
+  background: #ffffff;
+  color: #1e293b;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.agen-select:focus {
+  outline: none;
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.agen-select option {
+  padding: 10px;
+  background: #ffffff;
+  color: #1e293b;
+}
+
 .modal-footer {
   padding: 20px 30px 25px;
   border-top: 1px solid #e2e8f0;
@@ -610,6 +789,16 @@
     max-width: none;
   }
 
+  .date-filters {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .filter-group {
+    flex: 1;
+    min-width: 140px;
+  }
+
   .filter-buttons {
     justify-content: center;
     flex-wrap: wrap;
@@ -683,12 +872,182 @@
   }
 }
 
+/* Agen and Komisi Styles */
+.agen-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.agen-cell i {
+  color: #8b5cf6;
+  font-size: 16px;
+}
+
+.agen-name {
+  background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.agen-select {
+  width: 100%;
+  padding: 10px 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.agen-select:focus {
+  outline: none;
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.agen-select option[value=""] {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Future: Agen Management Styles - akan digunakan di halaman manajemen akun */
+.agen-management {
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.agen-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.agen-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+  color: white;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.agen-item .delete-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.agen-item .delete-btn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Komisi Status Styles */
+.komisi-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.komisi-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 80px;
+  justify-content: center;
+}
+
+.komisi-badge.dibayar {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.komisi-badge.belum {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.komisi-badge.pending {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  color: white;
+  font-size: 11px;
+  padding: 4px 10px;
+}
+
+.komisi-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.komisi-btn.mark-paid {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.komisi-btn.mark-paid:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.komisi-btn.mark-unpaid {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.komisi-btn.mark-unpaid:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
 /* Print Styles */
 @media print {
   .page-header .header-actions,
   .table-controls,
   .action-buttons,
-  .whatsapp-btn {
+  .whatsapp-btn,
+  .komisi-btn {
     display: none;
   }
 
@@ -701,5 +1060,498 @@
     background: #f8fafc !important;
     color: #1e293b !important;
     box-shadow: none;
+  }
+}
+
+/* Form Help & Required Field Styles */
+.form-help {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.form-help i {
+  color: #8b5cf6;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.required-field {
+  color: #ef4444;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.form-group input:focus + .form-help,
+.form-group select:focus + .form-help,
+.form-group textarea:focus + .form-help {
+  color: #8b5cf6;
+}
+
+.form-group input[type="date"],
+.form-group input[type="time"] {
+  position: relative;
+}
+
+.form-group input[type="date"]::-webkit-calendar-picker-indicator,
+.form-group input[type="time"]::-webkit-calendar-picker-indicator {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="%238b5cf6"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>') no-repeat;
+  background-size: 16px 16px;
+  cursor: pointer;
+}
+
+/* Auto-filled field indication */
+.form-group input[value]:not([value=""]) {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-color: #8b5cf6;
+}
+
+/* Custom Notification Styles */
+.custom-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 400px;
+  max-width: 90vw;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 10px rgba(0, 0, 0, 0.25);
+  border-left: 6px solid #e2e8f0;
+  transform: translateX(100%);
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  z-index: 1000;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.custom-notification.show {
+  transform: translateX(0);
+}
+
+.custom-notification.success {
+  border-left-color: #10b981;
+}
+
+.custom-notification.error {
+  border-left-color: #ef4444;
+}
+
+.custom-notification.info {
+  border-left-color: #3b82f6;
+}
+
+.notification-content {
+  display: flex;
+  align-items: flex-start;
+  padding: 20px;
+  gap: 15px;
+}
+
+.notification-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.custom-notification.success .notification-icon {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.custom-notification.error .notification-icon {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+.custom-notification.info .notification-icon {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+.notification-icon::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: inherit;
+  opacity: 0.3;
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.notification-text {
+  flex: 1;
+}
+
+.notification-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.notification-message {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.notification-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f1f5f9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  color: #64748b;
+}
+
+.notification-close:hover {
+  background: #e2e8f0;
+  transform: scale(1.1);
+}
+
+.notification-progress {
+  height: 4px;
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  position: relative;
+  overflow: hidden;
+}
+
+.custom-notification.success .notification-progress {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.custom-notification.error .notification-progress {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.custom-notification.info .notification-progress {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.notification-progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: progress-slide 3s linear;
+}
+
+@keyframes progress-slide {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Responsive Notification */
+@media (max-width: 768px) {
+  .custom-notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    width: auto;
+    max-width: none;
+  }
+
+  .notification-content {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .notification-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .notification-title {
+    font-size: 15px;
+  }
+
+  .notification-message {
+    font-size: 13px;
+  }
+}
+
+/* Toast Stack Animation */
+.custom-notification:nth-child(n+2) {
+  top: 100px;
+  transform: translateX(100%) scale(0.95);
+  opacity: 0.8;
+}
+
+.custom-notification:nth-child(n+3) {
+  top: 180px;
+  transform: translateX(100%) scale(0.9);
+  opacity: 0.6;
+}
+
+.custom-notification.show:nth-child(n+2) {
+  transform: translateX(0) scale(0.95);
+}
+
+.custom-notification.show:nth-child(n+3) {
+  transform: translateX(0) scale(0.9);
+}
+
+/* Komisi Dialog Styles */
+.komisi-dialog {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  width: 500px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.komisi-dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 25px 30px 20px;
+  background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+  color: white;
+  position: relative;
+}
+
+.komisi-dialog-icon {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.komisi-dialog-header h3 {
+  flex: 1;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.komisi-dialog-header .modal-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.komisi-dialog-header .modal-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.komisi-dialog-body {
+  padding: 30px;
+}
+
+.customer-info-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  border-radius: 16px;
+  margin-bottom: 25px;
+  border: 1px solid #cbd5e1;
+}
+
+.customer-avatar-large {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.customer-details-card {
+  flex: 1;
+}
+
+.customer-details-card h4 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.customer-details-card p {
+  margin: 5px 0;
+  color: #64748b;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.customer-details-card i {
+  color: #8b5cf6;
+  width: 16px;
+}
+
+.komisi-question {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.komisi-question h4 {
+  margin: 0 0 10px 0;
+  color: #1e293b;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.komisi-question p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.komisi-dialog-actions {
+  display: flex;
+  gap: 15px;
+  padding: 0 30px 30px;
+}
+
+.btn-komisi {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-komisi.sudah {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+.btn-komisi.sudah:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+}
+
+.btn-komisi.belum {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+}
+
+.btn-komisi.belum:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(245, 158, 11, 0.4);
+}
+
+.btn-komisi i {
+  font-size: 18px;
+}
+
+/* Responsive Komisi Dialog */
+@media (max-width: 768px) {
+  .komisi-dialog {
+    width: 90vw;
+    margin: 20px;
+  }
+
+  .komisi-dialog-header {
+    padding: 20px 25px 15px;
+  }
+
+  .komisi-dialog-header h3 {
+    font-size: 18px;
+  }
+
+  .komisi-dialog-body {
+    padding: 25px;
+  }
+
+  .customer-info-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .komisi-dialog-actions {
+    flex-direction: column;
+    padding: 0 25px 25px;
+  }
+
+  .btn-komisi {
+    padding: 12px 16px;
   }
 }

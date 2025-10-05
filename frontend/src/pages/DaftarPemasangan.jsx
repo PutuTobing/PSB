@@ -17,10 +17,19 @@ function DaftarPemasangan() {
   const [selectedPelanggan, setSelectedPelanggan] = useState(null);
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // Date filters - default to current month & year
+  const currentDate = new Date();
+  const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth() + 1); // 1-12, 0 for all months
+  const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear());
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  
   const [newPelanggan, setNewPelanggan] = useState({
     nama: '',
     telepon: '',
-    alamat: ''
+    alamat: '',
+    agen: '' // Default agen kosong - akan dikelola di manajemen akun
   });
   const [konfirmasiData, setKonfirmasiData] = useState({
     tanggal_pasang: '',
@@ -28,6 +37,27 @@ function DaftarPemasangan() {
     teknisi: '',
     catatan: ''
   });
+  
+  // State untuk komisi agen
+  const [showKomisiModal, setShowKomisiModal] = useState(false);
+  const [selectedAgen, setSelectedAgen] = useState(null);
+  
+  // State untuk custom notification
+  const [notification, setNotification] = useState({
+    show: false,
+    type: '', // 'success', 'error', 'info'
+    title: '',
+    message: '',
+    icon: ''
+  });
+  
+  // State untuk konfirmasi komisi dialog
+  const [showKomisiConfirm, setShowKomisiConfirm] = useState(false);
+  const [selectedKomisiData, setSelectedKomisiData] = useState(null);
+  
+  // Daftar agen yang tersedia - nanti akan dikelola di manajemen akun
+  // TODO: Implementasi CRUD agen di halaman manajemen akun
+  const daftarAgen = ['YOGA', 'ANDI', 'SARI', 'BUDI', 'LINA'];
 
   // Load data from API
   useEffect(() => {
@@ -50,10 +80,50 @@ function DaftarPemasangan() {
     }
   };
 
+  // Generate year options (current year and 2 years before)
+  const getYearOptions = () => {
+    const currentYear = new Date().getFullYear();
+    return [currentYear - 2, currentYear - 1, currentYear];
+  };
+
+  // Month names in Indonesian
+  const monthNames = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+  ];
+
+  // Validate phone number format
+  const validatePhoneNumber = (phone) => {
+    const phoneRegex = /^(\+62|62|0)8[1-9][0-9]{6,9}$/;
+    return phoneRegex.test(phone.replace(/\s+/g, ''));
+  };
+
+  // Calculate stats based on filtered data (month/year)
+  const getFilteredDataForStats = () => {
+    return pemasanganData.filter(pelanggan => {
+      // Filter by month and year based on tanggal_daftar
+      let matchesDate = true;
+      if (pelanggan.tanggal_daftar) {
+        const daftarDate = new Date(pelanggan.tanggal_daftar);
+        const daftarMonth = daftarDate.getMonth() + 1; // 1-12
+        const daftarYear = daftarDate.getFullYear();
+        
+        // If selectedMonth is 0, show all months for the selected year
+        if (selectedMonth === 0) {
+          matchesDate = daftarYear === selectedYear;
+        } else {
+          matchesDate = daftarMonth === selectedMonth && daftarYear === selectedYear;
+        }
+      }
+      return matchesDate;
+    });
+  };
+
+  const filteredDataForStats = getFilteredDataForStats();
   const stats = {
-    total: pemasanganData.length,
-    menunggu: pemasanganData.filter(p => p.status === 'menunggu').length,
-    terpasang: pemasanganData.filter(p => p.status === 'terpasang').length
+    total: filteredDataForStats.length,
+    menunggu: filteredDataForStats.filter(p => p.status === 'menunggu').length,
+    terpasang: filteredDataForStats.filter(p => p.status === 'terpasang').length
   };
 
   const filteredData = pemasanganData.filter(pelanggan => {
@@ -61,10 +131,51 @@ function DaftarPemasangan() {
     const matchesSearch = pelanggan.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          pelanggan.telepon.includes(searchTerm) ||
                          pelanggan.alamat.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesFilter && matchesSearch;
+    
+    // Filter by month and year based on tanggal_daftar
+    let matchesDate = true;
+    if (pelanggan.tanggal_daftar) {
+      const daftarDate = new Date(pelanggan.tanggal_daftar);
+      const daftarMonth = daftarDate.getMonth() + 1; // 1-12
+      const daftarYear = daftarDate.getFullYear();
+      
+      // If selectedMonth is 0, show all months for the selected year
+      if (selectedMonth === 0) {
+        matchesDate = daftarYear === selectedYear;
+      } else {
+        matchesDate = daftarMonth === selectedMonth && daftarYear === selectedYear;
+      }
+    }
+    
+    return matchesFilter && matchesSearch && matchesDate;
   });
 
   const handleAddPelanggan = async () => {
+    // Validation
+    if (!newPelanggan.nama.trim()) {
+      alert('Nama pelanggan harus diisi');
+      return;
+    }
+    if (!newPelanggan.telepon.trim()) {
+      alert('Nomor telepon harus diisi');
+      return;
+    }
+    if (!validatePhoneNumber(newPelanggan.telepon)) {
+      alert('Format nomor telepon tidak valid. Contoh: 08123456789');
+      return;
+    }
+    if (!newPelanggan.alamat.trim()) {
+      alert('Alamat harus diisi');
+      return;
+    }
+    if (!newPelanggan.agen.trim()) {
+      alert('Agen harus dipilih');
+      return;
+    }
+    
+    setLoading(true);
+    setError('');
+    
     if (newPelanggan.nama && newPelanggan.telepon && newPelanggan.alamat) {
       try {
         const token = localStorage.getItem('token');
@@ -78,15 +189,35 @@ function DaftarPemasangan() {
         
         if (response.ok) {
           await fetchPemasanganData(); // Refresh data
-          setNewPelanggan({ nama: '', telepon: '', alamat: '' });
+          setNewPelanggan({ nama: '', telepon: '', alamat: '', agen: '' });
           setShowAddModal(false);
+          showNotification(
+            'success',
+            'Pelanggan Berhasil Ditambahkan!',
+            `${newPelanggan.nama} telah terdaftar sebagai pelanggan baru.`,
+            'bi-person-plus'
+          );
         } else {
           const error = await response.json();
-          alert(error.message || 'Gagal menambahkan pelanggan');
+          setError(error.message || 'Gagal menambahkan pelanggan');
+          showNotification(
+            'error',
+            'Gagal Menambahkan Pelanggan!',
+            error.message || 'Terjadi kesalahan saat menambahkan pelanggan.',
+            'bi-exclamation-triangle'
+          );
         }
       } catch (error) {
         console.error('Error adding pelanggan:', error);
-        alert('Terjadi kesalahan saat menambahkan pelanggan');
+        setError('Terjadi kesalahan saat menambahkan pelanggan');
+        showNotification(
+          'error',
+          'Koneksi Bermasalah!',
+          'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.',
+          'bi-wifi-off'
+        );
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -101,13 +232,29 @@ function DaftarPemasangan() {
         
         if (response.ok) {
           await fetchPemasanganData(); // Refresh data
+          showNotification(
+            'success',
+            'Pelanggan Berhasil Dihapus!',
+            'Data pelanggan telah dihapus dari sistem.',
+            'bi-trash'
+          );
         } else {
           const error = await response.json();
-          alert(error.message || 'Gagal menghapus pelanggan');
+          showNotification(
+            'error',
+            'Gagal Menghapus Pelanggan!',
+            error.message || 'Terjadi kesalahan saat menghapus pelanggan.',
+            'bi-exclamation-triangle'
+          );
         }
       } catch (error) {
         console.error('Error deleting pelanggan:', error);
-        alert('Terjadi kesalahan saat menghapus pelanggan');
+        showNotification(
+          'error',
+          'Koneksi Bermasalah!',
+          'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.',
+          'bi-wifi-off'
+        );
       }
     }
   };
@@ -132,13 +279,79 @@ function DaftarPemasangan() {
         await fetchPemasanganData(); // Refresh data
         setShowConfirmModal(false);
         setKonfirmasiData({ tanggal_pasang: '', jam_pasang: '', teknisi: '', catatan: '' });
+        showNotification(
+          'success',
+          'Pemasangan Berhasil Dikonfirmasi!',
+          `Pemasangan untuk ${selectedPelanggan.nama} telah dikonfirmasi dan status diubah menjadi "Terpasang".`,
+          'bi-check-circle'
+        );
       } else {
         const error = await response.json();
-        alert(error.message || 'Gagal mengkonfirmasi pemasangan');
+        showNotification(
+          'error',
+          'Konfirmasi Gagal!',
+          error.message || 'Terjadi kesalahan saat mengkonfirmasi pemasangan.',
+          'bi-exclamation-triangle'
+        );
       }
     } catch (error) {
       console.error('Error confirming pemasangan:', error);
-      alert('Terjadi kesalahan saat mengkonfirmasi pemasangan');
+      showNotification(
+        'error',
+        'Koneksi Bermasalah!',
+        'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.',
+        'bi-wifi-off'
+      );
+    }
+  };
+  
+  // Fungsi untuk menampilkan dialog konfirmasi komisi
+  const handleKomisiClick = (pelanggan) => {
+    setSelectedKomisiData(pelanggan);
+    setShowKomisiConfirm(true);
+  };
+
+  // Fungsi untuk update status komisi setelah konfirmasi
+  const handleUpdateKomisi = async (status) => {
+    if (!selectedKomisiData) return;
+    
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${getApiUrl()}/pemasangan/${selectedKomisiData.id}/komisi`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ komisi_dibayar: status })
+      });
+      
+      if (response.ok) {
+        await fetchPemasanganData(); // Refresh data
+        setShowKomisiConfirm(false);
+        setSelectedKomisiData(null);
+        showNotification(
+          'success',
+          'Komisi Berhasil Diupdate!',
+          `Komisi untuk ${selectedKomisiData.nama} telah diubah menjadi "${status ? 'Sudah Dibayar' : 'Belum Dibayar'}".`,
+          status ? 'bi-currency-dollar' : 'bi-exclamation-triangle'
+        );
+      } else {
+        const error = await response.json();
+        showNotification(
+          'error',
+          'Update Gagal!',
+          error.message || 'Terjadi kesalahan saat mengupdate status komisi.',
+          'bi-x-circle'
+        );
+      }
+    } catch (error) {
+      console.error('Error updating komisi:', error);
+      showNotification(
+        'error',
+        'Koneksi Bermasalah!',
+        'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.',
+        'bi-wifi-off'
+      );
     }
   };
 
@@ -146,6 +359,35 @@ function DaftarPemasangan() {
     const cleanPhone = telepon.replace(/\D/g, '');
     const whatsappUrl = `https://wa.me/62${cleanPhone.startsWith('0') ? cleanPhone.slice(1) : cleanPhone}`;
     window.open(whatsappUrl, '_blank');
+  };
+
+  // Get current date and time in format for HTML inputs
+  const getCurrentDate = () => {
+    const now = new Date();
+    return now.toISOString().split('T')[0]; // YYYY-MM-DD format
+  };
+
+  const getCurrentTime = () => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`; // HH:MM format
+  };
+
+  // Custom notification function
+  const showNotification = (type, title, message, icon) => {
+    setNotification({
+      show: true,
+      type,
+      title,
+      message,
+      icon
+    });
+    
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+      setNotification(prev => ({ ...prev, show: false }));
+    }, 3000);
   };
 
   const formatDate = (dateString) => {
@@ -165,6 +407,10 @@ function DaftarPemasangan() {
             <div className="header-text">
               <h1>Daftar Pemasangan</h1>
               <p>Kelola dan pantau pemasangan internet pelanggan</p>
+              <div className="period-badge">
+                <i className="bi bi-calendar-check"></i>
+                {selectedMonth === 0 ? `Semua Bulan ${selectedYear}` : `${monthNames[selectedMonth - 1]} ${selectedYear}`}
+              </div>
             </div>
           </div>
           <div className="header-actions">
@@ -221,6 +467,41 @@ function DaftarPemasangan() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
+        
+        {/* Date Filters */}
+        <div className="date-filters">
+          <div className="filter-group">
+            <i className="bi bi-calendar-month"></i>
+            <select 
+              value={selectedMonth} 
+              onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+              className="date-select"
+            >
+              <option value={0}>Semua Bulan</option>
+              {monthNames.map((month, index) => (
+                <option key={index + 1} value={index + 1}>
+                  {month}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <div className="filter-group">
+            <i className="bi bi-calendar-event"></i>
+            <select 
+              value={selectedYear} 
+              onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+              className="date-select"
+            >
+              {getYearOptions().map(year => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
         <div className="filter-buttons">
           <button 
             className={`filter-btn ${filterStatus === 'all' ? 'active' : ''}`}
@@ -253,9 +534,11 @@ function DaftarPemasangan() {
                 <th>Nama Pelanggan</th>
                 <th>Telepon</th>
                 <th>Alamat</th>
+                <th>Agen</th>
                 <th>Tanggal Daftar</th>
                 <th>Tanggal Pasang</th>
                 <th>Status</th>
+                <th>Komisi</th>
                 <th>Aksi</th>
               </tr>
             </thead>
@@ -293,6 +576,12 @@ function DaftarPemasangan() {
                       {pelanggan.alamat}
                     </div>
                   </td>
+                  <td>
+                    <div className="agen-cell">
+                      <i className="bi bi-person-badge"></i>
+                      <span className="agen-name">{pelanggan.agen || 'YOGA'}</span>
+                    </div>
+                  </td>
                   <td>{formatDate(pelanggan.tanggal_daftar)}</td>
                   <td>{formatDate(pelanggan.tanggal_pasang)}</td>
                   <td>
@@ -311,12 +600,50 @@ function DaftarPemasangan() {
                     </span>
                   </td>
                   <td>
+                    {pelanggan.status === 'terpasang' ? (
+                      <div className="komisi-status">
+                        <span className={`komisi-badge ${pelanggan.komisi_dibayar ? 'dibayar' : 'belum'}`}>
+                          {pelanggan.komisi_dibayar ? (
+                            <>
+                              <i className="bi bi-currency-dollar"></i>
+                              Sudah
+                            </>
+                          ) : (
+                            <>
+                              <i className="bi bi-exclamation-circle"></i>
+                              Belum
+                            </>
+                          )}
+                        </span>
+                        <button
+                          className={`komisi-btn ${pelanggan.komisi_dibayar ? 'mark-unpaid' : 'mark-paid'}`}
+                          onClick={() => handleKomisiClick(pelanggan)}
+                          title="Update Status Komisi"
+                        >
+                          <i className={`bi ${pelanggan.komisi_dibayar ? 'bi-x-circle' : 'bi-check-circle'}`}></i>
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="komisi-badge pending">
+                        <i className="bi bi-dash-circle"></i>
+                        Menunggu Pemasangan
+                      </span>
+                    )}
+                  </td>
+                  <td>
                     <div className="action-buttons">
                       {pelanggan.status === 'menunggu' && (
                         <button
                           className="action-btn confirm"
                           onClick={() => {
                             setSelectedPelanggan(pelanggan);
+                            // Auto-fill dengan tanggal dan jam saat ini
+                            setKonfirmasiData({
+                              tanggal_pasang: getCurrentDate(),
+                              jam_pasang: getCurrentTime(),
+                              teknisi: '',
+                              catatan: ''
+                            });
                             setShowConfirmModal(true);
                           }}
                           title="Konfirmasi Pemasangan"
@@ -378,6 +705,21 @@ function DaftarPemasangan() {
                   rows="3"
                 />
               </div>
+              <div className="form-group">
+                <label>Nama Agen</label>
+                <select
+                  value={newPelanggan.agen}
+                  onChange={(e) => setNewPelanggan({...newPelanggan, agen: e.target.value})}
+                  className="agen-select"
+                >
+                  <option value="">-- Pilih Agen --</option>
+                  {daftarAgen.map(agen => (
+                    <option key={agen} value={agen}>
+                      {agen}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="modal-footer">
               <button className="btn btn-secondary" onClick={() => setShowAddModal(false)}>
@@ -415,6 +757,10 @@ function DaftarPemasangan() {
                   value={konfirmasiData.tanggal_pasang}
                   onChange={(e) => setKonfirmasiData({...konfirmasiData, tanggal_pasang: e.target.value})}
                 />
+                <small className="form-help">
+                  <i className="bi bi-info-circle"></i>
+                  Otomatis terisi tanggal hari ini. Ubah jika pemasangan di hari lain.
+                </small>
               </div>
               <div className="form-group">
                 <label>Jam Pemasangan</label>
@@ -423,15 +769,24 @@ function DaftarPemasangan() {
                   value={konfirmasiData.jam_pasang}
                   onChange={(e) => setKonfirmasiData({...konfirmasiData, jam_pasang: e.target.value})}
                 />
+                <small className="form-help">
+                  <i className="bi bi-clock"></i>
+                  Otomatis terisi jam sekarang. Sesuaikan dengan jadwal pemasangan.
+                </small>
               </div>
               <div className="form-group">
-                <label>Nama Teknisi</label>
+                <label>Nama Teknisi <span className="required-field">*</span></label>
                 <input
                   type="text"
                   value={konfirmasiData.teknisi}
                   onChange={(e) => setKonfirmasiData({...konfirmasiData, teknisi: e.target.value})}
                   placeholder="Nama teknisi yang memasang"
+                  autoFocus
                 />
+                <small className="form-help">
+                  <i className="bi bi-person-gear"></i>
+                  Wajib diisi - nama teknisi yang melakukan pemasangan
+                </small>
               </div>
               <div className="form-group">
                 <label>Catatan Pemasangan</label>
@@ -453,6 +808,80 @@ function DaftarPemasangan() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Komisi Confirmation Dialog */}
+      {showKomisiConfirm && selectedKomisiData && (
+        <div className="modal-overlay" onClick={() => setShowKomisiConfirm(false)}>
+          <div className="komisi-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="komisi-dialog-header">
+              <div className="komisi-dialog-icon">
+                <i className="bi bi-currency-dollar"></i>
+              </div>
+              <h3>Komisi Agen</h3>
+              <button 
+                className="modal-close" 
+                onClick={() => setShowKomisiConfirm(false)}
+              >
+                <i className="bi bi-x-lg"></i>
+              </button>
+            </div>
+            <div className="komisi-dialog-body">
+              <div className="customer-info-card">
+                <div className="customer-avatar-large">
+                  <i className="bi bi-person-circle"></i>
+                </div>
+                <div className="customer-details-card">
+                  <h4>{selectedKomisiData.nama}</h4>
+                  <p><i className="bi bi-person-badge"></i> Agen: {selectedKomisiData.agen}</p>
+                  <p><i className="bi bi-calendar-check"></i> Terpasang: {formatDate(selectedKomisiData.tanggal_pasang)}</p>
+                </div>
+              </div>
+              <div className="komisi-question">
+                <h4>Komisi agen sudah diberikan?</h4>
+                <p>Pilih status pembayaran komisi untuk agen <strong>{selectedKomisiData.agen}</strong></p>
+              </div>
+            </div>
+            <div className="komisi-dialog-actions">
+              <button 
+                className="btn-komisi sudah"
+                onClick={() => handleUpdateKomisi(true)}
+              >
+                <i className="bi bi-check-circle"></i>
+                Sudah Dibayar
+              </button>
+              <button 
+                className="btn-komisi belum"
+                onClick={() => handleUpdateKomisi(false)}
+              >
+                <i className="bi bi-clock"></i>
+                Belum Dibayar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Custom Notification */}
+      {notification.show && (
+        <div className={`custom-notification ${notification.type} show`}>
+          <div className="notification-content">
+            <div className="notification-icon">
+              <i className={`bi ${notification.icon}`}></i>
+            </div>
+            <div className="notification-text">
+              <div className="notification-title">{notification.title}</div>
+              <div className="notification-message">{notification.message}</div>
+            </div>
+            <button 
+              className="notification-close"
+              onClick={() => setNotification(prev => ({ ...prev, show: false }))}
+            >
+              <i className="bi bi-x"></i>
+            </button>
+          </div>
+          <div className="notification-progress"></div>
         </div>
       )}
     </div>

@@ -179,8 +179,8 @@ const verifyToken = (req, res, next) => {
 // Get all pemasangan data
 app.get('/api/pemasangan', (req, res) => {
     const query = `
-        SELECT id, nama, telepon, alamat, tanggal_daftar, tanggal_pasang, 
-               status, teknisi, catatan, jam_pasang
+        SELECT id, nama, telepon, alamat, agen, tanggal_daftar, tanggal_pasang, 
+               status, teknisi, catatan, jam_pasang, komisi_dibayar
         FROM pemasangan 
         ORDER BY tanggal_daftar DESC
     `;
@@ -196,18 +196,18 @@ app.get('/api/pemasangan', (req, res) => {
 
 // Add new pelanggan
 app.post('/api/pemasangan', (req, res) => {
-    const { nama, telepon, alamat } = req.body;
+    const { nama, telepon, alamat, agen } = req.body;
     
-    if (!nama || !telepon || !alamat) {
-        return res.status(400).json({ message: 'Nama, telepon, dan alamat harus diisi' });
+    if (!nama || !telepon || !alamat || !agen) {
+        return res.status(400).json({ message: 'Nama, telepon, alamat, dan agen harus diisi' });
     }
     
     const query = `
-        INSERT INTO pemasangan (nama, telepon, alamat, tanggal_daftar, status)
-        VALUES (?, ?, ?, CURDATE(), 'menunggu')
+        INSERT INTO pemasangan (nama, telepon, alamat, agen, tanggal_daftar, status, komisi_dibayar)
+        VALUES (?, ?, ?, ?, CURDATE(), 'menunggu', 0)
     `;
     
-    db.query(query, [nama, telepon, alamat], (err, result) => {
+    db.query(query, [nama, telepon, alamat, agen], (err, result) => {
         if (err) {
             console.error('Database error:', err);
             return res.status(500).json({ message: 'Database error' });
@@ -246,6 +246,35 @@ app.put('/api/pemasangan/:id/konfirmasi', (req, res) => {
         }
         
         res.json({ message: 'Pemasangan berhasil dikonfirmasi' });
+    });
+});
+
+// Update komisi status
+app.put('/api/pemasangan/:id/komisi', (req, res) => {
+    const { id } = req.params;
+    const { komisi_dibayar } = req.body;
+    
+    if (komisi_dibayar === undefined || komisi_dibayar === null) {
+        return res.status(400).json({ message: 'Status komisi harus diisi' });
+    }
+    
+    const query = `
+        UPDATE pemasangan 
+        SET komisi_dibayar = ?
+        WHERE id = ?
+    `;
+    
+    db.query(query, [komisi_dibayar ? 1 : 0, id], (err, result) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Pemasangan tidak ditemukan' });
+        }
+        
+        res.json({ message: 'Status komisi berhasil diupdate' });
     });
 });
 
