@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './DaftarPemasangan.css';
 
-
-// API Helper - AUTO DETECT NETWORK
-const getApiUrl = () => {
-  const host = window.location.hostname;
-  return (host === "localhost" || host === "127.0.0.1") ? "http://localhost:3000/api" : "http://172.16.31.11:3000/api";
-};
 function DaftarPemasangan() {
   const [pemasanganData, setPemasanganData] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -34,7 +28,7 @@ function DaftarPemasangan() {
   const fetchPemasanganData = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://172.16.31.11:3000/api/pemasangan');
+      const response = await fetch('http://localhost:3000/api/pemasangan');
       
       if (response.ok) {
         const data = await response.json();
@@ -102,7 +96,7 @@ function DaftarPemasangan() {
     if (newPelanggan.nama && newPelanggan.telepon && newPelanggan.alamat) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://172.16.31.11:3000/api/pemasangan', {
+        const response = await fetch('http://localhost:3000/api/pemasangan', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -129,7 +123,7 @@ function DaftarPemasangan() {
     if (window.confirm('Apakah Anda yakin ingin menghapus pelanggan ini?')) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://172.16.31.11:3000/api/pemasangan/${id}`, {
+        const response = await fetch(`http://localhost:3000/api/pemasangan/${id}`, {
           method: 'DELETE'
         });
         
@@ -154,7 +148,7 @@ function DaftarPemasangan() {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://172.16.31.11:3000/api/pemasangan/${selectedPelanggan.id}/konfirmasi`, {
+      const response = await fetch(`http://localhost:3000/api/pemasangan/${selectedPelanggan.id}/konfirmasi`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
