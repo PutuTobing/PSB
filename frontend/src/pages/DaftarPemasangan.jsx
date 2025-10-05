@@ -6,7 +6,7 @@ import './DaftarPemasangan.css';
 const getApiUrl = () => {
   const host = window.location.hostname;
   if (host === 'localhost' || host === '127.0.0.1') {
-    return `${getApiUrl()}';
+    return 'http://localhost:3000/api';
   }
   return 'http://172.16.31.11:3000/api';
 };
@@ -37,7 +37,7 @@ function DaftarPemasangan() {
   const fetchPemasanganData = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${getApiUrl()}/pemasangan');
+      const response = await fetch(`${getApiUrl()}/pemasangan`);
       
       if (response.ok) {
         const data = await response.json();
@@ -68,7 +68,7 @@ function DaftarPemasangan() {
     if (newPelanggan.nama && newPelanggan.telepon && newPelanggan.alamat) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${getApiUrl()}/pemasangan', {
+        const response = await fetch(`${getApiUrl()}/pemasangan`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
