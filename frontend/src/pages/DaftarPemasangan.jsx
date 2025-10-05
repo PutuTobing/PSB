@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './DaftarPemasangan.css';
 
+
+// Helper function untuk mendukung akses dari network
+const getApiUrl = () => {
+  const host = window.location.hostname;
+  if (host === 'localhost' || host === '127.0.0.1') {
+    return `${getApiUrl()}';
+  }
+  return 'http://172.16.31.11:3000/api';
+};
 function DaftarPemasangan() {
   const [pemasanganData, setPemasanganData] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -28,7 +37,7 @@ function DaftarPemasangan() {
   const fetchPemasanganData = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/pemasangan');
+      const response = await fetch(`${getApiUrl()}/pemasangan');
       
       if (response.ok) {
         const data = await response.json();
@@ -38,43 +47,6 @@ function DaftarPemasangan() {
       }
     } catch (error) {
       console.error('Error fetching pemasangan data:', error);
-      // Use sample data as fallback
-      const sampleData = [
-        {
-          id: 1,
-          nama: 'Ahmad Wijaya',
-          telepon: '081234567890',
-          alamat: 'Jl. Merdeka No. 123, Jakarta',
-          tanggal_daftar: '2025-01-15',
-          tanggal_pasang: null,
-          status: 'menunggu',
-          teknisi: null,
-          catatan: null
-        },
-        {
-          id: 2,
-          nama: 'Sari Indah',
-          telepon: '082345678901',
-          alamat: 'Jl. Sudirman No. 45, Bandung',
-          tanggal_daftar: '2025-01-10',
-          tanggal_pasang: '2025-01-20',
-          status: 'terpasang',
-          teknisi: 'Budi Santoso',
-          catatan: 'Pemasangan berhasil, signal bagus'
-        },
-        {
-          id: 3,
-          nama: 'Rahmat Hidayat',
-          telepon: '083456789012',
-          alamat: 'Jl. Gatot Subroto No. 78, Surabaya',
-          tanggal_daftar: '2025-01-12',
-          tanggal_pasang: null,
-          status: 'menunggu',
-          teknisi: null,
-          catatan: null
-        }
-      ];
-      setPemasanganData(sampleData);
     }
   };
 
@@ -96,7 +68,7 @@ function DaftarPemasangan() {
     if (newPelanggan.nama && newPelanggan.telepon && newPelanggan.alamat) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/api/pemasangan', {
+        const response = await fetch(`${getApiUrl()}/pemasangan', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -123,7 +95,7 @@ function DaftarPemasangan() {
     if (window.confirm('Apakah Anda yakin ingin menghapus pelanggan ini?')) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:3000/api/pemasangan/${id}`, {
+        const response = await fetch(`${getApiUrl()}/pemasangan/${id}`, {
           method: 'DELETE'
         });
         
@@ -148,7 +120,7 @@ function DaftarPemasangan() {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/pemasangan/${selectedPelanggan.id}/konfirmasi`, {
+      const response = await fetch(`${getApiUrl()}/pemasangan/${selectedPelanggan.id}/konfirmasi`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
