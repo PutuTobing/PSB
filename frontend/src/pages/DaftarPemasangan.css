@@ -2,9 +2,12 @@
 .daftar-pemasangan {
   padding: 20px;
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
   background: #f8fafc;
   min-height: 100vh;
+  box-sizing: border-box;
+  position: relative;
 }
 
 /* Page Header */
@@ -744,131 +747,703 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+
+/* Large Desktop */
+@media (min-width: 1400px) {
   .daftar-pemasangan {
-    padding: 15px;
+    max-width: 1400px;
+    padding: 25px;
   }
+  
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+  }
+  
+  .table-controls {
+    padding: 25px;
+  }
+}
 
-  .page-header {
+/* Desktop */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .daftar-pemasangan {
+    max-width: 1200px;
+  }
+}
+
+/* Tablet Landscape */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .daftar-pemasangan {
     padding: 20px;
-    margin-bottom: 20px;
+    max-width: 100%;
   }
+  
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  
+  .table-controls {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .search-box {
+    flex: 1;
+    min-width: 250px;
+  }
+  
+  .date-filters {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
 
+/* Tablet Portrait */
+@media (min-width: 768px) and (max-width: 991px) {
+  .daftar-pemasangan {
+    padding: 18px;
+  }
+  
+  .page-header {
+    padding: 25px;
+  }
+  
   .header-content {
     flex-direction: column;
-    align-items: stretch;
+    gap: 20px;
   }
-
+  
   .header-info {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 15px;
+    align-items: flex-start;
   }
-
-  .header-text h1 {
-    font-size: 24px;
-  }
-
+  
   .stats-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
   }
-
-  .stat-card {
-    padding: 20px;
-  }
-
+  
   .table-controls {
     flex-direction: column;
     align-items: stretch;
     gap: 15px;
   }
-
+  
   .search-box {
     max-width: none;
   }
-
+  
   .date-filters {
-    justify-content: center;
+    display: flex;
+    justify-content: space-between;
     width: 100%;
   }
-
+  
   .filter-group {
     flex: 1;
-    min-width: 140px;
+    margin: 0 5px;
   }
-
+  
   .filter-buttons {
     justify-content: center;
     flex-wrap: wrap;
   }
-
-  .pemasangan-table th,
-  .pemasangan-table td {
-    padding: 10px 8px;
-    font-size: 13px;
-  }
-
-  .customer-info {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .phone-actions {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-  }
-
-  .address-cell {
-    max-width: 150px;
-  }
-
-  .action-buttons {
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .modal-content {
-    margin: 15px;
-    width: calc(100% - 30px);
-  }
-
-  .modal-header,
-  .modal-body,
-  .modal-footer {
-    padding: 15px 20px;
-  }
-
-  .modal-footer {
-    flex-direction: column;
-  }
 }
 
-@media (max-width: 480px) {
-  .pemasangan-table {
-    font-size: 12px;
+/* Mobile Landscape & Large Mobile */
+@media (min-width: 576px) and (max-width: 767px) {
+  .daftar-pemasangan {
+    padding: 15px;
   }
-
-  .pemasangan-table th,
-  .pemasangan-table td {
-    padding: 8px 5px;
+  
+  .page-header {
+    padding: 20px;
+    margin-bottom: 20px;
   }
-
-  .customer-avatar {
-    font-size: 24px;
+  
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
   }
-
-  .stat-number {
-    font-size: 24px;
+  
+  .header-info {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 15px;
   }
-
+  
   .header-icon {
     width: 50px;
     height: 50px;
     font-size: 24px;
+  }
+  
+  .header-text h1 {
+    font-size: 22px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .stat-card {
+    padding: 18px;
+  }
+  
+  .stat-number {
+    font-size: 28px;
+  }
+  
+  .table-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    padding: 18px;
+  }
+  
+  .date-filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .filter-group {
+    min-width: auto;
+  }
+}
+
+/* Mobile Portrait */
+@media (max-width: 575px) {
+  .daftar-pemasangan {
+    padding: 10px;
+    background: #f8fafc;
+  }
+  
+  .page-header {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 16px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+  
+  .header-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .header-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+  
+  .header-text h1 {
+    font-size: 20px;
+    margin-bottom: 3px;
+  }
+  
+  .header-text p {
+    font-size: 14px;
+  }
+  
+  .period-badge {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+  
+  .header-actions .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .stat-card {
+    padding: 15px;
+    border-radius: 12px;
+  }
+  
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+  
+  .stat-number {
+    font-size: 24px;
+  }
+  
+  .stat-label {
+    font-size: 13px;
+  }
+  
+  .table-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 15px;
+    border-radius: 12px;
+  }
+  
+  .search-box {
+    max-width: none;
+  }
+  
+  .search-box input {
+    padding: 10px 12px 10px 40px;
+    font-size: 14px;
+  }
+  
+  .date-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .filter-group {
+    width: 100%;
+    padding: 8px 12px;
+  }
+  
+  .date-select {
+    min-width: auto;
+    width: 100%;
+    padding: 5px 8px;
+  }
+  
+  .filter-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 5px;
+  }
+  
+  .filter-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  
+  /* Table Responsive Design */
+  .table-container {
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .pemasangan-table {
+    min-width: 900px;
+  }
+  
+  .pemasangan-table th,
+  .pemasangan-table td {
+    padding: 8px 6px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  
+  .customer-info {
+    min-width: 120px;
+  }
+  
+  .customer-avatar {
+    font-size: 24px;
+  }
+  
+  .customer-name {
+    font-size: 13px;
+  }
+  
+  .teknisi-info {
+    font-size: 10px;
+  }
+  
+  .phone-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    min-width: 100px;
+  }
+  
+  .phone-number {
+    font-size: 11px;
+  }
+  
+  .whatsapp-btn {
+    padding: 4px 8px;
+    font-size: 14px;
+  }
+  
+  .address-cell {
+    max-width: 120px;
+    font-size: 11px;
+  }
+  
+  .agen-cell {
+    min-width: 80px;
+  }
+  
+  .agen-name {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+  
+  .status-badge {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  
+  .komisi-badge {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  
+  .komisi-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .action-btn {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  /* Modal Responsive */
+  .modal-overlay {
+    padding: 10px;
+    align-items: flex-start;
+    padding-top: 50px;
+  }
+  
+  .modal-content {
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100vh - 100px);
+    border-radius: 16px;
+  }
+  
+  .modal-header {
+    padding: 15px 20px 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .modal-header h3 {
+    font-size: 16px;
+  }
+  
+  .modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
+  
+  .modal-body {
+    padding: 15px 20px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+  }
+  
+  .modal-footer {
+    padding: 15px 20px;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .modal-footer .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+  }
+  
+  /* Komisi Dialog Responsive */
+  .komisi-dialog {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    border-radius: 16px;
+  }
+  
+  .komisi-dialog-header {
+    padding: 15px 20px 12px;
+  }
+  
+  .komisi-dialog-header h3 {
+    font-size: 16px;
+  }
+  
+  .komisi-dialog-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .komisi-dialog-body {
+    padding: 15px 20px;
+  }
+  
+  .customer-info-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+    padding: 15px;
+  }
+  
+  .customer-avatar-large {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+  
+  .customer-details-card h4 {
+    font-size: 16px;
+  }
+  
+  .customer-details-card p {
+    font-size: 13px;
+  }
+  
+  .komisi-question {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .komisi-question h4 {
+    font-size: 16px;
+  }
+  
+  .komisi-question p {
+    font-size: 13px;
+  }
+  
+  .komisi-dialog-actions {
+    flex-direction: column;
+    padding: 0 20px 20px;
+    gap: 12px;
+  }
+  
+  .btn-komisi {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  
+  /* Form Responsive */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  
+  .form-group input,
+  .form-group textarea,
+  .agen-select {
+    padding: 10px 12px;
+    font-size: 14px;
+    border-radius: 8px;
+  }
+  
+  .form-help {
+    font-size: 11px;
+    margin-top: 4px;
+  }
+  
+  .customer-summary {
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .customer-summary h4 {
+    font-size: 15px;
+  }
+  
+  .customer-summary p {
+    font-size: 13px;
+  }
+  
+  /* Custom Notification Mobile */
+  .custom-notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    width: auto;
+    max-width: none;
+    border-radius: 12px;
+  }
+  
+  .notification-content {
+    padding: 15px;
+    gap: 12px;
+  }
+  
+  .notification-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+  
+  .notification-title {
+    font-size: 15px;
+  }
+  
+  .notification-message {
+    font-size: 13px;
+  }
+  
+  .notification-close {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .notification-progress {
+    height: 4px;
+  }
+}
+
+/* Extra Small Mobile */
+@media (max-width: 480px) {
+  .daftar-pemasangan {
+    padding: 8px;
+  }
+  
+  .page-header {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .header-text h1 {
+    font-size: 18px;
+  }
+  
+  .header-text p {
+    font-size: 13px;
+  }
+  
+  .stats-grid {
+    gap: 10px;
+  }
+  
+  .stat-card {
+    padding: 12px;
+  }
+  
+  .stat-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+  
+  .stat-number {
+    font-size: 20px;
+  }
+  
+  .stat-label {
+    font-size: 12px;
+  }
+  
+  .table-controls {
+    padding: 12px;
+    gap: 10px;
+  }
+  
+  .search-box input {
+    padding: 8px 10px 8px 35px;
+    font-size: 13px;
+  }
+  
+  .filter-group {
+    padding: 6px 10px;
+  }
+  
+  .date-select {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+  
+  .filter-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  
+  .pemasangan-table {
+    font-size: 11px;
+    min-width: 800px;
+  }
+  
+  .pemasangan-table th,
+  .pemasangan-table td {
+    padding: 6px 4px;
+  }
+  
+  .customer-name {
+    font-size: 12px;
+  }
+  
+  .teknisi-info {
+    font-size: 9px;
+  }
+  
+  .phone-number {
+    font-size: 10px;
+  }
+  
+  .address-cell {
+    max-width: 100px;
+    font-size: 10px;
+  }
+  
+  .agen-name {
+    font-size: 9px;
+  }
+  
+  .status-badge {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  
+  .komisi-badge {
+    font-size: 8px;
+    padding: 2px 4px;
+  }
+  
+  .action-btn {
+    padding: 4px 6px;
+    font-size: 10px;
   }
 }
 
@@ -1553,5 +2128,203 @@
 
   .btn-komisi {
     padding: 12px 16px;
+  }
+}
+
+/* Enhanced Mobile Responsive Design */
+
+/* Better Mobile Table Handling */
+@media (max-width: 991px) {
+  .table-container {
+    margin: 0 -10px;
+    border-radius: 0;
+  }
+  
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f7fafc;
+  }
+  
+  .table-responsive::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .table-responsive::-webkit-scrollbar-track {
+    background: #f7fafc;
+    border-radius: 10px;
+  }
+  
+  .table-responsive::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 10px;
+  }
+  
+  .table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+  }
+  
+  .pemasangan-table {
+    min-width: 1000px;
+    font-size: 13px;
+  }
+  
+  .pemasangan-table th {
+    position: sticky;
+    top: 0;
+    background: #f8fafc;
+    z-index: 10;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 12px 8px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  
+  .pemasangan-table td {
+    padding: 10px 8px;
+    vertical-align: middle;
+  }
+}
+
+/* Enhanced Mobile Portrait */
+@media (max-width: 575px) {
+  .header-actions .btn .btn-text {
+    display: none;
+  }
+  
+  .header-actions .btn {
+    width: auto;
+    padding: 10px 12px;
+    border-radius: 50%;
+    min-width: 44px;
+    height: 44px;
+  }
+  
+  .header-actions .btn i {
+    margin-right: 0;
+    font-size: 18px;
+  }
+}
+
+/* Toggle Button for Mobile View */
+@media (max-width: 767px) {
+  .view-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 15px;
+    padding: 8px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .toggle-btn {
+    flex: 1;
+    padding: 8px 16px;
+    font-size: 13px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #64748b;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  .toggle-btn.active {
+    background: #4f46e5;
+    color: white;
+    border-color: #4f46e5;
+  }
+  
+  .toggle-btn i {
+    font-size: 14px;
+  }
+}
+
+/* Better spacing for small screens */
+@media (max-width: 480px) {
+  .daftar-pemasangan {
+    padding: 8px;
+  }
+  
+  .page-header {
+    margin-bottom: 12px;
+  }
+  
+  .stats-grid {
+    margin-bottom: 15px;
+  }
+  
+  .table-controls {
+    margin-bottom: 15px;
+  }
+  
+  .search-box input {
+    border-radius: 10px;
+  }
+  
+  .date-select {
+    border-radius: 8px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .daftar-pemasangan {
+    padding: 0;
+    background: white !important;
+    color: black !important;
+  }
+  
+  .page-header {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    border: 1px solid #ccc;
+  }
+  
+  .header-actions,
+  .table-controls,
+  .action-buttons,
+  .whatsapp-btn,
+  .komisi-btn {
+    display: none !important;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    page-break-inside: avoid;
+  }
+  
+  .stat-card {
+    border: 1px solid #ddd;
+    box-shadow: none !important;
+  }
+  
+  .pemasangan-table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .pemasangan-table th,
+  .pemasangan-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-size: 12px;
+  }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .daftar-pemasangan {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }

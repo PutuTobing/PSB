@@ -396,7 +396,7 @@ function DaftarPemasangan() {
   };
 
   return (
-    <div className="daftar-pemasangan">
+    <div className="daftar-pemasangan container-fluid">
       {/* Header Section */}
       <div className="page-header">
         <div className="header-content">
@@ -419,7 +419,7 @@ function DaftarPemasangan() {
               onClick={() => setShowAddModal(true)}
             >
               <i className="bi bi-plus-circle"></i>
-              Tambah Pelanggan
+              <span className="btn-text">Tambah Pelanggan</span>
             </button>
           </div>
         </div>
@@ -527,19 +527,19 @@ function DaftarPemasangan() {
       {/* Data Table */}
       <div className="table-container">
         <div className="table-responsive">
-          <table className="pemasangan-table">
+          <table className="pemasangan-table table">
             <thead>
               <tr>
-                <th>No</th>
-                <th>Nama Pelanggan</th>
-                <th>Telepon</th>
-                <th>Alamat</th>
-                <th>Agen</th>
-                <th>Tanggal Daftar</th>
-                <th>Tanggal Pasang</th>
-                <th>Status</th>
-                <th>Komisi</th>
-                <th>Aksi</th>
+                <th className="text-center" style={{minWidth: '50px'}}>No</th>
+                <th style={{minWidth: '200px'}}>Nama Pelanggan</th>
+                <th style={{minWidth: '140px'}}>Telepon</th>
+                <th style={{minWidth: '200px'}}>Alamat</th>
+                <th className="text-center" style={{minWidth: '120px'}}>Agen</th>
+                <th className="text-center" style={{minWidth: '130px'}}>Tanggal Daftar</th>
+                <th className="text-center" style={{minWidth: '130px'}}>Tanggal Pasang</th>
+                <th className="text-center" style={{minWidth: '150px'}}>Status Pemasangan</th>
+                <th className="text-center" style={{minWidth: '120px'}}>Komisi Agen</th>
+                <th className="text-center" style={{minWidth: '120px'}}>Aksi</th>
               </tr>
             </thead>
             <tbody>
