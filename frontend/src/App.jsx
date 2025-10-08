@@ -7,6 +7,7 @@ import Header from './components/Header';
 import Dashboard from './pages/Dashboard';
 import DaftarPemasangan from './pages/DaftarPemasangan';
 import ManajemenAkun from './pages/ManajemenAkun';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -52,7 +53,9 @@ function App() {
                 <div className="flex-fill" style={{ background: '#f5f7fa' }}>
                   <Header onLogout={handleLogout} />
                   <div className="p-4">
-                    <DaftarPemasangan />
+                    <ErrorBoundary>
+                      <DaftarPemasangan />
+                    </ErrorBoundary>
                   </div>
                 </div>
               </div>

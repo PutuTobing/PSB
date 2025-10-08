@@ -31,6 +31,11 @@
     padding: 15px 12px;
     font-size: 14px;
   }
+  
+  /* Desktop - Full visibility */
+  .address-cell {
+    font-size: 14px;
+  }
 }
 
 /* Laptop Layout (1024px-1280px) */
@@ -103,46 +108,47 @@
 }
 
 .header-text h1 {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 700;
   margin: 0;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 }
 
 .header-text p {
   margin: 0;
   opacity: 0.9;
-  font-size: 16px;
+  font-size: 13px;
 }
 
 .period-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 11px;
   font-weight: 600;
-  margin-top: 8px;
+  margin-top: 6px;
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .period-badge i {
-  font-size: 14px;
+  font-size: 10px;
 }
 
 .header-actions .btn {
-  padding: 12px 24px;
+  padding: 8px 16px;
   background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
-  border-radius: 12px;
+  border-radius: 8px;
   font-weight: 600;
+  font-size: 12px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
 }
@@ -156,19 +162,19 @@
 /* Statistics Grid */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  margin-bottom: 25px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
 }
 
 .stat-card {
   background: white;
-  padding: 25px;
-  border-radius: 16px;
+  padding: 16px;
+  border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 12px;
   transition: all 0.3s ease;
   animation: fadeInUp 0.5s ease-out;
 }
@@ -190,13 +196,13 @@
 }
 
 .stat-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: 18px;
   color: white;
 }
 
@@ -213,14 +219,14 @@
 }
 
 .stat-number {
-  font-size: 32px;
+  font-size: 22px;
   font-weight: 700;
   color: #1e293b;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 }
 
 .stat-label {
-  font-size: 14px;
+  font-size: 11px;
   color: #64748b;
   font-weight: 500;
 }
@@ -228,15 +234,15 @@
 /* Table Controls */
 .table-controls {
   background: white;
-  padding: 20px;
-  border-radius: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 10px;
 }
 
 .search-box {
@@ -248,19 +254,19 @@
 
 .search-box i {
   position: absolute;
-  left: 15px;
+  left: 12px;
   top: 50%;
   transform: translateY(-50%);
   color: #64748b;
-  font-size: 16px;
+  font-size: 12px;
 }
 
 .search-box input {
   width: 100%;
-  padding: 12px 15px 12px 45px;
+  padding: 8px 12px 8px 30px;
   border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 14px;
+  border-radius: 8px;
+  font-size: 12px;
   transition: all 0.3s ease;
 }
 
@@ -273,7 +279,7 @@
 /* Date Filters */
 .date-filters {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -281,10 +287,10 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  padding: 10px 15px;
-  border-radius: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
   border: 2px solid #e2e8f0;
   transition: all 0.3s ease;
 }
@@ -323,11 +329,12 @@
 }
 
 .filter-btn {
-  padding: 10px 20px;
-  border: 2px solid #e2e8f0;
+  padding: 6px 12px;
+  border: 1px solid #e2e8f0;
   background: white;
-  border-radius: 10px;
+  border-radius: 6px;
   font-weight: 500;
+  font-size: 11px;
   color: #64748b;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -348,25 +355,62 @@
 .table-container {
   width: 100%;
   background: white;
-  border-radius: 16px;
+  border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .table-responsive {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #f7fafc;
+}
+
+.table-responsive::-webkit-scrollbar {
+  height: 12px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: #f7fafc;
+  border-radius: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 6px;
+  border: 2px solid #f7fafc;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
 }
 
 .pemasangan-table {
   width: 100%;
-  min-width: 100%;
+  min-width: 1550px;
   border-collapse: collapse;
-  table-layout: auto;
+  table-layout: fixed;
   border: 1px solid #e5e7eb;
 }
+
+/* Fixed Column Widths for Better Display */
+.pemasangan-table th:nth-child(1) { width: 50px; text-align: center; }     /* No */
+.pemasangan-table th:nth-child(2) { width: 180px; }    /* Nama Pelanggan */
+.pemasangan-table th:nth-child(3) { width: 130px; }    /* Telepon */
+.pemasangan-table th:nth-child(4) { width: 220px; }    /* Alamat */
+.pemasangan-table th:nth-child(5) { width: 140px; }    /* Desa */
+.pemasangan-table th:nth-child(6) { width: 90px; }     /* Agen */
+.pemasangan-table th:nth-child(7) { width: 110px; }    /* Tanggal Daftar */
+.pemasangan-table th:nth-child(8) { width: 110px; }    /* Tanggal Pasang */
+.pemasangan-table th:nth-child(9) { width: 130px; }    /* Status Pemasangan */
+.pemasangan-table th:nth-child(10) { width: 110px; }   /* Komisi Agen */
+.pemasangan-table th:nth-child(11) { width: 90px; }    /* Aksi */
+
+/* Center align untuk kolom nomor */
+.pemasangan-table td:nth-child(1) { text-align: center; }     /* No - rata tengah */
 
 /* Desktop Table - Full Width Usage */
 @media (min-width: 1280px) {
@@ -379,16 +423,20 @@
     table-layout: fixed;
   }
   
-  .pemasangan-table th:nth-child(1) { width: 5%; }    /* No */
-  .pemasangan-table th:nth-child(2) { width: 18%; }   /* Nama Pelanggan */
-  .pemasangan-table th:nth-child(3) { width: 12%; }   /* Telepon */
-  .pemasangan-table th:nth-child(4) { width: 20%; }   /* Alamat */
-  .pemasangan-table th:nth-child(5) { width: 10%; }   /* Agen */
-  .pemasangan-table th:nth-child(6) { width: 10%; }   /* Tanggal Daftar */
-  .pemasangan-table th:nth-child(7) { width: 10%; }   /* Tanggal Pasang */
-  .pemasangan-table th:nth-child(8) { width: 10%; }   /* Status */
-  .pemasangan-table th:nth-child(9) { width: 8%; }    /* Komisi */
-  .pemasangan-table th:nth-child(10) { width: 7%; }   /* Aksi */
+  .pemasangan-table th:nth-child(1) { width: 2%; text-align: center; }    /* No */
+  .pemasangan-table th:nth-child(2) { width: 12%; text-align: center; }   /* Nama Pelanggan */
+  .pemasangan-table th:nth-child(3) { width: 10%; text-align: center; }   /* Telepon */
+  .pemasangan-table th:nth-child(4) { width: 16%; text-align: center; }   /* Alamat */
+  .pemasangan-table th:nth-child(5) { width: 12%; text-align: center; }   /* Desa */
+  .pemasangan-table th:nth-child(6) { width: 7%; text-align: center; }    /* Agen */
+  .pemasangan-table th:nth-child(7) { width: 8%; text-align: center; }    /* Tanggal Daftar */
+  .pemasangan-table th:nth-child(8) { width: 8%; text-align: center; }    /* Tanggal Pasang */
+  .pemasangan-table th:nth-child(9) { width: 9%; text-align: center; }    /* Status */
+  .pemasangan-table th:nth-child(10) { width: 9%; text-align: center; }   /* Komisi */
+  .pemasangan-table th:nth-child(11) { width: 7%; text-align: center; }   /* Aksi */
+  
+  /* Center align untuk kolom nomor di desktop */
+  .pemasangan-table td:nth-child(1) { text-align: center; }     /* No - rata tengah */
   
   .pemasangan-table th,
   .pemasangan-table td {
@@ -425,7 +473,7 @@
     border-right: none;
   }
   
-  /* Slightly smaller font for content */
+  /* Laptop specific optimizations */
   .customer-name {
     font-size: 13px;
   }
@@ -436,7 +484,7 @@
   
   .address-cell {
     font-size: 12px;
-    line-height: 1.4;
+    line-height: 1.3;
   }
   
   .agen-name {
@@ -483,11 +531,11 @@
 
 .pemasangan-table th {
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  padding: 15px 12px;
+  padding: 10px 8px;
   text-align: left;
   font-weight: 600;
   color: #1e293b;
-  font-size: 14px;
+  font-size: 12px;
   border-bottom: 2px solid #e2e8f0;
   border-right: 1px solid #e5e7eb;
   white-space: nowrap;
@@ -498,10 +546,11 @@
 }
 
 .pemasangan-table td {
-  padding: 15px 12px;
+  padding: 8px 6px;
   border-bottom: 1px solid #f1f5f9;
   border-right: 1px solid #e5e7eb;
-  vertical-align: middle;
+  vertical-align: top;
+  font-size: 12px;
 }
 
 .pemasangan-table td:last-child {
@@ -512,7 +561,7 @@
   background: #f8fafc;
 }
 
-/* Customer Info */
+/* Customer Info - No individual scroll */
 .customer-info {
   display: flex;
   align-items: center;
@@ -520,26 +569,40 @@
 }
 
 .customer-avatar {
-  font-size: 32px;
+  font-size: 24px;
   color: #667eea;
+  flex-shrink: 0;
+}
+
+.customer-details {
+  flex: 1;
+  min-width: 120px;
+  overflow: hidden;
 }
 
 .customer-name {
   font-weight: 600;
   color: #1e293b;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.2;
+  font-size: 12px;
 }
 
 .teknisi-info {
-  font-size: 12px;
+  font-size: 10px;
   color: #64748b;
   background: #f1f5f9;
-  padding: 2px 8px;
-  border-radius: 6px;
+  padding: 1px 4px;
+  border-radius: 4px;
   display: inline-block;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.1;
 }
 
-/* Phone Actions */
+/* Phone Actions - No individual scroll */
 .phone-actions {
   display: flex;
   align-items: center;
@@ -550,15 +613,18 @@
   font-family: monospace;
   font-weight: 500;
   color: #1e293b;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  font-size: 11px;
 }
 
 .whatsapp-btn {
-  padding: 6px 10px;
+  padding: 4px 6px;
   background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   color: white;
-  font-size: 16px;
+  font-size: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -568,34 +634,57 @@
   box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
 }
 
-/* Address Cell */
+/* Address Cell - Compact and elegant */
 .address-cell {
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   color: #64748b;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  white-space: normal;
+  padding: 2px;
+  vertical-align: top;
+  height: auto;
+  font-size: 11px;
 }
 
-/* Agen Cell */
+/* Desa Cell - Compact */
+.desa-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  color: #059669;
+}
+
+.desa-cell i {
+  font-size: 12px;
+  color: #10b981;
+}
+
+.desa-name {
+  font-size: 10px;
+}
+
+/* Agen Cell - Compact */
 .agen-cell {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   font-weight: 600;
   color: #6366f1;
 }
 
 .agen-cell i {
-  font-size: 16px;
+  font-size: 12px;
   color: #8b5cf6;
 }
 
 .agen-name {
   background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 9px;
   font-weight: 700;
   color: #4338ca;
 }
@@ -604,10 +693,10 @@
 .status-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  border-radius: 20px;
-  font-size: 12px;
+  gap: 3px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 10px;
   font-weight: 600;
 }
 
@@ -631,10 +720,10 @@
 .komisi-badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 6px 10px;
-  border-radius: 15px;
-  font-size: 11px;
+  gap: 2px;
+  padding: 3px 6px;
+  border-radius: 8px;
+  font-size: 9px;
   font-weight: 600;
 }
 
@@ -657,13 +746,14 @@
 .komisi-btn {
   background: none;
   border: none;
-  padding: 6px;
+  padding: 3px;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 10px;
 }
 
 .komisi-btn.mark-paid {
@@ -686,18 +776,18 @@
   transform: scale(1.1);
 }
 
-/* Action Buttons */
+/* Action Buttons - Compact */
 .action-buttons {
   display: flex;
-  gap: 8px;
+  gap: 4px;
 }
 
 .action-btn {
-  padding: 8px 10px;
+  padding: 4px 6px;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 11px;
   transition: all 0.3s ease;
 }
 
@@ -845,6 +935,8 @@
   min-height: 80px;
 }
 
+/* Desa Select Styling */
+.desa-select,
 /* Agen Select Styling */
 .agen-select {
   width: 100%;
@@ -858,12 +950,14 @@
   cursor: pointer;
 }
 
+.desa-select:focus,
 .agen-select:focus {
   outline: none;
   border-color: #8b5cf6;
   box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
 }
 
+.desa-select option,
 .agen-select option {
   padding: 10px;
   background: #ffffff;
@@ -1748,11 +1842,11 @@
   
   .customer-card {
     background: white;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 16px;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border-left: 4px solid #4f46e5;
+    border-left: 3px solid #4f46e5;
     animation: fadeInUp 0.3s ease-out;
   }
   
@@ -1770,22 +1864,22 @@
   .card-header {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
     border-bottom: 1px solid #e2e8f0;
   }
   
   .card-avatar {
-    width: 50px;
-    height: 50px;
+    width: 36px;
+    height: 36px;
     background: linear-gradient(135deg, #667eea, #764ba2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 20px;
+    font-size: 14px;
     flex-shrink: 0;
   }
   
@@ -1795,39 +1889,39 @@
   }
   
   .card-customer-name {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 600;
     color: #1a202c;
-    margin: 0 0 4px 0;
+    margin: 0 0 2px 0;
     line-height: 1.2;
   }
   
   .card-customer-phone {
-    font-size: 14px;
+    font-size: 11px;
     color: #64748b;
     margin: 0;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
   }
   
   .card-number {
     position: absolute;
-    top: 12px;
-    right: 16px;
+    top: 8px;
+    right: 12px;
     background: #f1f5f9;
     color: #475569;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
-    padding: 4px 8px;
-    border-radius: 6px;
+    padding: 2px 6px;
+    border-radius: 4px;
   }
   
   .card-body {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px 16px;
-    margin-bottom: 16px;
+    gap: 8px 12px;
+    margin-bottom: 12px;
   }
   
   .card-field {
@@ -1840,45 +1934,57 @@
   }
   
   .card-field-label {
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 600;
     color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
   }
   
   .card-field-value {
-    font-size: 14px;
+    font-size: 12px;
     color: #1e293b;
     font-weight: 500;
     line-height: 1.3;
   }
   
   .card-address {
-    font-size: 13px;
+    font-size: 11px;
     line-height: 1.4;
+  }
+  
+  .card-desa-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: linear-gradient(135deg, #059669, #047857);
+    color: white;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 600;
   }
   
   .card-agen-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    background: linear-gradient(135deg, #10b981, #059669);
+    gap: 3px;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
     color: white;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 11px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 9px;
     font-weight: 600;
   }
   
   .card-status-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 6px 10px;
-    border-radius: 8px;
-    font-size: 12px;
+    gap: 3px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -1904,18 +2010,18 @@
   
   .card-action-btn {
     flex: 1;
-    min-width: 100px;
-    padding: 10px 16px;
-    font-size: 13px;
+    min-width: 80px;
+    padding: 6px 10px;
+    font-size: 11px;
     font-weight: 600;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 4px;
   }
   
   .card-action-btn.whatsapp {

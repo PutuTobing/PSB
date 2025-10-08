@@ -1,0 +1,16 @@
+-- Query untuk menambahkan kolom desa ke tabel pemasangan
+-- Jalankan query ini di phpMyAdmin:
+
+USE auth_db;
+
+-- Tambahkan kolom desa setelah kolom alamat
+ALTER TABLE pemasangan ADD COLUMN desa VARCHAR(100) NOT NULL DEFAULT 'Desa Braja Gemilang' AFTER alamat;
+
+-- Update semua data yang sudah ada untuk menggunakan 'Desa Braja Gemilang'
+UPDATE pemasangan SET desa = 'Desa Braja Gemilang' WHERE desa IS NULL OR desa = '';
+
+-- Verifikasi struktur tabel
+DESCRIBE pemasangan;
+
+-- Lihat data yang sudah diupdate
+SELECT id, nama, alamat, desa, agen, tanggal_daftar FROM pemasangan LIMIT 10;

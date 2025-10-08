@@ -179,7 +179,7 @@ const verifyToken = (req, res, next) => {
 // Get all pemasangan data
 app.get('/api/pemasangan', (req, res) => {
     const query = `
-        SELECT id, nama, telepon, alamat, agen, tanggal_daftar, tanggal_pasang, 
+        SELECT id, nama, telepon, alamat, desa, agen, tanggal_daftar, tanggal_pasang, 
                status, teknisi, catatan, jam_pasang, komisi_dibayar
         FROM pemasangan 
         ORDER BY tanggal_daftar DESC
@@ -196,18 +196,25 @@ app.get('/api/pemasangan', (req, res) => {
 
 // Add new pelanggan
 app.post('/api/pemasangan', (req, res) => {
-    const { nama, telepon, alamat, agen } = req.body;
+    const { nama, telepon, alamat, desa, agen, tanggal_daftar } = req.body;
     
-    if (!nama || !telepon || !alamat || !agen) {
-        return res.status(400).json({ message: 'Nama, telepon, alamat, dan agen harus diisi' });
+    if (!nama || !telepon || !alamat || !agen || !desa) {
+        return res.status(400).json({ message: 'Nama, telepon, alamat, desa, dan agen harus diisi' });
     }
     
+    // Gunakan tanggal_daftar dari frontend atau CURDATE() sebagai fallback
+    const tanggalDaftar = tanggal_daftar || 'CURDATE()';
+    
     const query = `
-        INSERT INTO pemasangan (nama, telepon, alamat, agen, tanggal_daftar, status, komisi_dibayar)
-        VALUES (?, ?, ?, ?, CURDATE(), 'menunggu', 0)
+        INSERT INTO pemasangan (nama, telepon, alamat, desa, agen, tanggal_daftar, status, komisi_dibayar)
+        VALUES (?, ?, ?, ?, ?, ${tanggal_daftar ? '?' : 'CURDATE()'}, 'menunggu', 0)
     `;
     
-    db.query(query, [nama, telepon, alamat, agen], (err, result) => {
+    const params = tanggal_daftar 
+        ? [nama, telepon, alamat, desa, agen, tanggal_daftar]
+        : [nama, telepon, alamat, desa, agen];
+    
+    db.query(query, params, (err, result) => {
         if (err) {
             console.error('Database error:', err);
             return res.status(500).json({ message: 'Database error' });
@@ -314,6 +321,26 @@ app.get('/api/pemasangan/stats', verifyToken, (req, res) => {
             return res.status(500).json({ message: 'Database error' });
         }
         res.json(results[0]);
+    });
+});
+
+// Get unique desa list
+app.get('/api/desa', (req, res) => {
+    const query = `
+        SELECT DISTINCT desa 
+        FROM pemasangan 
+        WHERE desa IS NOT NULL AND desa != ''
+        ORDER BY desa ASC
+    `;
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        const desaList = results.map(row => row.desa);
+        res.json(desaList);
     });
 });
 

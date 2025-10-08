@@ -11,11 +11,25 @@ const getApiUrl = () => {
   return 'http://172.16.31.11:3000/api';
 };
 function DaftarPemasangan() {
+  // Get current date and time in format for HTML inputs - Declare early
+  const getCurrentDate = () => {
+    const now = new Date();
+    return now.toISOString().split('T')[0]; // YYYY-MM-DD format
+  };
+
+  const getCurrentTime = () => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`; // HH:MM format
+  };
+
   const [pemasanganData, setPemasanganData] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedPelanggan, setSelectedPelanggan] = useState(null);
   const [filterStatus, setFilterStatus] = useState('all');
+  const [filterDesa, setFilterDesa] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   
   // Date filters - default to current month & year
@@ -29,7 +43,9 @@ function DaftarPemasangan() {
     nama: '',
     telepon: '',
     alamat: '',
-    agen: '' // Default agen kosong - akan dikelola di manajemen akun
+    desa: 'Desa Braja Gemilang', // Default ke Desa Braja Gemilang
+    agen: '', // Default agen kosong - akan dikelola di manajemen akun
+    tanggal_daftar: getCurrentDate() // Default ke hari ini
   });
   const [konfirmasiData, setKonfirmasiData] = useState({
     tanggal_pasang: '',
@@ -58,10 +74,14 @@ function DaftarPemasangan() {
   // Daftar agen yang tersedia - nanti akan dikelola di manajemen akun
   // TODO: Implementasi CRUD agen di halaman manajemen akun
   const daftarAgen = ['YOGA', 'ANDI', 'SARI', 'BUDI', 'LINA'];
+  
+  // State untuk daftar desa yang diambil dari database
+  const [daftarDesa, setDaftarDesa] = useState(['Desa Braja Gemilang', 'Desa Braja Fajar']);
 
   // Load data from API
   useEffect(() => {
     fetchPemasanganData();
+    fetchDesaData();
   }, []);
 
   const fetchPemasanganData = async () => {
@@ -77,6 +97,24 @@ function DaftarPemasangan() {
       }
     } catch (error) {
       console.error('Error fetching pemasangan data:', error);
+    }
+  };
+
+  const fetchDesaData = async () => {
+    try {
+      const response = await fetch(`${getApiUrl()}/desa`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.length > 0) {
+          setDaftarDesa(data);
+        }
+      } else {
+        console.error('Failed to fetch desa data');
+      }
+    } catch (error) {
+      console.error('Error fetching desa data:', error);
+      // Gunakan default jika gagal
     }
   };
 
@@ -98,24 +136,51 @@ function DaftarPemasangan() {
     return phoneRegex.test(phone.replace(/\s+/g, ''));
   };
 
-  // Calculate stats based on filtered data (month/year)
+  // Helper function untuk mendapatkan tanggal daftar dari berbagai field
+  const getTanggalDaftar = (pelanggan) => {
+    // Coba beberapa kemungkinan nama field
+    return pelanggan.tanggal_daftar || 
+           pelanggan.created_at || 
+           pelanggan.createdAt || 
+           pelanggan.date_created ||
+           pelanggan.registration_date;
+  };
+
+  // Calculate stats based on filtered data (month/year and desa)
   const getFilteredDataForStats = () => {
     return pemasanganData.filter(pelanggan => {
+      // Filter by desa
+      const matchesDesa = filterDesa === 'all' || pelanggan.desa === filterDesa;
+      
       // Filter by month and year based on tanggal_daftar
       let matchesDate = true;
-      if (pelanggan.tanggal_daftar) {
-        const daftarDate = new Date(pelanggan.tanggal_daftar);
-        const daftarMonth = daftarDate.getMonth() + 1; // 1-12
-        const daftarYear = daftarDate.getFullYear();
+      
+      const tanggalDaftar = getTanggalDaftar(pelanggan);
+      
+      if (tanggalDaftar) {
+        const daftarDate = new Date(tanggalDaftar);
         
-        // If selectedMonth is 0, show all months for the selected year
-        if (selectedMonth === 0) {
-          matchesDate = daftarYear === selectedYear;
+        // Validasi apakah tanggal valid
+        if (!isNaN(daftarDate.getTime())) {
+          const daftarMonth = daftarDate.getMonth() + 1; // 1-12
+          const daftarYear = daftarDate.getFullYear();
+          
+          // If selectedMonth is 0, show all months for the selected year
+          if (selectedMonth === 0) {
+            matchesDate = daftarYear === selectedYear;
+          } else {
+            matchesDate = daftarMonth === selectedMonth && daftarYear === selectedYear;
+          }
         } else {
-          matchesDate = daftarMonth === selectedMonth && daftarYear === selectedYear;
+          // Jika tanggal tidak valid, tampilkan semua (fallback)
+          matchesDate = true;
         }
+      } else {
+        // Jika tidak ada tanggal sama sekali, tampilkan semua (fallback)
+        matchesDate = true;
       }
-      return matchesDate;
+      
+      return matchesDate && matchesDesa;
     });
   };
 
@@ -128,26 +193,41 @@ function DaftarPemasangan() {
 
   const filteredData = pemasanganData.filter(pelanggan => {
     const matchesFilter = filterStatus === 'all' || pelanggan.status === filterStatus;
+    const matchesDesa = filterDesa === 'all' || pelanggan.desa === filterDesa;
     const matchesSearch = pelanggan.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          pelanggan.telepon.includes(searchTerm) ||
-                         pelanggan.alamat.toLowerCase().includes(searchTerm.toLowerCase());
+                         pelanggan.alamat.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (pelanggan.desa && pelanggan.desa.toLowerCase().includes(searchTerm.toLowerCase()));
     
     // Filter by month and year based on tanggal_daftar
     let matchesDate = true;
-    if (pelanggan.tanggal_daftar) {
-      const daftarDate = new Date(pelanggan.tanggal_daftar);
-      const daftarMonth = daftarDate.getMonth() + 1; // 1-12
-      const daftarYear = daftarDate.getFullYear();
+    
+    const tanggalDaftar = getTanggalDaftar(pelanggan);
+    
+    if (tanggalDaftar) {
+      const daftarDate = new Date(tanggalDaftar);
       
-      // If selectedMonth is 0, show all months for the selected year
-      if (selectedMonth === 0) {
-        matchesDate = daftarYear === selectedYear;
+      // Validasi apakah tanggal valid
+      if (!isNaN(daftarDate.getTime())) {
+        const daftarMonth = daftarDate.getMonth() + 1; // 1-12
+        const daftarYear = daftarDate.getFullYear();
+        
+        // If selectedMonth is 0, show all months for the selected year
+        if (selectedMonth === 0) {
+          matchesDate = daftarYear === selectedYear;
+        } else {
+          matchesDate = daftarMonth === selectedMonth && daftarYear === selectedYear;
+        }
       } else {
-        matchesDate = daftarMonth === selectedMonth && daftarYear === selectedYear;
+        // Jika tanggal tidak valid, tampilkan semua (fallback)
+        matchesDate = true;
       }
+    } else {
+      // Jika tidak ada tanggal sama sekali, tampilkan semua (fallback)
+      matchesDate = true;
     }
     
-    return matchesFilter && matchesSearch && matchesDate;
+    return matchesFilter && matchesDesa && matchesSearch && matchesDate;
   });
 
   const handleAddPelanggan = async () => {
@@ -172,6 +252,14 @@ function DaftarPemasangan() {
       alert('Agen harus dipilih');
       return;
     }
+    if (!newPelanggan.desa.trim()) {
+      alert('Desa harus dipilih');
+      return;
+    }
+    if (!newPelanggan.tanggal_daftar) {
+      alert('Tanggal daftar harus diisi');
+      return;
+    }
     
     setLoading(true);
     setError('');
@@ -189,7 +277,7 @@ function DaftarPemasangan() {
         
         if (response.ok) {
           await fetchPemasanganData(); // Refresh data
-          setNewPelanggan({ nama: '', telepon: '', alamat: '', agen: '' });
+          setNewPelanggan({ nama: '', telepon: '', alamat: '', desa: 'Desa Braja Gemilang', agen: '', tanggal_daftar: getCurrentDate() });
           setShowAddModal(false);
           showNotification(
             'success',
@@ -361,19 +449,6 @@ function DaftarPemasangan() {
     window.open(whatsappUrl, '_blank');
   };
 
-  // Get current date and time in format for HTML inputs
-  const getCurrentDate = () => {
-    const now = new Date();
-    return now.toISOString().split('T')[0]; // YYYY-MM-DD format
-  };
-
-  const getCurrentTime = () => {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`; // HH:MM format
-  };
-
   // Custom notification function
   const showNotification = (type, title, message, icon) => {
     setNotification({
@@ -392,7 +467,9 @@ function DaftarPemasangan() {
 
   const formatDate = (dateString) => {
     if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('id-ID');
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '-';
+    return date.toLocaleDateString('id-ID');
   };
 
   return (
@@ -500,6 +577,22 @@ function DaftarPemasangan() {
               ))}
             </select>
           </div>
+          
+          <div className="filter-group">
+            <i className="bi bi-geo-alt"></i>
+            <select 
+              value={filterDesa} 
+              onChange={(e) => setFilterDesa(e.target.value)}
+              className="date-select"
+            >
+              <option value="all">Semua Desa</option>
+              {daftarDesa.map(desa => (
+                <option key={desa} value={desa}>
+                  {desa}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         
         <div className="filter-buttons">
@@ -534,6 +627,7 @@ function DaftarPemasangan() {
                 <th>Nama Pelanggan</th>
                 <th>Telepon</th>
                 <th>Alamat</th>
+                <th>Desa</th>
                 <th>Agen</th>
                 <th>Tanggal Daftar</th>
                 <th>Tanggal Pasang</th>
@@ -577,12 +671,18 @@ function DaftarPemasangan() {
                     </div>
                   </td>
                   <td>
+                    <div className="desa-cell">
+                      <i className="bi bi-geo-alt"></i>
+                      <span className="desa-name">{pelanggan.desa || 'Desa Braja Gemilang'}</span>
+                    </div>
+                  </td>
+                  <td>
                     <div className="agen-cell">
                       <i className="bi bi-person-badge"></i>
                       <span className="agen-name">{pelanggan.agen || 'YOGA'}</span>
                     </div>
                   </td>
-                  <td>{formatDate(pelanggan.tanggal_daftar)}</td>
+                  <td>{formatDate(getTanggalDaftar(pelanggan))}</td>
                   <td>{formatDate(pelanggan.tanggal_pasang)}</td>
                   <td>
                     <span className={`status-badge ${pelanggan.status}`}>
@@ -693,6 +793,16 @@ function DaftarPemasangan() {
               </div>
               
               <div className="card-field">
+                <div className="card-field-label">Desa</div>
+                <div className="card-field-value">
+                  <span className="card-desa-badge">
+                    <i className="bi bi-geo-alt"></i>
+                    {pelanggan.desa || 'Desa Braja Gemilang'}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="card-field">
                 <div className="card-field-label">Agen</div>
                 <div className="card-field-value">
                   <span className="card-agen-badge">
@@ -714,7 +824,7 @@ function DaftarPemasangan() {
               
               <div className="card-field">
                 <div className="card-field-label">Tanggal Daftar</div>
-                <div className="card-field-value">{formatDate(pelanggan.tanggal_daftar)}</div>
+                <div className="card-field-value">{formatDate(getTanggalDaftar(pelanggan))}</div>
               </div>
               
               <div className="card-field">
@@ -742,7 +852,10 @@ function DaftarPemasangan() {
               
               <button 
                 className="card-action-btn edit"
-                onClick={() => handleEdit(pelanggan)}
+                onClick={() => {
+                  // TODO: Implement edit functionality
+                  alert('Fitur edit akan segera tersedia');
+                }}
               >
                 <i className="bi bi-pencil"></i>
                 Edit
@@ -750,7 +863,7 @@ function DaftarPemasangan() {
               
               <button 
                 className="card-action-btn delete"
-                onClick={() => handleDelete(pelanggan.id)}
+                onClick={() => handleDeletePelanggan(pelanggan.id)}
               >
                 <i className="bi bi-trash"></i>
                 Hapus
@@ -808,6 +921,21 @@ function DaftarPemasangan() {
                 />
               </div>
               <div className="form-group">
+                <label>Nama Desa</label>
+                <select
+                  value={newPelanggan.desa}
+                  onChange={(e) => setNewPelanggan({...newPelanggan, desa: e.target.value})}
+                  className="desa-select"
+                >
+                  <option value="">-- Pilih Desa --</option>
+                  {daftarDesa.map(desa => (
+                    <option key={desa} value={desa}>
+                      {desa}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
                 <label>Nama Agen</label>
                 <select
                   value={newPelanggan.agen}
@@ -821,6 +949,18 @@ function DaftarPemasangan() {
                     </option>
                   ))}
                 </select>
+              </div>
+              <div className="form-group">
+                <label>Tanggal Daftar</label>
+                <input
+                  type="date"
+                  value={newPelanggan.tanggal_daftar}
+                  onChange={(e) => setNewPelanggan({...newPelanggan, tanggal_daftar: e.target.value})}
+                />
+                <small className="form-help">
+                  <i className="bi bi-info-circle"></i>
+                  Otomatis terisi tanggal hari ini. Ubah jika pendaftaran di hari lain.
+                </small>
               </div>
             </div>
             <div className="modal-footer">
