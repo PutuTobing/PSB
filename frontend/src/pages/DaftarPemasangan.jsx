@@ -396,7 +396,7 @@ function DaftarPemasangan() {
   };
 
   return (
-    <div className="daftar-pemasangan container-fluid">
+    <div className="daftar-pemasangan">
       {/* Header Section */}
       <div className="page-header">
         <div className="header-content">
@@ -419,7 +419,7 @@ function DaftarPemasangan() {
               onClick={() => setShowAddModal(true)}
             >
               <i className="bi bi-plus-circle"></i>
-              <span className="btn-text">Tambah Pelanggan</span>
+              Tambah Pelanggan
             </button>
           </div>
         </div>
@@ -527,19 +527,19 @@ function DaftarPemasangan() {
       {/* Data Table */}
       <div className="table-container">
         <div className="table-responsive">
-          <table className="pemasangan-table table">
+          <table className="pemasangan-table">
             <thead>
               <tr>
-                <th className="text-center" style={{minWidth: '50px'}}>No</th>
-                <th style={{minWidth: '200px'}}>Nama Pelanggan</th>
-                <th style={{minWidth: '140px'}}>Telepon</th>
-                <th style={{minWidth: '200px'}}>Alamat</th>
-                <th className="text-center" style={{minWidth: '120px'}}>Agen</th>
-                <th className="text-center" style={{minWidth: '130px'}}>Tanggal Daftar</th>
-                <th className="text-center" style={{minWidth: '130px'}}>Tanggal Pasang</th>
-                <th className="text-center" style={{minWidth: '150px'}}>Status Pemasangan</th>
-                <th className="text-center" style={{minWidth: '120px'}}>Komisi Agen</th>
-                <th className="text-center" style={{minWidth: '120px'}}>Aksi</th>
+                <th>No</th>
+                <th>Nama Pelanggan</th>
+                <th>Telepon</th>
+                <th>Alamat</th>
+                <th>Agen</th>
+                <th>Tanggal Daftar</th>
+                <th>Tanggal Pasang</th>
+                <th>Status Pemasangan</th>
+                <th>Komisi Agen</th>
+                <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -665,6 +665,108 @@ function DaftarPemasangan() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Mobile Card Layout */}
+      <div className="mobile-card-container">
+        {filteredData.map((pelanggan, index) => (
+          <div key={pelanggan.id} className="customer-card">
+            <div className="card-number">{index + 1}</div>
+            
+            <div className="card-header">
+              <div className="card-avatar">
+                <i className="bi bi-person-circle"></i>
+              </div>
+              <div className="card-header-info">
+                <h4 className="card-customer-name">{pelanggan.nama}</h4>
+                <p className="card-customer-phone">
+                  <i className="bi bi-telephone"></i>
+                  {pelanggan.telepon}
+                </p>
+              </div>
+            </div>
+            
+            <div className="card-body">
+              <div className="card-field full-width">
+                <div className="card-field-label">Alamat</div>
+                <div className="card-field-value card-address">{pelanggan.alamat}</div>
+              </div>
+              
+              <div className="card-field">
+                <div className="card-field-label">Agen</div>
+                <div className="card-field-value">
+                  <span className="card-agen-badge">
+                    <i className="bi bi-person-badge"></i>
+                    {pelanggan.agen}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="card-field">
+                <div className="card-field-label">Status</div>
+                <div className="card-field-value">
+                  <span className={`card-status-badge ${pelanggan.status_pemasangan}`}>
+                    <i className={`bi ${pelanggan.status_pemasangan === 'terpasang' ? 'bi-check-circle' : 'bi-clock'}`}></i>
+                    {pelanggan.status_pemasangan === 'menunggu' ? 'Menunggu' : 'Terpasang'}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="card-field">
+                <div className="card-field-label">Tanggal Daftar</div>
+                <div className="card-field-value">{formatDate(pelanggan.tanggal_daftar)}</div>
+              </div>
+              
+              <div className="card-field">
+                <div className="card-field-label">Tanggal Pasang</div>
+                <div className="card-field-value">{formatDate(pelanggan.tanggal_pasang)}</div>
+              </div>
+            </div>
+            
+            <div className="card-footer">
+              <button 
+                className="card-action-btn whatsapp"
+                onClick={() => openWhatsApp(pelanggan.telepon)}
+              >
+                <i className="bi bi-whatsapp"></i>
+                WhatsApp
+              </button>
+              
+              <button 
+                className="card-action-btn komisi"
+                onClick={() => handleKomisiClick(pelanggan)}
+              >
+                <i className="bi bi-cash-coin"></i>
+                Komisi
+              </button>
+              
+              <button 
+                className="card-action-btn edit"
+                onClick={() => handleEdit(pelanggan)}
+              >
+                <i className="bi bi-pencil"></i>
+                Edit
+              </button>
+              
+              <button 
+                className="card-action-btn delete"
+                onClick={() => handleDelete(pelanggan.id)}
+              >
+                <i className="bi bi-trash"></i>
+                Hapus
+              </button>
+            </div>
+            
+            {pelanggan.komisi_dibayar && (
+              <div className="card-komisi-info">
+                <span className="card-komisi-badge">
+                  <i className="bi bi-check-circle"></i>
+                  Komisi Dibayar
+                </span>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
 
       {/* Add Customer Modal */}

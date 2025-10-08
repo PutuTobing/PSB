@@ -1,13 +1,57 @@
-/* Daftar Pemasangan Styles */
+/* Daftar Pemasangan Styles - Full Width Responsive */
 .daftar-pemasangan {
-  padding: 20px;
-  max-width: 1200px;
   width: 100%;
-  margin: 0 auto;
+  padding: 16px 20px;
   background: #f8fafc;
   min-height: 100vh;
   box-sizing: border-box;
-  position: relative;
+  overflow-x: hidden;
+}
+
+/* Desktop Layout (>1366px) - Keep Original Full Layout */
+@media (min-width: 1367px) {
+  .daftar-pemasangan {
+    padding: 24px 32px;
+  }
+  
+  /* Restore all columns and original styling for desktop */
+  .pemasangan-table th:nth-child(9),
+  .pemasangan-table td:nth-child(9) {
+    display: table-cell;
+  }
+  
+  /* Restore proper last column border for desktop */
+  .pemasangan-table th:nth-child(10),
+  .pemasangan-table td:nth-child(10) {
+    border-right: none;
+  }
+  
+  .pemasangan-table th,
+  .pemasangan-table td {
+    padding: 15px 12px;
+    font-size: 14px;
+  }
+}
+
+/* Laptop Layout (1024px-1280px) */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .daftar-pemasangan {
+    padding: 20px 24px;
+  }
+}
+
+/* Tablet Layout (768px-1024px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .daftar-pemasangan {
+    padding: 18px 20px;
+  }
+}
+
+/* Mobile Layout (<768px) */
+@media (max-width: 767px) {
+  .daftar-pemasangan {
+    padding: 12px 16px;
+  }
 }
 
 /* Page Header */
@@ -300,37 +344,168 @@
   color: white;
 }
 
-/* Table Container */
+/* Table Container - Full Width */
 .table-container {
+  width: 100%;
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
+  margin-bottom: 20px;
 }
 
 .table-responsive {
+  width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .pemasangan-table {
   width: 100%;
+  min-width: 100%;
   border-collapse: collapse;
+  table-layout: auto;
+  border: 1px solid #e5e7eb;
+}
+
+/* Desktop Table - Full Width Usage */
+@media (min-width: 1280px) {
+  .table-responsive {
+    overflow-x: visible;
+  }
+  
+  .pemasangan-table {
+    min-width: 100%;
+    table-layout: fixed;
+  }
+  
+  .pemasangan-table th:nth-child(1) { width: 5%; }    /* No */
+  .pemasangan-table th:nth-child(2) { width: 18%; }   /* Nama Pelanggan */
+  .pemasangan-table th:nth-child(3) { width: 12%; }   /* Telepon */
+  .pemasangan-table th:nth-child(4) { width: 20%; }   /* Alamat */
+  .pemasangan-table th:nth-child(5) { width: 10%; }   /* Agen */
+  .pemasangan-table th:nth-child(6) { width: 10%; }   /* Tanggal Daftar */
+  .pemasangan-table th:nth-child(7) { width: 10%; }   /* Tanggal Pasang */
+  .pemasangan-table th:nth-child(8) { width: 10%; }   /* Status */
+  .pemasangan-table th:nth-child(9) { width: 8%; }    /* Komisi */
+  .pemasangan-table th:nth-child(10) { width: 7%; }   /* Aksi */
+  
+  .pemasangan-table th,
+  .pemasangan-table td {
+    white-space: normal;
+    word-wrap: break-word;
+    padding: 15px 12px;
+  }
+  
+  .address-cell {
+    max-width: none;
+    word-wrap: break-word;
+    line-height: 1.4;
+  }
+}
+
+/* Laptop Layout - Conservative Fix (1024px-1366px) */
+@media (min-width: 1024px) and (max-width: 1366px) {
+  /* Reduce padding to save space */
+  .pemasangan-table th,
+  .pemasangan-table td {
+    padding: 10px 6px;
+    font-size: 13px;
+  }
+  
+  /* Hide Komisi Agen column on laptop to save space */
+  .pemasangan-table th:nth-child(9),
+  .pemasangan-table td:nth-child(9) {
+    display: none;
+  }
+  
+  /* Adjust last visible column border after hiding column 9 */
+  .pemasangan-table th:nth-child(10),
+  .pemasangan-table td:nth-child(10) {
+    border-right: none;
+  }
+  
+  /* Slightly smaller font for content */
+  .customer-name {
+    font-size: 13px;
+  }
+  
+  .phone-number {
+    font-size: 12px;
+  }
+  
+  .address-cell {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  
+  .agen-name {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+  
+  .status-badge {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  
+  .teknisi-info {
+    font-size: 11px;
+  }
+}
+
+/* Tablet Table - Hide Some Columns (768px-1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pemasangan-table {
+    min-width: 900px;
+  }
+  
+  /* Hide Tanggal Daftar and Komisi columns on tablet */
+  .pemasangan-table th:nth-child(6),
+  .pemasangan-table td:nth-child(6),
+  .pemasangan-table th:nth-child(9),
+  .pemasangan-table td:nth-child(9) {
+    display: none;
+  }
+  
+  /* Adjust last visible column border after hiding columns */
+  .pemasangan-table th:nth-child(10),
+  .pemasangan-table td:nth-child(10) {
+    border-right: none;
+  }
+  
+  .pemasangan-table th,
+  .pemasangan-table td {
+    padding: 12px 10px;
+    font-size: 13px;
+  }
 }
 
 .pemasangan-table th {
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  padding: 18px 15px;
+  padding: 15px 12px;
   text-align: left;
   font-weight: 600;
   color: #1e293b;
   font-size: 14px;
   border-bottom: 2px solid #e2e8f0;
+  border-right: 1px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+.pemasangan-table th:last-child {
+  border-right: none;
 }
 
 .pemasangan-table td {
-  padding: 15px;
+  padding: 15px 12px;
   border-bottom: 1px solid #f1f5f9;
+  border-right: 1px solid #e5e7eb;
   vertical-align: middle;
+}
+
+.pemasangan-table td:last-child {
+  border-right: none;
 }
 
 .pemasangan-table tbody tr:hover {
@@ -747,703 +922,131 @@
 }
 
 /* Responsive Design */
-
-/* Large Desktop */
-@media (min-width: 1400px) {
-  .daftar-pemasangan {
-    max-width: 1400px;
-    padding: 25px;
-  }
-  
-  .stats-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-  }
-  
-  .table-controls {
-    padding: 25px;
-  }
-}
-
-/* Desktop */
-@media (min-width: 1200px) and (max-width: 1399px) {
-  .daftar-pemasangan {
-    max-width: 1200px;
-  }
-}
-
-/* Tablet Landscape */
-@media (min-width: 992px) and (max-width: 1199px) {
-  .daftar-pemasangan {
-    padding: 20px;
-    max-width: 100%;
-  }
-  
-  .stats-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-  
-  .table-controls {
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-  
-  .search-box {
-    flex: 1;
-    min-width: 250px;
-  }
-  
-  .date-filters {
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-}
-
-/* Tablet Portrait */
-@media (min-width: 768px) and (max-width: 991px) {
-  .daftar-pemasangan {
-    padding: 18px;
-  }
-  
-  .page-header {
-    padding: 25px;
-  }
-  
-  .header-content {
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .header-info {
-    align-items: flex-start;
-  }
-  
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
-  }
-  
-  .table-controls {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 15px;
-  }
-  
-  .search-box {
-    max-width: none;
-  }
-  
-  .date-filters {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-  
-  .filter-group {
-    flex: 1;
-    margin: 0 5px;
-  }
-  
-  .filter-buttons {
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-}
-
-/* Mobile Landscape & Large Mobile */
-@media (min-width: 576px) and (max-width: 767px) {
+@media (max-width: 768px) {
   .daftar-pemasangan {
     padding: 15px;
   }
-  
+
   .page-header {
     padding: 20px;
     margin-bottom: 20px;
   }
-  
-  .header-content {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 15px;
-  }
-  
-  .header-info {
-    flex-direction: row;
-    align-items: center;
-    text-align: left;
-    gap: 15px;
-  }
-  
-  .header-icon {
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-  }
-  
-  .header-text h1 {
-    font-size: 22px;
-  }
-  
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-  }
-  
-  .stat-card {
-    padding: 18px;
-  }
-  
-  .stat-number {
-    font-size: 28px;
-  }
-  
-  .table-controls {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 15px;
-    padding: 18px;
-  }
-  
-  .date-filters {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    width: 100%;
-  }
-  
-  .filter-group {
-    min-width: auto;
-  }
-}
 
-/* Mobile Portrait */
-@media (max-width: 575px) {
-  .daftar-pemasangan {
-    padding: 10px;
-    background: #f8fafc;
-  }
-  
-  .page-header {
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 16px;
-  }
-  
   .header-content {
     flex-direction: column;
     align-items: stretch;
-    gap: 15px;
   }
-  
+
   .header-info {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 12px;
+    gap: 15px;
   }
-  
-  .header-icon {
-    width: 45px;
-    height: 45px;
-    font-size: 20px;
-  }
-  
+
   .header-text h1 {
-    font-size: 20px;
-    margin-bottom: 3px;
+    font-size: 24px;
   }
-  
-  .header-text p {
-    font-size: 14px;
-  }
-  
-  .period-badge {
-    font-size: 11px;
-    padding: 4px 10px;
-  }
-  
-  .header-actions .btn {
-    width: 100%;
-    justify-content: center;
-    padding: 12px 20px;
-  }
-  
+
   .stats-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 15px;
   }
-  
+
   .stat-card {
-    padding: 15px;
-    border-radius: 12px;
+    padding: 20px;
   }
-  
-  .stat-icon {
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-  }
-  
-  .stat-number {
-    font-size: 24px;
-  }
-  
-  .stat-label {
-    font-size: 13px;
-  }
-  
+
   .table-controls {
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
-    padding: 15px;
-    border-radius: 12px;
+    gap: 15px;
   }
-  
+
   .search-box {
     max-width: none;
   }
-  
-  .search-box input {
-    padding: 10px 12px 10px 40px;
-    font-size: 14px;
-  }
-  
+
   .date-filters {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    justify-content: center;
     width: 100%;
-  }
-  
-  .filter-group {
-    width: 100%;
-    padding: 8px 12px;
-  }
-  
-  .date-select {
-    min-width: auto;
-    width: 100%;
-    padding: 5px 8px;
-  }
-  
-  .filter-buttons {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-top: 5px;
-  }
-  
-  .filter-btn {
-    padding: 8px 12px;
-    font-size: 12px;
-    text-align: center;
   }
 
-  
-  /* Table Responsive Design */
-  .table-container {
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 20px;
+  .filter-group {
+    flex: 1;
+    min-width: 140px;
   }
-  
-  .table-responsive {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+
+  .filter-buttons {
+    justify-content: center;
+    flex-wrap: wrap;
   }
-  
-  .pemasangan-table {
-    min-width: 900px;
-  }
-  
+
   .pemasangan-table th,
   .pemasangan-table td {
-    padding: 8px 6px;
-    font-size: 12px;
-    white-space: nowrap;
-  }
-  
-  .customer-info {
-    min-width: 120px;
-  }
-  
-  .customer-avatar {
-    font-size: 24px;
-  }
-  
-  .customer-name {
+    padding: 10px 8px;
     font-size: 13px;
   }
-  
-  .teknisi-info {
-    font-size: 10px;
+
+  .customer-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
-  
+
   .phone-actions {
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
-    min-width: 100px;
-  }
-  
-  .phone-number {
-    font-size: 11px;
-  }
-  
-  .whatsapp-btn {
-    padding: 4px 8px;
-    font-size: 14px;
-  }
-  
-  .address-cell {
-    max-width: 120px;
-    font-size: 11px;
-  }
-  
-  .agen-cell {
-    min-width: 80px;
-  }
-  
-  .agen-name {
-    font-size: 10px;
-    padding: 2px 6px;
-  }
-  
-  .status-badge {
-    font-size: 10px;
-    padding: 4px 8px;
-  }
-  
-  .komisi-badge {
-    font-size: 9px;
-    padding: 3px 6px;
-  }
-  
-  .komisi-btn {
-    width: 24px;
-    height: 24px;
-    font-size: 12px;
-  }
-  
-  .action-buttons {
-    flex-direction: column;
-    gap: 4px;
-  }
-  
-  .action-btn {
-    padding: 6px 8px;
-    font-size: 12px;
+    gap: 5px;
   }
 
-  /* Modal Responsive */
-  .modal-overlay {
-    padding: 10px;
-    align-items: flex-start;
-    padding-top: 50px;
+  .address-cell {
+    max-width: 150px;
   }
-  
-  .modal-content {
-    margin: 0;
-    width: 100%;
-    max-width: 100%;
-    max-height: calc(100vh - 100px);
-    border-radius: 16px;
-  }
-  
-  .modal-header {
-    padding: 15px 20px 12px;
+
+  .action-buttons {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+    gap: 5px;
   }
-  
-  .modal-header h3 {
-    font-size: 16px;
+
+  .modal-content {
+    margin: 15px;
+    width: calc(100% - 30px);
   }
-  
-  .modal-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-  }
-  
-  .modal-body {
-    padding: 15px 20px;
-    max-height: calc(100vh - 200px);
-    overflow-y: auto;
-  }
-  
+
+  .modal-header,
+  .modal-body,
   .modal-footer {
     padding: 15px 20px;
+  }
+
+  .modal-footer {
     flex-direction: column;
-    gap: 10px;
-  }
-  
-  .modal-footer .btn {
-    width: 100%;
-    justify-content: center;
-    padding: 12px 20px;
-  }
-  
-  /* Komisi Dialog Responsive */
-  .komisi-dialog {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    border-radius: 16px;
-  }
-  
-  .komisi-dialog-header {
-    padding: 15px 20px 12px;
-  }
-  
-  .komisi-dialog-header h3 {
-    font-size: 16px;
-  }
-  
-  .komisi-dialog-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-  }
-  
-  .komisi-dialog-body {
-    padding: 15px 20px;
-  }
-  
-  .customer-info-card {
-    flex-direction: column;
-    text-align: center;
-    gap: 12px;
-    padding: 15px;
-  }
-  
-  .customer-avatar-large {
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-  }
-  
-  .customer-details-card h4 {
-    font-size: 16px;
-  }
-  
-  .customer-details-card p {
-    font-size: 13px;
-  }
-  
-  .komisi-question {
-    padding: 15px;
-    margin-bottom: 20px;
-  }
-  
-  .komisi-question h4 {
-    font-size: 16px;
-  }
-  
-  .komisi-question p {
-    font-size: 13px;
-  }
-  
-  .komisi-dialog-actions {
-    flex-direction: column;
-    padding: 0 20px 20px;
-    gap: 12px;
-  }
-  
-  .btn-komisi {
-    width: 100%;
-    padding: 12px 16px;
-    font-size: 14px;
-  }
-  
-  /* Form Responsive */
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    font-size: 14px;
-    margin-bottom: 6px;
-  }
-  
-  .form-group input,
-  .form-group textarea,
-  .agen-select {
-    padding: 10px 12px;
-    font-size: 14px;
-    border-radius: 8px;
-  }
-  
-  .form-help {
-    font-size: 11px;
-    margin-top: 4px;
-  }
-  
-  .customer-summary {
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-  }
-  
-  .customer-summary h4 {
-    font-size: 15px;
-  }
-  
-  .customer-summary p {
-    font-size: 13px;
-  }
-  
-  /* Custom Notification Mobile */
-  .custom-notification {
-    top: 10px;
-    right: 10px;
-    left: 10px;
-    width: auto;
-    max-width: none;
-    border-radius: 12px;
-  }
-  
-  .notification-content {
-    padding: 15px;
-    gap: 12px;
-  }
-  
-  .notification-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-  }
-  
-  .notification-title {
-    font-size: 15px;
-  }
-  
-  .notification-message {
-    font-size: 13px;
-  }
-  
-  .notification-close {
-    width: 30px;
-    height: 30px;
-  }
-  
-  .notification-progress {
-    height: 4px;
   }
 }
 
-/* Extra Small Mobile */
 @media (max-width: 480px) {
-  .daftar-pemasangan {
-    padding: 8px;
-  }
-  
-  .page-header {
-    padding: 12px;
-    margin-bottom: 12px;
-  }
-  
-  .header-text h1 {
-    font-size: 18px;
-  }
-  
-  .header-text p {
-    font-size: 13px;
-  }
-  
-  .stats-grid {
-    gap: 10px;
-  }
-  
-  .stat-card {
-    padding: 12px;
-  }
-  
-  .stat-icon {
-    width: 45px;
-    height: 45px;
-    font-size: 20px;
-  }
-  
-  .stat-number {
-    font-size: 20px;
-  }
-  
-  .stat-label {
-    font-size: 12px;
-  }
-  
-  .table-controls {
-    padding: 12px;
-    gap: 10px;
-  }
-  
-  .search-box input {
-    padding: 8px 10px 8px 35px;
-    font-size: 13px;
-  }
-  
-  .filter-group {
-    padding: 6px 10px;
-  }
-  
-  .date-select {
-    font-size: 12px;
-    padding: 4px 6px;
-  }
-  
-  .filter-btn {
-    padding: 6px 10px;
-    font-size: 11px;
-  }
-  
   .pemasangan-table {
-    font-size: 11px;
-    min-width: 800px;
+    font-size: 12px;
   }
-  
+
   .pemasangan-table th,
   .pemasangan-table td {
-    padding: 6px 4px;
+    padding: 8px 5px;
   }
-  
-  .customer-name {
-    font-size: 12px;
+
+  .customer-avatar {
+    font-size: 24px;
   }
-  
-  .teknisi-info {
-    font-size: 9px;
+
+  .stat-number {
+    font-size: 24px;
   }
-  
-  .phone-number {
-    font-size: 10px;
-  }
-  
-  .address-cell {
-    max-width: 100px;
-    font-size: 10px;
-  }
-  
-  .agen-name {
-    font-size: 9px;
-  }
-  
-  .status-badge {
-    font-size: 9px;
-    padding: 3px 6px;
-  }
-  
-  .komisi-badge {
-    font-size: 8px;
-    padding: 2px 4px;
-  }
-  
-  .action-btn {
-    padding: 4px 6px;
-    font-size: 10px;
+
+  .header-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
   }
 }
 
@@ -2131,103 +1734,181 @@
   }
 }
 
-/* Enhanced Mobile Responsive Design */
-
-/* Better Mobile Table Handling */
-@media (max-width: 991px) {
+/* ===== MOBILE CARD LAYOUT (<768px) ===== */
+@media (max-width: 767px) {
+  /* Hide Table, Show Cards */
   .table-container {
-    margin: 0 -10px;
-    border-radius: 0;
-  }
-  
-  .table-responsive {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: #cbd5e0 #f7fafc;
-  }
-  
-  .table-responsive::-webkit-scrollbar {
-    height: 8px;
-  }
-  
-  .table-responsive::-webkit-scrollbar-track {
-    background: #f7fafc;
-    border-radius: 10px;
-  }
-  
-  .table-responsive::-webkit-scrollbar-thumb {
-    background: #cbd5e0;
-    border-radius: 10px;
-  }
-  
-  .table-responsive::-webkit-scrollbar-thumb:hover {
-    background: #a0aec0;
-  }
-  
-  .pemasangan-table {
-    min-width: 1000px;
-    font-size: 13px;
-  }
-  
-  .pemasangan-table th {
-    position: sticky;
-    top: 0;
-    background: #f8fafc;
-    z-index: 10;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 12px 8px;
-    border-bottom: 2px solid #e2e8f0;
-  }
-  
-  .pemasangan-table td {
-    padding: 10px 8px;
-    vertical-align: middle;
-  }
-}
-
-/* Enhanced Mobile Portrait */
-@media (max-width: 575px) {
-  .header-actions .btn .btn-text {
     display: none;
   }
   
-  .header-actions .btn {
-    width: auto;
-    padding: 10px 12px;
-    border-radius: 50%;
-    min-width: 44px;
-    height: 44px;
+  .mobile-card-container {
+    display: block;
+    width: 100%;
   }
   
-  .header-actions .btn i {
-    margin-right: 0;
-    font-size: 18px;
+  .customer-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #4f46e5;
+    animation: fadeInUp 0.3s ease-out;
   }
-}
-
-/* Toggle Button for Mobile View */
-@media (max-width: 767px) {
-  .view-toggle {
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .card-avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin-bottom: 15px;
-    padding: 8px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    color: white;
+    font-size: 20px;
+    flex-shrink: 0;
   }
   
-  .toggle-btn {
+  .card-header-info {
     flex: 1;
-    padding: 8px 16px;
-    font-size: 13px;
-    border: 1px solid #e2e8f0;
-    background: white;
+    min-width: 0;
+  }
+  
+  .card-customer-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a202c;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+  }
+  
+  .card-customer-phone {
+    font-size: 14px;
     color: #64748b;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .card-number {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+  
+  .card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+    margin-bottom: 16px;
+  }
+  
+  .card-field {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-field.full-width {
+    grid-column: 1 / -1;
+  }
+  
+  .card-field-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  
+  .card-field-value {
+    font-size: 14px;
+    color: #1e293b;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  
+  .card-address {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  
+  .card-agen-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  
+  .card-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .card-status-badge.menunggu {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  
+  .card-status-badge.terpasang {
+    background: #dcfce7;
+    color: #166534;
+  }
+  
+  .card-footer {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  .card-action-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -2237,94 +1918,75 @@
     gap: 6px;
   }
   
-  .toggle-btn.active {
-    background: #4f46e5;
+  .card-action-btn.whatsapp {
+    background: #25d366;
     color: white;
-    border-color: #4f46e5;
   }
   
-  .toggle-btn i {
-    font-size: 14px;
+  .card-action-btn.whatsapp:hover {
+    background: #20b954;
+    transform: translateY(-1px);
+  }
+  
+  .card-action-btn.komisi {
+    background: #f59e0b;
+    color: white;
+  }
+  
+  .card-action-btn.komisi:hover {
+    background: #d97706;
+    transform: translateY(-1px);
+  }
+  
+  .card-action-btn.edit {
+    background: #3b82f6;
+    color: white;
+  }
+  
+  .card-action-btn.edit:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+  }
+  
+  .card-action-btn.delete {
+    background: #ef4444;
+    color: white;
+  }
+  
+  .card-action-btn.delete:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+  }
+  
+  .card-komisi-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  .card-komisi-badge {
+    background: #dcfce7;
+    color: #166534;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  
+  .card-komisi-badge.belum {
+    background: #fef3c7;
+    color: #92400e;
   }
 }
 
-/* Better spacing for small screens */
-@media (max-width: 480px) {
-  .daftar-pemasangan {
-    padding: 8px;
+/* Desktop View - Show Table, Hide Cards */
+@media (min-width: 768px) {
+  .mobile-card-container {
+    display: none;
   }
   
-  .page-header {
-    margin-bottom: 12px;
-  }
-  
-  .stats-grid {
-    margin-bottom: 15px;
-  }
-  
-  .table-controls {
-    margin-bottom: 15px;
-  }
-  
-  .search-box input {
-    border-radius: 10px;
-  }
-  
-  .date-select {
-    border-radius: 8px;
-  }
-}
-
-/* Print Styles */
-@media print {
-  .daftar-pemasangan {
-    padding: 0;
-    background: white !important;
-    color: black !important;
-  }
-  
-  .page-header {
-    background: white !important;
-    color: black !important;
-    box-shadow: none !important;
-    border: 1px solid #ccc;
-  }
-  
-  .header-actions,
-  .table-controls,
-  .action-buttons,
-  .whatsapp-btn,
-  .komisi-btn {
-    display: none !important;
-  }
-  
-  .stats-grid {
-    grid-template-columns: repeat(3, 1fr);
-    page-break-inside: avoid;
-  }
-  
-  .stat-card {
-    border: 1px solid #ddd;
-    box-shadow: none !important;
-  }
-  
-  .pemasangan-table {
-    border-collapse: collapse;
-    width: 100%;
-  }
-  
-  .pemasangan-table th,
-  .pemasangan-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    font-size: 12px;
-  }
-}
-
-/* High DPI Displays */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .daftar-pemasangan {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  .table-container {
+    display: block;
   }
 }
