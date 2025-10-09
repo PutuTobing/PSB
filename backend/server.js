@@ -227,6 +227,35 @@ app.post('/api/pemasangan', (req, res) => {
     });
 });
 
+// Update pelanggan data (edit)
+app.put('/api/pemasangan/:id', (req, res) => {
+    const { id } = req.params;
+    const { nama, telepon, alamat, desa, agen, tanggal_daftar } = req.body;
+    
+    if (!nama || !telepon || !alamat || !desa || !agen || !tanggal_daftar) {
+        return res.status(400).json({ message: 'Semua field harus diisi' });
+    }
+    
+    const query = `
+        UPDATE pemasangan 
+        SET nama = ?, telepon = ?, alamat = ?, desa = ?, agen = ?, tanggal_daftar = ?
+        WHERE id = ?
+    `;
+    
+    db.query(query, [nama, telepon, alamat, desa, agen, tanggal_daftar, id], (err, result) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Pelanggan tidak ditemukan' });
+        }
+        
+        res.json({ message: 'Data pelanggan berhasil diperbarui' });
+    });
+});
+
 // Update pemasangan status (konfirmasi)
 app.put('/api/pemasangan/:id/konfirmasi', (req, res) => {
     const { id } = req.params;

@@ -409,8 +409,10 @@
 .pemasangan-table th:nth-child(10) { width: 110px; }   /* Komisi Agen */
 .pemasangan-table th:nth-child(11) { width: 90px; }    /* Aksi */
 
-/* Center align untuk kolom nomor */
+/* Center align untuk kolom nomor dan tanggal */
 .pemasangan-table td:nth-child(1) { text-align: center; }     /* No - rata tengah */
+.pemasangan-table td:nth-child(7) { text-align: center; }     /* Tanggal Daftar - rata tengah */
+.pemasangan-table td:nth-child(8) { text-align: center; }     /* Tanggal Pasang - rata tengah */
 
 /* Desktop Table - Full Width Usage */
 @media (min-width: 1280px) {
@@ -433,10 +435,13 @@
   .pemasangan-table th:nth-child(8) { width: 8%; text-align: center; }    /* Tanggal Pasang */
   .pemasangan-table th:nth-child(9) { width: 9%; text-align: center; }    /* Status */
   .pemasangan-table th:nth-child(10) { width: 9%; text-align: center; }   /* Komisi */
-  .pemasangan-table th:nth-child(11) { width: 7%; text-align: center; }   /* Aksi */
+  .pemasangan-table th:nth-child(11) { width: 8%; text-align: center; }   /* Aksi */
   
-  /* Center align untuk kolom nomor di desktop */
+  /* Center align untuk kolom nomor dan tanggal di desktop */
   .pemasangan-table td:nth-child(1) { text-align: center; }     /* No - rata tengah */
+  .pemasangan-table td:nth-child(7) { text-align: center; }     /* Tanggal Daftar - rata tengah */
+  .pemasangan-table td:nth-child(8) { text-align: center; }     /* Tanggal Pasang - rata tengah */
+  
   
   .pemasangan-table th,
   .pemasangan-table td {
@@ -470,7 +475,13 @@
   /* Adjust last visible column border after hiding column 9 */
   .pemasangan-table th:nth-child(10),
   .pemasangan-table td:nth-child(10) {
-    border-right: none;
+    border-right: 1px solid #e5e7eb !important;
+  }
+  
+  /* Kolom Aksi tetap tanpa border kanan */
+  .pemasangan-table th:nth-child(11),
+  .pemasangan-table td:nth-child(11) {
+    border-right: none !important;
   }
   
   /* Laptop specific optimizations */
@@ -555,6 +566,18 @@
 
 .pemasangan-table td:last-child {
   border-right: none;
+}
+
+/* Pastikan kolom Komisi Agen (kolom ke-10) memiliki border kanan */
+.pemasangan-table th:nth-child(10),
+.pemasangan-table td:nth-child(10) {
+  border-right: 1px solid #e5e7eb !important;
+}
+
+/* Kolom Aksi (kolom ke-11) tidak memiliki border kanan */
+.pemasangan-table th:nth-child(11),
+.pemasangan-table td:nth-child(11) {
+  border-right: none !important;
 }
 
 .pemasangan-table tbody tr:hover {
@@ -799,6 +822,16 @@
 .action-btn.confirm:hover {
   transform: scale(1.1);
   box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.action-btn.edit {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+}
+
+.action-btn.edit:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
 }
 
 .action-btn.delete {
@@ -1082,6 +1115,12 @@
     font-size: 13px;
   }
 
+  /* Center align untuk tanggal di tablet */
+  .pemasangan-table td:nth-child(7),
+  .pemasangan-table td:nth-child(8) {
+    text-align: center;
+  }
+
   .customer-info {
     flex-direction: column;
     align-items: flex-start;
@@ -1127,6 +1166,12 @@
   .pemasangan-table th,
   .pemasangan-table td {
     padding: 8px 5px;
+  }
+
+  /* Center align untuk tanggal di mobile */
+  .pemasangan-table td:nth-child(7),
+  .pemasangan-table td:nth-child(8) {
+    text-align: center;
   }
 
   .customer-avatar {
@@ -1382,57 +1427,78 @@
   border-color: #8b5cf6;
 }
 
-/* Custom Notification Styles */
+/* Custom Notification Styles - Enhanced Visibility */
 .custom-notification {
   position: fixed;
   top: 20px;
   right: 20px;
-  width: 400px;
+  width: 420px;
   max-width: 90vw;
   background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 20px 10px rgba(0, 0, 0, 0.25);
-  border-left: 6px solid #e2e8f0;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 8px 25px rgba(0, 0, 0, 0.2);
+  border-left: 8px solid #e2e8f0;
   transform: translateX(100%);
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  z-index: 1000;
+  z-index: 9999;
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
 }
 
 .custom-notification.show {
   transform: translateX(0);
+  animation: slideInBounce 0.6s ease-out;
+}
+
+@keyframes slideInBounce {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-10px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .custom-notification.success {
   border-left-color: #10b981;
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
 }
 
 .custom-notification.error {
   border-left-color: #ef4444;
+  background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
 }
 
 .custom-notification.info {
   border-left-color: #3b82f6;
+  background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
 }
 
 .notification-content {
   display: flex;
   align-items: flex-start;
-  padding: 20px;
-  gap: 15px;
+  padding: 25px;
+  gap: 18px;
 }
 
 .notification-icon {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 24px;
   flex-shrink: 0;
   position: relative;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .custom-notification.success .notification-icon {
@@ -1477,17 +1543,19 @@
 }
 
 .notification-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 4px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 6px;
   line-height: 1.3;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .notification-message {
-  font-size: 14px;
-  color: #64748b;
-  line-height: 1.4;
+  font-size: 15px;
+  color: #475569;
+  line-height: 1.5;
+  font-weight: 500;
 }
 
 .notification-close {
@@ -1511,10 +1579,20 @@
 }
 
 .notification-progress {
-  height: 4px;
+  height: 6px;
   background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
   position: relative;
   overflow: hidden;
+  animation: progressBar 3s linear;
+}
+
+@keyframes progressBar {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
 }
 
 .custom-notification.success .notification-progress {
@@ -1549,25 +1627,37 @@
   }
 }
 
-/* Responsive Notification */
+/* Responsive Notification - Enhanced Mobile */
 @media (max-width: 768px) {
   .custom-notification {
-    top: 10px;
-    right: 10px;
-    left: 10px;
+    top: 15px;
+    right: 15px;
+    left: 15px;
     width: auto;
     max-width: none;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-left-width: 6px;
   }
 
   .notification-content {
-    padding: 16px;
-    gap: 12px;
+    padding: 20px;
+    gap: 15px;
   }
 
   .notification-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+  }
+
+  .notification-title {
+    font-size: 17px;
+    font-weight: 800;
+  }
+
+  .notification-message {
+    font-size: 14px;
+    font-weight: 500;
   }
 
   .notification-title {
@@ -1828,6 +1918,297 @@
   }
 }
 
+/* Delete Confirmation Dialog */
+.delete-dialog {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 8px 16px rgba(0, 0, 0, 0.15);
+  width: 420px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow: hidden;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  animation: deleteModalSlideIn 0.4s ease-out;
+}
+
+@keyframes deleteModalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.delete-dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px 15px;
+  background: linear-gradient(135deg, #fef2f2, #fee2e2);
+  border-bottom: 1px solid #fecaca;
+  position: relative;
+}
+
+.delete-dialog-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  animation: shake 0.6s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+.delete-dialog-header h3 {
+  flex: 1;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #991b1b;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.delete-dialog-header .modal-close {
+  background: rgba(239, 68, 68, 0.1);
+  border: none;
+  color: #dc2626;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.delete-dialog-header .modal-close:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: scale(1.1);
+}
+
+.delete-dialog-body {
+  padding: 20px;
+}
+
+.delete-customer-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  border-radius: 12px;
+  margin-bottom: 18px;
+  border: 1px solid #cbd5e1;
+}
+
+.delete-customer-avatar {
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, #64748b, #475569);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.delete-customer-details {
+  flex: 1;
+}
+
+.delete-customer-details h4 {
+  margin: 0 0 6px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.delete-customer-details p {
+  margin: 3px 0;
+  color: #64748b;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.delete-customer-details i {
+  color: #ef4444;
+  width: 14px;
+  font-size: 12px;
+}
+
+.delete-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 15px;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-radius: 12px;
+  border: 1px solid #f59e0b;
+  margin-bottom: 20px;
+}
+
+.warning-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+}
+
+.warning-text h4 {
+  margin: 0 0 6px 0;
+  color: #92400e;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.warning-text p {
+  margin: 0;
+  color: #a16207;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.delete-dialog-actions {
+  display: flex;
+  gap: 12px;
+  padding: 0 20px 20px;
+}
+
+.btn-delete-cancel,
+.btn-delete-confirm {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.btn-delete-cancel {
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  color: #64748b;
+  border: 2px solid #cbd5e1;
+}
+
+.btn-delete-cancel:hover {
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn-delete-confirm {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+}
+
+.btn-delete-confirm:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(239, 68, 68, 0.5);
+}
+
+.btn-delete-cancel i,
+.btn-delete-confirm i {
+  font-size: 14px;
+}
+
+/* Responsive Delete Dialog */
+@media (max-width: 768px) {
+  .delete-dialog {
+    width: 90vw;
+    margin: 20px;
+    border-radius: 14px;
+  }
+
+  .delete-dialog-header {
+    padding: 15px 18px 12px;
+  }
+
+  .delete-dialog-header h3 {
+    font-size: 15px;
+  }
+
+  .delete-dialog-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .delete-dialog-body {
+    padding: 18px;
+  }
+
+  .delete-customer-info {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .delete-customer-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .delete-warning {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .delete-dialog-actions {
+    flex-direction: column;
+    padding: 0 18px 18px;
+  }
+
+  .btn-delete-cancel,
+  .btn-delete-confirm {
+    padding: 12px 16px;
+    font-size: 12px;
+  }
+}
+
 /* ===== MOBILE CARD LAYOUT (<768px) ===== */
 @media (max-width: 767px) {
   /* Hide Table, Show Cards */
@@ -2054,6 +2435,16 @@
     transform: translateY(-1px);
   }
   
+  .card-action-btn.confirm {
+    background: #10b981;
+    color: white;
+  }
+  
+  .card-action-btn.confirm:hover {
+    background: #059669;
+    transform: translateY(-1px);
+  }
+  
   .card-action-btn.delete {
     background: #ef4444;
     color: white;
@@ -2072,17 +2463,28 @@
   }
   
   .card-komisi-badge {
-    background: #dcfce7;
-    color: #166534;
     padding: 4px 8px;
     border-radius: 6px;
     font-size: 11px;
     font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .card-komisi-badge.dibayar {
+    background: #dcfce7;
+    color: #166534;
   }
   
   .card-komisi-badge.belum {
     background: #fef3c7;
     color: #92400e;
+  }
+  
+  .card-komisi-badge.pending {
+    background: #f1f5f9;
+    color: #64748b;
   }
 }
 
@@ -2094,5 +2496,394 @@
   
   .table-container {
     display: block;
+  }
+}
+
+/* Detail Pelanggan Modal */
+.detail-dialog {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 480px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  animation: detailModalSlideIn 0.4s ease-out;
+}
+
+@keyframes detailModalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.detail-dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 18px 14px;
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  border-bottom: 1px solid #bae6fd;
+  position: relative;
+}
+
+.detail-dialog-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+}
+
+.detail-dialog-header h3 {
+  flex: 1;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0c4a6e;
+}
+
+.detail-dialog-header .modal-close {
+  background: rgba(14, 165, 233, 0.1);
+  border: none;
+  color: #0284c7;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+}
+
+.detail-dialog-header .modal-close:hover {
+  background: rgba(14, 165, 233, 0.2);
+  transform: scale(1.1);
+}
+
+.detail-dialog-body {
+  padding: 18px;
+  max-height: calc(90vh - 120px);
+  overflow-y: auto;
+}
+
+.detail-customer-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  border-radius: 10px;
+  margin-bottom: 18px;
+  border: 1px solid #cbd5e1;
+}
+
+.detail-customer-avatar {
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, #64748b, #475569);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.detail-customer-title {
+  flex: 1;
+}
+
+.detail-customer-title h2 {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.detail-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.detail-status-badge.menunggu {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #92400e;
+  border: 1px solid #f59e0b;
+}
+
+.detail-status-badge.terpasang {
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+
+.detail-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.detail-info-card {
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.detail-info-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.detail-info-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 6px;
+}
+
+.detail-info-label i {
+  color: #0ea5e9;
+  font-size: 12px;
+}
+
+.detail-info-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1e293b;
+  line-height: 1.4;
+}
+
+.detail-komisi-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+}
+
+.detail-komisi-badge.pending {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+}
+
+.detail-komisi-badge.dibayar {
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+
+.detail-komisi-badge.belum {
+  background: linear-gradient(135deg, #fef2f2, #fee2e2);
+  color: #991b1b;
+  border: 1px solid #ef4444;
+}
+
+.detail-catatan-section {
+  background: linear-gradient(135deg, #fefce8, #fef3c7);
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 15px;
+}
+
+.detail-catatan-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #92400e;
+  margin-bottom: 8px;
+}
+
+.detail-catatan-header i {
+  color: #f59e0b;
+  font-size: 14px;
+}
+
+.detail-catatan-content {
+  font-size: 12px;
+  color: #a16207;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.detail-catatan-content:empty::before {
+  content: "Tidak ada catatan";
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Styling untuk catatan kosong */
+.detail-catatan-content {
+  min-height: 20px;
+}
+
+.detail-catatan-content:has-text("Tidak ada catatan") {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.detail-dialog-footer {
+  padding: 12px 18px 16px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-detail-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  color: #64748b;
+  border: 2px solid #cbd5e1;
+}
+
+.btn-detail-close:hover {
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn-detail-close i {
+  font-size: 12px;
+}
+
+/* Action Button Styling for Detail */
+.action-btn.detail {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  color: white;
+  border: 2px solid #0ea5e9;
+}
+
+.action-btn.detail:hover {
+  background: linear-gradient(135deg, #0284c7, #0369a1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+}
+
+.card-action-btn.detail {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  color: white;
+  border: 2px solid #0ea5e9;
+}
+
+.card-action-btn.detail:hover {
+  background: linear-gradient(135deg, #0284c7, #0369a1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+}
+
+/* Responsive Detail Dialog */
+@media (max-width: 768px) {
+  .detail-dialog {
+    width: 95vw;
+    margin: 10px;
+    border-radius: 10px;
+  }
+
+  .detail-dialog-header {
+    padding: 14px 16px 12px;
+  }
+
+  .detail-dialog-header h3 {
+    font-size: 13px;
+  }
+
+  .detail-dialog-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .detail-dialog-body {
+    padding: 15px;
+  }
+
+  .detail-customer-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .detail-customer-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .detail-customer-title h2 {
+    font-size: 15px;
+  }
+
+  .detail-info-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .detail-info-card {
+    padding: 10px;
+  }
+
+  .detail-catatan-section {
+    padding: 10px;
+  }
+
+  .detail-dialog-footer {
+    padding: 10px 15px 14px;
+  }
+
+  .btn-detail-close {
+    padding: 8px 16px;
+    font-size: 11px;
   }
 }
