@@ -10,6 +10,14 @@ const getApiUrl = () => {
   }
   return 'http://172.16.31.11:3000/api';
 };
+
+const getBaseApiUrl = () => {
+  const host = window.location.hostname;
+  if (host === 'localhost' || host === '127.0.0.1') {
+    return 'http://localhost:3000';
+  }
+  return 'http://172.16.31.11:3000';
+};
 function DaftarPemasangan() {
   // Get current date and time in format for HTML inputs - Declare early
   const getCurrentDate = () => {
@@ -126,7 +134,7 @@ function DaftarPemasangan() {
     try {
       setLoadingDesa(true);
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/villages', {
+      const response = await fetch(`${getBaseApiUrl()}/villages`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -134,8 +142,8 @@ function DaftarPemasangan() {
       
       if (response.ok) {
         const data = await response.json();
-        // Ambil hanya nama desa untuk dropdown
-        const desaNames = data.map(village => village.name);
+        // Ambil hanya nama desa untuk dropdown dan hapus duplikat
+        const desaNames = [...new Set(data.map(village => village.name))];
         setDaftarDesa(desaNames);
         
         // Set default desa jika ada data
@@ -168,7 +176,7 @@ function DaftarPemasangan() {
     try {
       setLoadingAgen(true);
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/agents', {
+      const response = await fetch(`${getBaseApiUrl()}/agents`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -176,8 +184,8 @@ function DaftarPemasangan() {
       
       if (response.ok) {
         const data = await response.json();
-        // Ambil hanya nama agent untuk dropdown
-        const agentNames = data.map(agent => agent.name);
+        // Ambil hanya nama agent untuk dropdown dan hapus duplikat
+        const agentNames = [...new Set(data.map(agent => agent.name))];
         setDaftarAgen(agentNames);
       } else {
         console.error('Failed to fetch agents data');
@@ -768,8 +776,8 @@ function DaftarPemasangan() {
               className="date-select"
             >
               <option value="all">Semua Desa</option>
-              {daftarDesa.map(desa => (
-                <option key={desa} value={desa}>
+              {daftarDesa.map((desa, index) => (
+                <option key={`filter-desa-${index}`} value={desa}>
                   {desa}
                 </option>
               ))}
@@ -1184,8 +1192,8 @@ function DaftarPemasangan() {
                   <option value="">
                     {loadingDesa ? "Memuat data desa..." : "-- Pilih Desa --"}
                   </option>
-                  {daftarDesa.map(desa => (
-                    <option key={desa} value={desa}>
+                  {daftarDesa.map((desa, index) => (
+                    <option key={`add-desa-${index}`} value={desa}>
                       {desa}
                     </option>
                   ))}
@@ -1202,8 +1210,8 @@ function DaftarPemasangan() {
                   <option value="">
                     {loadingAgen ? "Memuat data agen..." : "-- Pilih Agen --"}
                   </option>
-                  {daftarAgen.map(agen => (
-                    <option key={agen} value={agen}>
+                  {daftarAgen.map((agen, index) => (
+                    <option key={`add-agen-${index}`} value={agen}>
                       {agen}
                     </option>
                   ))}
@@ -1284,8 +1292,8 @@ function DaftarPemasangan() {
                   <option value="">
                     {loadingDesa ? "Memuat data desa..." : "-- Pilih Desa --"}
                   </option>
-                  {daftarDesa.map(desa => (
-                    <option key={desa} value={desa}>
+                  {daftarDesa.map((desa, index) => (
+                    <option key={`edit-desa-${index}`} value={desa}>
                       {desa}
                     </option>
                   ))}
@@ -1302,8 +1310,8 @@ function DaftarPemasangan() {
                   <option value="">
                     {loadingAgen ? "Memuat data agen..." : "-- Pilih Agen --"}
                   </option>
-                  {daftarAgen.map(agen => (
-                    <option key={agen} value={agen}>
+                  {daftarAgen.map((agen, index) => (
+                    <option key={`edit-agen-${index}`} value={agen}>
                       {agen}
                     </option>
                   ))}

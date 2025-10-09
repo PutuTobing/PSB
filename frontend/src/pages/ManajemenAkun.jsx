@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './ManajemenAkun.css';
 
+// Helper function untuk mendukung akses dari network
+const getApiUrl = () => {
+  const host = window.location.hostname;
+  if (host === 'localhost' || host === '127.0.0.1') {
+    return 'http://localhost:3000';
+  }
+  return 'http://172.16.31.11:3000';
+};
+
 const ManajemenAkun = () => {
     // State untuk tab aktif
     const [activeTab, setActiveTab] = useState('konfigurasi');
@@ -114,7 +123,7 @@ const ManajemenAkun = () => {
                 return;
             }
 
-            const response = await fetch('http://localhost:3000/auth/profile', {
+            const response = await fetch(`${getApiUrl()}/auth/profile`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -155,7 +164,7 @@ const ManajemenAkun = () => {
                 return;
             }
 
-            const response = await fetch('http://localhost:3000/users', {
+            const response = await fetch(`${getApiUrl()}/users`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -192,7 +201,7 @@ const ManajemenAkun = () => {
                 return;
             }
 
-            const response = await fetch('http://localhost:3000/agents', {
+            const response = await fetch(`${getApiUrl()}/agents`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -227,7 +236,7 @@ const ManajemenAkun = () => {
                 return;
             }
 
-            const response = await fetch('http://localhost:3000/villages', {
+            const response = await fetch(`${getApiUrl()}/villages`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -262,7 +271,7 @@ const ManajemenAkun = () => {
                 return;
             }
 
-            const response = await fetch('http://localhost:3000/activity-logs', {
+            const response = await fetch(`${getApiUrl()}/activity-logs`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -341,7 +350,7 @@ const ManajemenAkun = () => {
         setIsLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3000/auth/change-password', {
+            const response = await fetch(`${getApiUrl()}/auth/change-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -374,7 +383,7 @@ const ManajemenAkun = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3000/auth/profile', {
+            const response = await fetch(`${getApiUrl()}/auth/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -406,8 +415,8 @@ const ManajemenAkun = () => {
         try {
             const token = localStorage.getItem('token');
             const url = editingUser 
-                ? `http://localhost:3000/users/${editingUser.id}`
-                : 'http://localhost:3000/users';
+                ? `${getApiUrl()}/users/${editingUser.id}`
+                : `${getApiUrl()}/users`;
             
             const method = editingUser ? 'PUT' : 'POST';
             
@@ -447,7 +456,7 @@ const ManajemenAkun = () => {
         setIsLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:3000/users/${deletingUser.id}`, {
+            const response = await fetch(`${getApiUrl()}/users/${deletingUser.id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -486,7 +495,7 @@ const ManajemenAkun = () => {
         setIsLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:3000/users/${resettingUser.id}/reset-password`, {
+            const response = await fetch(`${getApiUrl()}/users/${resettingUser.id}/reset-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -525,8 +534,8 @@ const ManajemenAkun = () => {
         try {
             const token = localStorage.getItem('token');
             const url = editingAgent 
-                ? `http://localhost:3000/agents/${editingAgent.id}`
-                : 'http://localhost:3000/agents';
+                ? `${getApiUrl()}/agents/${editingAgent.id}`
+                : `${getApiUrl()}/agents`;
             
             const method = editingAgent ? 'PUT' : 'POST';
             
@@ -566,7 +575,7 @@ const ManajemenAkun = () => {
         setIsLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:3000/agents/${deletingAgent.id}`, {
+            const response = await fetch(`${getApiUrl()}/agents/${deletingAgent.id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -597,8 +606,8 @@ const ManajemenAkun = () => {
         try {
             const token = localStorage.getItem('token');
             const url = editingVillage 
-                ? `http://localhost:3000/villages/${editingVillage.id}`
-                : 'http://localhost:3000/villages';
+                ? `${getApiUrl()}/villages/${editingVillage.id}`
+                : `${getApiUrl()}/villages`;
             
             const method = editingVillage ? 'PUT' : 'POST';
             
@@ -638,7 +647,7 @@ const ManajemenAkun = () => {
         setIsLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:3000/villages/${deletingVillage.id}`, {
+            const response = await fetch(`${getApiUrl()}/villages/${deletingVillage.id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
