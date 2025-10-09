@@ -373,6 +373,562 @@ app.get('/api/desa', (req, res) => {
     });
 });
 
+// ========== MANAJEMEN AKUN API ROUTES ==========
+
+// Get current user profile
+app.get('/auth/profile', verifyToken, (req, res) => {
+    const query = 'SELECT id, email, name, phone, address, role FROM users WHERE id = ?';
+    
+    db.query(query, [req.user.id], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        res.json(results[0]);
+    });
+});
+
+// Update user profile
+app.put('/auth/profile', verifyToken, (req, res) => {
+    const { name, email, phone, address } = req.body;
+    
+    if (!name || !email) {
+        return res.status(400).json({ message: 'Name and email are required' });
+    }
+    
+    // Check if email is already taken by another user
+    const checkEmailQuery = 'SELECT id FROM users WHERE email = ? AND id != ?';
+    db.query(checkEmailQuery, [email, req.user.id], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (results.length > 0) {
+            return res.status(400).json({ message: 'Email already exists' });
+        }
+        
+        const updateQuery = 'UPDATE users SET name = ?, email = ?, phone = ?, address = ? WHERE id = ?';
+        
+        db.query(updateQuery, [name, email, phone, address, req.user.id], (err, result) => {
+            if (err) {
+                console.error('Database error:', err);
+                return res.status(500).json({ message: 'Database error' });
+            }
+            
+            res.json({ message: 'Profile updated successfully' });
+        });
+    });
+});
+
+// Change password
+app.post('/auth/change-password', verifyToken, async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    
+    if (!currentPassword || !newPassword) {
+        return res.status(400).json({ message: 'Current password and new password are required' });
+    }
+    
+    if (newPassword.length < 6) {
+        return res.status(400).json({ message: 'New password must be at least 6 characters' });
+    }
+    
+    // Get current user password
+    const getUserQuery = 'SELECT password FROM users WHERE id = ?';
+    
+    db.query(getUserQuery, [req.user.id], async (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        const user = results[0];
+        
+        try {
+            // Verify current password
+            const isValidPassword = await bcrypt.compare(currentPassword, user.password);
+            
+            if (!isValidPassword) {
+                return res.status(400).json({ message: 'Current password is incorrect' });
+            }
+            
+            // Hash new password
+            const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+            
+            // Update password
+            const updateQuery = 'UPDATE users SET password = ? WHERE id = ?';
+            
+            db.query(updateQuery, [hashedNewPassword, req.user.id], (err, result) => {
+                if (err) {
+                    console.error('Database error:', err);
+                    return res.status(500).json({ message: 'Database error' });
+                }
+                
+                res.json({ message: 'Password changed successfully' });
+            });
+            
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).json({ message: 'Server error' });
+        }
+    });
+});
+
+// Reset user password (Admin only)
+app.post('/users/:id/reset-password', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    const { newPassword, confirmPassword } = req.body;
+    
+    if (!newPassword || !confirmPassword) {
+        return res.status(400).json({ message: 'New password and confirm password are required' });
+    }
+    
+    if (newPassword !== confirmPassword) {
+        return res.status(400).json({ message: 'Passwords do not match' });
+    }
+    
+    if (newPassword.length < 6) {
+        return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+    
+    // Check if user is admin
+    const checkAdminQuery = 'SELECT role FROM users WHERE id = ?';
+    
+    db.query(checkAdminQuery, [req.user.id], async (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (results.length === 0 || results[0].role !== 'Administrator') {
+            return res.status(403).json({ message: 'Access denied. Admin role required.' });
+        }
+        
+        // Check if target user exists
+        const checkUserQuery = 'SELECT id, name, email FROM users WHERE id = ?';
+        
+        db.query(checkUserQuery, [id], async (err, userResults) => {
+            if (err) {
+                console.error('Database error:', err);
+                return res.status(500).json({ message: 'Database error' });
+            }
+            
+            if (userResults.length === 0) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            
+            try {
+                // Hash new password
+                const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+                
+                // Update password
+                const updateQuery = 'UPDATE users SET password = ? WHERE id = ?';
+                
+                db.query(updateQuery, [hashedNewPassword, id], (err, result) => {
+                    if (err) {
+                        console.error('Database error:', err);
+                        return res.status(500).json({ message: 'Database error' });
+                    }
+                    
+                    res.json({ message: 'Password reset successfully' });
+                });
+                
+            } catch (error) {
+                console.error('Error:', error);
+                res.status(500).json({ message: 'Server error' });
+            }
+        });
+    });
+});
+
+// Get all users (Admin only)
+app.get('/users', verifyToken, (req, res) => {
+    // Check if user is admin
+    const checkAdminQuery = 'SELECT role FROM users WHERE id = ?';
+    
+    db.query(checkAdminQuery, [req.user.id], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (results.length === 0 || results[0].role !== 'Administrator') {
+            return res.status(403).json({ message: 'Access denied. Admin role required.' });
+        }
+        
+        const getUsersQuery = 'SELECT id, email, name, phone, address, role, created_at FROM users ORDER BY created_at DESC';
+        
+        db.query(getUsersQuery, (err, users) => {
+            if (err) {
+                console.error('Database error:', err);
+                return res.status(500).json({ message: 'Database error' });
+            }
+            
+            res.json(users);
+        });
+    });
+});
+
+// Create new user (Admin only)
+app.post('/users', verifyToken, async (req, res) => {
+    const { name, email, password, role, phone, address } = req.body;
+    
+    if (!name || !email || !password || !role) {
+        return res.status(400).json({ message: 'Name, email, password, and role are required' });
+    }
+    
+    // Check if user is admin
+    const checkAdminQuery = 'SELECT role FROM users WHERE id = ?';
+    
+    db.query(checkAdminQuery, [req.user.id], async (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (results.length === 0 || results[0].role !== 'Administrator') {
+            return res.status(403).json({ message: 'Access denied. Admin role required.' });
+        }
+        
+        // Check if email already exists
+        const checkEmailQuery = 'SELECT id FROM users WHERE email = ?';
+        
+        db.query(checkEmailQuery, [email], async (err, emailResults) => {
+            if (err) {
+                console.error('Database error:', err);
+                return res.status(500).json({ message: 'Database error' });
+            }
+            
+            if (emailResults.length > 0) {
+                return res.status(400).json({ message: 'Email already exists' });
+            }
+            
+            try {
+                // Hash password
+                const hashedPassword = await bcrypt.hash(password, 10);
+                
+                const insertQuery = 'INSERT INTO users (name, email, password, role, phone, address) VALUES (?, ?, ?, ?, ?, ?)';
+                
+                db.query(insertQuery, [name, email, hashedPassword, role, phone, address], (err, result) => {
+                    if (err) {
+                        console.error('Database error:', err);
+                        return res.status(500).json({ message: 'Database error' });
+                    }
+                    
+                    res.status(201).json({ 
+                        message: 'User created successfully',
+                        id: result.insertId 
+                    });
+                });
+                
+            } catch (error) {
+                console.error('Error:', error);
+                res.status(500).json({ message: 'Server error' });
+            }
+        });
+    });
+});
+
+// Update user (Admin only)
+app.put('/users/:id', verifyToken, (req, res) => {
+    const { id } = req.params;
+    const { name, email, role, phone, address } = req.body;
+    
+    if (!name || !email || !role) {
+        return res.status(400).json({ message: 'Name, email, and role are required' });
+    }
+    
+    // Check if user is admin
+    const checkAdminQuery = 'SELECT role FROM users WHERE id = ?';
+    
+    db.query(checkAdminQuery, [req.user.id], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (results.length === 0 || results[0].role !== 'Administrator') {
+            return res.status(403).json({ message: 'Access denied. Admin role required.' });
+        }
+        
+        // Check if email is already taken by another user
+        const checkEmailQuery = 'SELECT id FROM users WHERE email = ? AND id != ?';
+        
+        db.query(checkEmailQuery, [email, id], (err, emailResults) => {
+            if (err) {
+                console.error('Database error:', err);
+                return res.status(500).json({ message: 'Database error' });
+            }
+            
+            if (emailResults.length > 0) {
+                return res.status(400).json({ message: 'Email already exists' });
+            }
+            
+            const updateQuery = 'UPDATE users SET name = ?, email = ?, role = ?, phone = ?, address = ? WHERE id = ?';
+            
+            db.query(updateQuery, [name, email, role, phone, address, id], (err, result) => {
+                if (err) {
+                    console.error('Database error:', err);
+                    return res.status(500).json({ message: 'Database error' });
+                }
+                
+                if (result.affectedRows === 0) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
+                
+                res.json({ message: 'User updated successfully' });
+            });
+        });
+    });
+});
+
+// Delete user (Admin only)
+app.delete('/users/:id', verifyToken, (req, res) => {
+    const { id } = req.params;
+    
+    // Check if user is admin
+    const checkAdminQuery = 'SELECT role FROM users WHERE id = ?';
+    
+    db.query(checkAdminQuery, [req.user.id], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (results.length === 0 || results[0].role !== 'Administrator') {
+            return res.status(403).json({ message: 'Access denied. Admin role required.' });
+        }
+        
+        // Prevent self-deletion
+        if (parseInt(id) === req.user.id) {
+            return res.status(400).json({ message: 'Cannot delete your own account' });
+        }
+        
+        const deleteQuery = 'DELETE FROM users WHERE id = ?';
+        
+        db.query(deleteQuery, [id], (err, result) => {
+            if (err) {
+                console.error('Database error:', err);
+                return res.status(500).json({ message: 'Database error' });
+            }
+            
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            
+            res.json({ message: 'User deleted successfully' });
+        });
+    });
+});
+
+// Get all agents
+app.get('/agents', verifyToken, (req, res) => {
+    const query = 'SELECT id, name, phone, email, address, created_at FROM agents ORDER BY name ASC';
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        res.json(results);
+    });
+});
+
+// Create new agent
+app.post('/agents', verifyToken, (req, res) => {
+    const { name, phone, email, address } = req.body;
+    
+    if (!name || !phone) {
+        return res.status(400).json({ message: 'Name and phone are required' });
+    }
+    
+    const insertQuery = 'INSERT INTO agents (name, phone, email, address) VALUES (?, ?, ?, ?)';
+    
+    db.query(insertQuery, [name, phone, email, address], (err, result) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        res.status(201).json({ 
+            message: 'Agent created successfully',
+            id: result.insertId 
+        });
+    });
+});
+
+// Update agent
+app.put('/agents/:id', verifyToken, (req, res) => {
+    const { id } = req.params;
+    const { name, phone, email, address } = req.body;
+    
+    if (!name || !phone) {
+        return res.status(400).json({ message: 'Name and phone are required' });
+    }
+    
+    const updateQuery = 'UPDATE agents SET name = ?, phone = ?, email = ?, address = ? WHERE id = ?';
+    
+    db.query(updateQuery, [name, phone, email, address, id], (err, result) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Agent not found' });
+        }
+        
+        res.json({ message: 'Agent updated successfully' });
+    });
+});
+
+// Delete agent
+app.delete('/agents/:id', verifyToken, (req, res) => {
+    const { id } = req.params;
+    
+    const deleteQuery = 'DELETE FROM agents WHERE id = ?';
+    
+    db.query(deleteQuery, [id], (err, result) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Agent not found' });
+        }
+        
+        res.json({ message: 'Agent deleted successfully' });
+    });
+});
+
+// Get all villages
+app.get('/villages', verifyToken, (req, res) => {
+    const query = 'SELECT id, name, kecamatan, kabupaten, created_at FROM villages ORDER BY name ASC';
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        res.json(results);
+    });
+});
+
+// Create new village
+app.post('/villages', verifyToken, (req, res) => {
+    const { name, kecamatan, kabupaten } = req.body;
+    
+    if (!name || !kecamatan || !kabupaten) {
+        return res.status(400).json({ message: 'Name, kecamatan, and kabupaten are required' });
+    }
+    
+    const insertQuery = 'INSERT INTO villages (name, kecamatan, kabupaten) VALUES (?, ?, ?)';
+    
+    db.query(insertQuery, [name, kecamatan, kabupaten], (err, result) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        res.status(201).json({ 
+            message: 'Village created successfully',
+            id: result.insertId 
+        });
+    });
+});
+
+// Update village
+app.put('/villages/:id', verifyToken, (req, res) => {
+    const { id } = req.params;
+    const { name, kecamatan, kabupaten } = req.body;
+    
+    if (!name || !kecamatan || !kabupaten) {
+        return res.status(400).json({ message: 'Name, kecamatan, and kabupaten are required' });
+    }
+    
+    const updateQuery = 'UPDATE villages SET name = ?, kecamatan = ?, kabupaten = ? WHERE id = ?';
+    
+    db.query(updateQuery, [name, kecamatan, kabupaten, id], (err, result) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Village not found' });
+        }
+        
+        res.json({ message: 'Village updated successfully' });
+    });
+});
+
+// Delete village
+app.delete('/villages/:id', verifyToken, (req, res) => {
+    const { id } = req.params;
+    
+    const deleteQuery = 'DELETE FROM villages WHERE id = ?';
+    
+    db.query(deleteQuery, [id], (err, result) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Village not found' });
+        }
+        
+        res.json({ message: 'Village deleted successfully' });
+    });
+});
+
+// Get activity logs (Admin only)
+app.get('/activity-logs', verifyToken, (req, res) => {
+    // Check if user is admin
+    const checkAdminQuery = 'SELECT role FROM users WHERE id = ?';
+    
+    db.query(checkAdminQuery, [req.user.id], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        if (results.length === 0 || results[0].role !== 'Administrator') {
+            return res.status(403).json({ message: 'Access denied. Admin role required.' });
+        }
+        
+        const getLogsQuery = `
+            SELECT al.id, al.user_id, u.name as user_name, al.activity, al.details, 
+                   al.ip_address, al.created_at
+            FROM activity_logs al
+            LEFT JOIN users u ON al.user_id = u.id
+            ORDER BY al.created_at DESC
+            LIMIT 100
+        `;
+        
+        db.query(getLogsQuery, (err, logs) => {
+            if (err) {
+                console.error('Database error:', err);
+                return res.status(500).json({ message: 'Database error' });
+            }
+            
+            res.json(logs);
+        });
+    });
+});
+
 // Catch-all route for unknown paths
 app.get('*', (req, res) => {
     res.status(404).json({ message: 'API endpoint not found' });

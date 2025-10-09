@@ -43,8 +43,8 @@ function DaftarPemasangan() {
     nama: '',
     telepon: '',
     alamat: '',
-    desa: 'Desa Braja Gemilang', // Default ke Desa Braja Gemilang
-    agen: '', // Default agen kosong - akan dikelola di manajemen akun
+    desa: '', // Akan diset dari database
+    agen: '', // Akan diset dari database
     tanggal_daftar: getCurrentDate() // Default ke hari ini
   });
   const [konfirmasiData, setKonfirmasiData] = useState({
@@ -91,17 +91,19 @@ function DaftarPemasangan() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedDetailPelanggan, setSelectedDetailPelanggan] = useState(null);
   
-  // Daftar agen yang tersedia - nanti akan dikelola di manajemen akun
-  // TODO: Implementasi CRUD agen di halaman manajemen akun
-  const daftarAgen = ['YOGA', 'ANDI', 'SARI', 'BUDI', 'LINA'];
+  // State untuk daftar agen yang diambil dari database
+  const [daftarAgen, setDaftarAgen] = useState([]);
+  const [loadingAgen, setLoadingAgen] = useState(true);
   
   // State untuk daftar desa yang diambil dari database
-  const [daftarDesa, setDaftarDesa] = useState(['Desa Braja Gemilang', 'Desa Braja Fajar']);
+  const [daftarDesa, setDaftarDesa] = useState([]);
+  const [loadingDesa, setLoadingDesa] = useState(true);
 
   // Load data from API
   useEffect(() => {
     fetchPemasanganData();
     fetchDesaData();
+    fetchAgentData();
   }, []);
 
   const fetchPemasanganData = async () => {
@@ -122,19 +124,74 @@ function DaftarPemasangan() {
 
   const fetchDesaData = async () => {
     try {
-      const response = await fetch(`${getApiUrl()}/desa`);
+      setLoadingDesa(true);
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:3000/villages', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       
       if (response.ok) {
         const data = await response.json();
-        if (data.length > 0) {
-          setDaftarDesa(data);
+        // Ambil hanya nama desa untuk dropdown
+        const desaNames = data.map(village => village.name);
+        setDaftarDesa(desaNames);
+        
+        // Set default desa jika ada data
+        if (desaNames.length > 0 && newPelanggan.desa === '') {
+          setNewPelanggan(prev => ({...prev, desa: desaNames[0]}));
         }
       } else {
-        console.error('Failed to fetch desa data');
+        console.error('Failed to fetch villages data');
+        // Fallback ke data default jika gagal
+        const defaultDesa = ['Desa Braja Gemilang', 'Desa Braja Fajar'];
+        setDaftarDesa(defaultDesa);
+        if (newPelanggan.desa === '') {
+          setNewPelanggan(prev => ({...prev, desa: defaultDesa[0]}));
+        }
       }
     } catch (error) {
-      console.error('Error fetching desa data:', error);
-      // Gunakan default jika gagal
+      console.error('Error fetching villages data:', error);
+      // Fallback ke data default jika gagal
+      const defaultDesa = ['Desa Braja Gemilang', 'Desa Braja Fajar'];
+      setDaftarDesa(defaultDesa);
+      if (newPelanggan.desa === '') {
+        setNewPelanggan(prev => ({...prev, desa: defaultDesa[0]}));
+      }
+    } finally {
+      setLoadingDesa(false);
+    }
+  };
+
+  const fetchAgentData = async () => {
+    try {
+      setLoadingAgen(true);
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:3000/agents', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        // Ambil hanya nama agent untuk dropdown
+        const agentNames = data.map(agent => agent.name);
+        setDaftarAgen(agentNames);
+      } else {
+        console.error('Failed to fetch agents data');
+        // Fallback ke data default jika gagal
+        const defaultAgen = ['YOGA', 'ANDI', 'SARI', 'BUDI', 'LINA'];
+        setDaftarAgen(defaultAgen);
+      }
+    } catch (error) {
+      console.error('Error fetching agents data:', error);
+      // Fallback ke data default jika gagal
+      const defaultAgen = ['YOGA', 'ANDI', 'SARI', 'BUDI', 'LINA'];
+      setDaftarAgen(defaultAgen);
+    } finally {
+      setLoadingAgen(false);
     }
   };
 
@@ -1122,8 +1179,11 @@ function DaftarPemasangan() {
                   value={newPelanggan.desa}
                   onChange={(e) => setNewPelanggan({...newPelanggan, desa: e.target.value})}
                   className="desa-select"
+                  disabled={loadingDesa}
                 >
-                  <option value="">-- Pilih Desa --</option>
+                  <option value="">
+                    {loadingDesa ? "Memuat data desa..." : "-- Pilih Desa --"}
+                  </option>
                   {daftarDesa.map(desa => (
                     <option key={desa} value={desa}>
                       {desa}
@@ -1137,8 +1197,11 @@ function DaftarPemasangan() {
                   value={newPelanggan.agen}
                   onChange={(e) => setNewPelanggan({...newPelanggan, agen: e.target.value})}
                   className="agen-select"
+                  disabled={loadingAgen}
                 >
-                  <option value="">-- Pilih Agen --</option>
+                  <option value="">
+                    {loadingAgen ? "Memuat data agen..." : "-- Pilih Agen --"}
+                  </option>
                   {daftarAgen.map(agen => (
                     <option key={agen} value={agen}>
                       {agen}
@@ -1216,8 +1279,11 @@ function DaftarPemasangan() {
                   value={editPelanggan.desa}
                   onChange={(e) => setEditPelanggan({...editPelanggan, desa: e.target.value})}
                   className="desa-select"
+                  disabled={loadingDesa}
                 >
-                  <option value="">-- Pilih Desa --</option>
+                  <option value="">
+                    {loadingDesa ? "Memuat data desa..." : "-- Pilih Desa --"}
+                  </option>
                   {daftarDesa.map(desa => (
                     <option key={desa} value={desa}>
                       {desa}
@@ -1231,8 +1297,11 @@ function DaftarPemasangan() {
                   value={editPelanggan.agen}
                   onChange={(e) => setEditPelanggan({...editPelanggan, agen: e.target.value})}
                   className="agen-select"
+                  disabled={loadingAgen}
                 >
-                  <option value="">-- Pilih Agen --</option>
+                  <option value="">
+                    {loadingAgen ? "Memuat data agen..." : "-- Pilih Agen --"}
+                  </option>
                   {daftarAgen.map(agen => (
                     <option key={agen} value={agen}>
                       {agen}
