@@ -1524,7 +1524,7 @@
   border-radius: 50%;
   background: inherit;
   opacity: 0.3;
-  animation: pulse-ring 2s ease-out infinite;
+  animation: pulse-ring 2s ease-out 3;
 }
 
 @keyframes pulse-ring {

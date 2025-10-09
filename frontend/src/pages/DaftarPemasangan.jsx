@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './DaftarPemasangan.css';
 
 
@@ -204,51 +204,55 @@ function DaftarPemasangan() {
     });
   };
 
-  const filteredDataForStats = getFilteredDataForStats();
-  const stats = {
+  // Optimize filtering with useMemo to prevent unnecessary re-computations
+  const filteredDataForStats = useMemo(() => getFilteredDataForStats(), [pemasanganData, selectedMonth, selectedYear, filterDesa]);
+  
+  const stats = useMemo(() => ({
     total: filteredDataForStats.length,
     menunggu: filteredDataForStats.filter(p => p.status === 'menunggu').length,
     terpasang: filteredDataForStats.filter(p => p.status === 'terpasang').length
-  };
+  }), [filteredDataForStats]);
 
-  const filteredData = pemasanganData.filter(pelanggan => {
-    const matchesFilter = filterStatus === 'all' || pelanggan.status === filterStatus;
-    const matchesDesa = filterDesa === 'all' || pelanggan.desa === filterDesa;
-    const matchesSearch = pelanggan.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         pelanggan.telepon.includes(searchTerm) ||
-                         pelanggan.alamat.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (pelanggan.desa && pelanggan.desa.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    // Filter by month and year based on tanggal_daftar
-    let matchesDate = true;
-    
-    const tanggalDaftar = getTanggalDaftar(pelanggan);
-    
-    if (tanggalDaftar) {
-      const daftarDate = new Date(tanggalDaftar);
+  const filteredData = useMemo(() => {
+    return pemasanganData.filter(pelanggan => {
+      const matchesFilter = filterStatus === 'all' || pelanggan.status === filterStatus;
+      const matchesDesa = filterDesa === 'all' || pelanggan.desa === filterDesa;
+      const matchesSearch = pelanggan.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           pelanggan.telepon.includes(searchTerm) ||
+                           pelanggan.alamat.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           (pelanggan.desa && pelanggan.desa.toLowerCase().includes(searchTerm.toLowerCase()));
       
-      // Validasi apakah tanggal valid
-      if (!isNaN(daftarDate.getTime())) {
-        const daftarMonth = daftarDate.getMonth() + 1; // 1-12
-        const daftarYear = daftarDate.getFullYear();
+      // Filter by month and year based on tanggal_daftar
+      let matchesDate = true;
+      
+      const tanggalDaftar = getTanggalDaftar(pelanggan);
+      
+      if (tanggalDaftar) {
+        const daftarDate = new Date(tanggalDaftar);
         
-        // If selectedMonth is 0, show all months for the selected year
-        if (selectedMonth === 0) {
-          matchesDate = daftarYear === selectedYear;
+        // Validasi apakah tanggal valid
+        if (!isNaN(daftarDate.getTime())) {
+          const daftarMonth = daftarDate.getMonth() + 1; // 1-12
+          const daftarYear = daftarDate.getFullYear();
+          
+          // If selectedMonth is 0, show all months for the selected year
+          if (selectedMonth === 0) {
+            matchesDate = daftarYear === selectedYear;
+          } else {
+            matchesDate = daftarMonth === selectedMonth && daftarYear === selectedYear;
+          }
         } else {
-          matchesDate = daftarMonth === selectedMonth && daftarYear === selectedYear;
+          // Jika tanggal tidak valid, tampilkan semua (fallback)
+          matchesDate = true;
         }
       } else {
-        // Jika tanggal tidak valid, tampilkan semua (fallback)
+        // Jika tidak ada tanggal sama sekali, tampilkan semua (fallback)
         matchesDate = true;
       }
-    } else {
-      // Jika tidak ada tanggal sama sekali, tampilkan semua (fallback)
-      matchesDate = true;
-    }
-    
-    return matchesFilter && matchesDesa && matchesSearch && matchesDate;
-  });
+      
+      return matchesFilter && matchesDesa && matchesSearch && matchesDate;
+    });
+  }, [pemasanganData, filterStatus, filterDesa, searchTerm, selectedMonth, selectedYear]);
 
   const handleAddPelanggan = async () => {
     // Validation
@@ -577,10 +581,13 @@ function DaftarPemasangan() {
       icon
     });
     
-    // Auto hide after 3 seconds
-    setTimeout(() => {
+    // Auto hide after 3 seconds with cleanup
+    const timeoutId = setTimeout(() => {
       setNotification(prev => ({ ...prev, show: false }));
     }, 3000);
+    
+    // Cleanup function to prevent memory leaks
+    return () => clearTimeout(timeoutId);
   };
 
   const formatDate = (dateString) => {
