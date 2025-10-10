@@ -1,41 +1,64 @@
-# Database Login System
+# Database Login Application
 
-A complete authentication system with MySQL database integration, built with Node.js backend and vanilla HTML/CSS/JavaScript frontend.
+A comprehensive customer management system for internet service installations with React frontend and Node.js backend.
 
 ## 🚀 Features
 
-- **User Registration & Login** - Email-based authentication
-- **Secure Password Handling** - Bcrypt encryption
-- **JWT Token Authentication** - Secure session management
-- **MySQL Database Integration** - User data persistence
-- **phpMyAdmin Integration** - Database management interface
-- **Responsive Frontend** - Modern UI with form validation
-- **Protected Routes** - Dashboard access control
-- **Docker Support** - Easy database setup with Docker Compose
+- **User Authentication & Management** - JWT-based secure login system
+- **Installation Management** - Complete CRUD for customer installations
+- **Master Data Management** - Agents and Villages management
+- **Role-Based Access Control** - Administrator and User roles
+- **Responsive Design** - Mobile-first approach with elegant UI
+- **Database Integration** - Complete MySQL integration with auth_db
+- **Real-time Updates** - Dynamic data fetching and updates
+- **Elegant Action Buttons** - Modern UI with gradients and animations
+
+## 📚 Complete Documentation
+
+| Document | Purpose | Audience |
+|----------|---------|----------|
+| [PROJECT_OVERVIEW.md](./PROJECT_OVERVIEW.md) | Complete project architecture and features | All team members |
+| [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md) | Development patterns and troubleshooting | Developers |
+| [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) | Complete API reference | Developers & integrators |
+| [CHAT_CONTEXT.md](./CHAT_CONTEXT.md) | AI assistant context and quick reference | AI assistants & new chats |
 
 ## 📁 Project Structure
 
 ```
 Database-Login/
 ├── backend/
-│   ├── server.js           # Main server file
-│   ├── package.json        # Backend dependencies
-│   └── .env.example        # Environment template
+│   ├── server.js           # Express server with all API endpoints
+│   └── package.json        # Backend dependencies
 ├── frontend/
-│   ├── login.html          # Login & Register page
-│   └── dashboard.html      # Protected dashboard
-├── docker-compose.yml      # Database & phpMyAdmin setup
-├── database-setup.sql      # Database initialization script
+│   ├── src/pages/
+│   │   ├── DaftarPemasangan.jsx    # Installation management
+│   │   ├── ManajemenAkun.jsx       # User & master data management
+│   │   └── Login.jsx               # Authentication
+│   └── package.json        # Frontend dependencies (React + Vite)
+├── database/
+│   └── customers-schema.sql # Database schema
+├── docker-compose.yml      # MySQL & phpMyAdmin setup
+├── PROJECT_OVERVIEW.md     # Complete project documentation
+├── DEVELOPMENT_GUIDE.md    # Development patterns and guidelines
+├── API_DOCUMENTATION.md    # Complete API reference
+├── CHAT_CONTEXT.md        # AI assistant context file
 └── README.md              # This file
 ```
 
-## 🛠️ Prerequisites
+## 🛠️ Tech Stack
 
-Before running this project, make sure you have:
+- **Frontend**: React 19.2.0 + Vite 7.1.9
+- **Backend**: Node.js + Express + MySQL2
+- **Database**: MySQL (auth_db)
+- **Styling**: Custom CSS + Bootstrap Icons
+- **Authentication**: JWT tokens
 
-- **Node.js** (v14 or higher)
-- **Docker & Docker Compose**
+## Prerequisites
+
+- **Node.js** (v18 or higher)
+- **MySQL** (8.0+)
 - **Git**
+- **Docker** (optional for database setup)
 
 ## ⚡ Quick Start
 
