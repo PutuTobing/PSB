@@ -36,7 +36,7 @@ function App() {
           </>
         ) : (
           <>
-            <Route path="/" element={
+            <Route path="/beranda" element={
               <div className="d-flex">
                 <Sidebar />
                 <div className="flex-fill" style={{ background: '#f5f7fa' }}>
@@ -71,7 +71,8 @@ function App() {
                 </div>
               </div>
             } />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="/" element={<Navigate to="/beranda" replace />} />
+            <Route path="*" element={<Navigate to="/beranda" replace />} />
           </>
         )}
       </Routes>

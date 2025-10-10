@@ -25,12 +25,24 @@
 
 /* Page Header */
 .page-header {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  border-radius: 16px;
-  padding: 24px;
-  margin-bottom: 24px;
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 30px;
   color: white;
-  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+  animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .header-content {
@@ -46,27 +58,28 @@
 }
 
 .header-icon {
-  width: 64px;
-  height: 64px;
+  width: 60px;
+  height: 60px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
-  color: white;
+  font-size: 28px;
+  backdrop-filter: blur(10px);
 }
 
 .header-text h1 {
-  margin: 0 0 8px 0;
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 700;
+  margin: 0;
+  margin-bottom: 3px;
 }
 
 .header-text p {
   margin: 0;
-  font-size: 16px;
   opacity: 0.9;
+  font-size: 13px;
 }
 
 /* Tabs Navigation */
@@ -103,9 +116,9 @@
 }
 
 .tab-btn.active {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
   color: white;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
 }
 
 .tab-btn i {
@@ -115,7 +128,7 @@
 /* Tab Content */
 .tab-content {
   background: white;
-  border-radius: 16px;
+  border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
@@ -136,13 +149,13 @@
 }
 
 .config-section h3 i {
-  color: #667eea;
+  color: #7c3aed;
   font-size: 24px;
 }
 
 .profile-card {
   background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 24px;
   border: 1px solid #e2e8f0;
 }
@@ -157,7 +170,7 @@
 .profile-avatar {
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -165,7 +178,7 @@
   font-size: 40px;
   color: white;
   flex-shrink: 0;
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
 }
 
 .profile-details {
@@ -248,7 +261,7 @@
 
 .sub-tab-btn.active {
   background: white;
-  color: #667eea;
+  color: #7c3aed;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -274,7 +287,7 @@
 .users-table th,
 .master-table th,
 .logs-table th {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
   color: white;
   padding: 16px 12px;
   text-align: left;
@@ -333,7 +346,7 @@
 }
 
 .section-header h3 i {
-  color: #667eea;
+  color: #7c3aed;
 }
 
 /* Logs Content */
@@ -352,7 +365,7 @@
 }
 
 .logs-section h3 i {
-  color: #667eea;
+  color: #7c3aed;
 }
 
 /* Action Buttons */
@@ -422,7 +435,7 @@
 }
 
 .action-btn.edit {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
   color: white !important;
   border: 2px solid transparent;
 }
@@ -430,7 +443,7 @@
 .action-btn.edit:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-  border-color: #1d4ed8;
+  border-color: #6d28d9;
 }
 
 .action-btn.edit i {
@@ -537,13 +550,13 @@
 
 /* Edit button styling */
 .action-btn.edit {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9) !important;
   color: white !important;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25) !important;
 }
 
 .action-btn.edit:hover {
-  background: linear-gradient(135deg, #1d4ed8, #1e40af) !important;
+  background: linear-gradient(135deg, #6d28d9, #1e40af) !important;
   transform: translateY(-2px) !important;
   box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4) !important;
 }
@@ -796,7 +809,7 @@
 }
 
 .card-action-btn-mobile.edit {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9) !important;
   color: white !important;
 }
 
@@ -936,13 +949,13 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
   color: white;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
 }
 
 .btn-secondary {
@@ -989,7 +1002,7 @@
 
 .modal-content {
   background: white;
-  border-radius: 16px;
+  border-radius: 12px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   max-width: 500px;
   width: 90%;
@@ -1029,7 +1042,7 @@
 }
 
 .modal-header h3 i {
-  color: #667eea;
+  color: #7c3aed;
 }
 
 .modal-close {
@@ -1094,8 +1107,8 @@
 .form-group textarea:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
 
 .form-group textarea {
@@ -2259,7 +2272,7 @@
     padding: 10px;
     margin-bottom: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    border-left: 3px solid #667eea;
+    border-left: 3px solid #7c3aed;
     animation: fadeInUp 0.3s ease-out;
   }
 
@@ -2286,7 +2299,7 @@
   .card-avatar-mobile {
     width: 28px;
     height: 28px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -2391,7 +2404,7 @@
   }
 
   .card-action-btn-mobile.edit {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
     color: white;
   }
 
@@ -2523,7 +2536,7 @@
 .user-info-card .user-avatar {
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -2553,7 +2566,7 @@
 
 .user-details .role-badge {
   padding: 4px 12px;
-  border-radius: 20px;
+  border-radius: 12px;
   font-size: 12px;
   font-weight: 500;
 }
@@ -2564,7 +2577,7 @@
 }
 
 .user-details .role-badge.user {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
   color: white;
 }
 
@@ -2696,7 +2709,7 @@
 }
 
 .master-section .section-header {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
   color: white;
   padding: 20px;
   display: flex;

@@ -16,14 +16,14 @@ function Header({ onLogout }) {
   const getPageTitle = () => {
     const path = location.pathname;
     switch (path) {
-      case '/dashboard':
-        return 'Dashboard';
+      case '/beranda':
+        return 'Beranda';
       case '/daftar-pemasangan':
         return 'Daftar Pemasangan';
       case '/manajemen-akun':
         return 'Manajemen Akun';
       default:
-        return 'Dashboard';
+        return 'Beranda';
     }
   };
 
@@ -31,7 +31,7 @@ function Header({ onLogout }) {
   const getPageIcon = () => {
     const path = location.pathname;
     switch (path) {
-      case '/dashboard':
+      case '/beranda':
         return 'bi-speedometer2';
       case '/daftar-pemasangan':
         return 'bi-list-check';

@@ -8,7 +8,7 @@ function Sidebar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const menuItems = [
-    { path: '/', icon: 'bi-speedometer2', label: 'Dashboard' },
+    { path: '/beranda', icon: 'bi-speedometer2', label: 'Beranda' },
     { path: '/daftar-pemasangan', icon: 'bi-clipboard-data', label: 'Daftar Pemasangan' },
     { path: '/manajemen-akun', icon: 'bi-person-gear', label: 'Manajemen Akun' }
   ];
