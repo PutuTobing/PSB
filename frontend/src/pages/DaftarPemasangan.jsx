@@ -2,21 +2,58 @@ import React, { useState, useEffect, useMemo } from 'react';
 import './DaftarPemasangan.css';
 
 
-// Helper function untuk mendukung akses dari network
+// Helper function untuk akses database auth_db melalui API
+// Database: auth_db
+// Tables: pemasangan, villages, agents
 const getApiUrl = () => {
   const host = window.location.hostname;
   if (host === 'localhost' || host === '127.0.0.1') {
-    return 'http://localhost:3000/api';
+    return 'http://localhost:3000/api'; // API endpoint ke database auth_db
   }
-  return 'http://172.16.31.11:3000/api';
+  return 'http://172.16.31.11:3000/api'; // API endpoint ke database auth_db
 };
 
 const getBaseApiUrl = () => {
   const host = window.location.hostname;
   if (host === 'localhost' || host === '127.0.0.1') {
-    return 'http://localhost:3000';
+    return 'http://localhost:3000'; // Base URL untuk akses database auth_db
   }
-  return 'http://172.16.31.11:3000';
+  return 'http://172.16.31.11:3000'; // Base URL untuk akses database auth_db
+};
+
+// Helper function untuk validasi dan format token
+const getValidToken = () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.warn('No authentication token found');
+    return null;
+  }
+  
+  // Cek apakah token terlihat valid (tidak kosong, tidak hanya whitespace)
+  if (typeof token !== 'string' || token.trim().length === 0) {
+    console.warn('Invalid token format found');
+    return null;
+  }
+  
+  return token.trim();
+};
+
+// Helper function untuk handle authentication errors
+const handleAuthError = (endpoint, error) => {
+  console.error(`Authentication failed for ${endpoint}:`, error);
+  
+  // Check if user needs to re-login
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.warn('No token found - user may need to login');
+  } else {
+    console.warn('Token exists but was rejected - may be expired or invalid');
+    // Optionally clear invalid token
+    // localStorage.removeItem('token');
+  }
+  
+  // You could add notification or redirect to login here if needed
+  // For now, we'll just log and continue with fallback data
 };
 function DaftarPemasangan() {
   // Get current date and time in format for HTML inputs - Declare early
@@ -51,8 +88,8 @@ function DaftarPemasangan() {
     nama: '',
     telepon: '',
     alamat: '',
-    desa: '', // Akan diset dari database
-    agen: '', // Akan diset dari database
+    desa: '', // Akan diambil dari database auth_db.villages
+    agen: '', // Akan diambil dari database auth_db.agents
     tanggal_daftar: getCurrentDate() // Default ke hari ini
   });
   const [konfirmasiData, setKonfirmasiData] = useState({
@@ -106,9 +143,60 @@ function DaftarPemasangan() {
   // State untuk daftar desa yang diambil dari database
   const [daftarDesa, setDaftarDesa] = useState([]);
   const [loadingDesa, setLoadingDesa] = useState(true);
+  
+  // State untuk authentication status
+  const [authStatus, setAuthStatus] = useState({
+    hasToken: false,
+    isValid: null,
+    lastChecked: null
+  });
 
-  // Load data from API
+  // Debug function untuk memeriksa status authentication
+  const debugAuthStatus = () => {
+    const token = localStorage.getItem('token');
+    console.group('🔐 Authentication Debug Info');
+    console.log('Token exists:', !!token);
+    if (token) {
+      console.log('Token length:', token.length);
+      console.log('Token preview:', token.substring(0, 20) + '...');
+      console.log('Token type:', typeof token);
+    } else {
+      console.warn('No token found in localStorage');
+    }
+    
+    // Update auth status
+    setAuthStatus({
+      hasToken: !!token,
+      isValid: null, // Will be determined by API calls
+      lastChecked: new Date().toISOString()
+    });
+    
+    // List all localStorage keys
+    console.log('All localStorage keys:', Object.keys(localStorage));
+    console.groupEnd();
+  };
+
+  // Set default values setelah data dari database dimuat
   useEffect(() => {
+    if (daftarDesa.length > 0 && newPelanggan.desa === '') {
+      setNewPelanggan(prev => ({...prev, desa: daftarDesa[0]}));
+    }
+    if (daftarAgen.length > 0 && newPelanggan.agen === '') {
+      setNewPelanggan(prev => ({...prev, agen: daftarAgen[0]}));
+    }
+  }, [daftarDesa, daftarAgen]);
+
+  // Load data from database auth_db
+  useEffect(() => {
+    // Debug authentication status
+    debugAuthStatus();
+    
+    // Fetch data dari database auth_db
+    console.log('Loading data from database auth_db...');
+    console.log('- Table: pemasangan');
+    console.log('- Table: villages'); 
+    console.log('- Table: agents');
+    
     fetchPemasanganData();
     fetchDesaData();
     fetchAgentData();
@@ -116,88 +204,181 @@ function DaftarPemasangan() {
 
   const fetchPemasanganData = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${getApiUrl()}/pemasangan`);
+      const token = getValidToken();
+      
+      // Headers untuk request ke database
+      const headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      };
+      
+      // Tambahkan authorization header jika token tersedia
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      // Fetch dari database auth_db table pemasangan
+      const response = await fetch(`${getApiUrl()}/pemasangan`, {
+        method: 'GET',
+        headers: headers
+      });
       
       if (response.ok) {
         const data = await response.json();
-        setPemasanganData(data);
+        
+        // Pastikan data adalah array
+        if (Array.isArray(data)) {
+          setPemasanganData(data);
+          console.log('Pemasangan data fetched from database successfully:', data.length, 'records');
+          
+          // Update auth status sebagai valid jika berhasil
+          if (token) {
+            setAuthStatus(prev => ({ ...prev, isValid: true }));
+          }
+        } else {
+          console.warn('Invalid pemasangan data format from database');
+          setPemasanganData([]);
+        }
+      } else if (response.status === 401) {
+        handleAuthError('/pemasangan', 'Unauthorized access to pemasangan data');
+        setAuthStatus(prev => ({ ...prev, isValid: false }));
+        console.warn('Authentication failed for pemasangan data - please check login status');
+        setPemasanganData([]);
       } else {
-        console.error('Failed to fetch pemasangan data');
+        console.error(`Failed to fetch pemasangan data from database: ${response.status} ${response.statusText}`);
+        setPemasanganData([]);
       }
     } catch (error) {
-      console.error('Error fetching pemasangan data:', error);
+      console.error('Network error fetching pemasangan data from database:', error);
+      setPemasanganData([]);
     }
   };
 
   const fetchDesaData = async () => {
+    setLoadingDesa(true);
+    
     try {
-      setLoadingDesa(true);
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${getBaseApiUrl()}/villages`, {
+      const token = getValidToken();
+      
+      // Jika tidak ada token valid, retry tanpa token atau tampilkan error
+      if (!token) {
+        console.warn('No valid authentication token found for villages data');
+        // Set state bahwa tidak ada token
+        setAuthStatus(prev => ({ ...prev, hasToken: false }));
+        setDaftarDesa([]); // Kosongkan daftar desa
+        return;
+      }
+      
+      // Fetch dari database auth_db table villages
+      const response = await fetch(`${getBaseApiUrl()}/api/villages`, {
+        method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         }
       });
       
       if (response.ok) {
         const data = await response.json();
-        // Ambil hanya nama desa untuk dropdown dan hapus duplikat
-        const desaNames = [...new Set(data.map(village => village.name))];
-        setDaftarDesa(desaNames);
+        console.log('Villages data fetched from database:', data);
         
-        // Set default desa jika ada data
-        if (desaNames.length > 0 && newPelanggan.desa === '') {
-          setNewPelanggan(prev => ({...prev, desa: desaNames[0]}));
+        // Pastikan data adalah array
+        if (Array.isArray(data) && data.length > 0) {
+          // Ambil nama desa dari database - sesuaikan dengan struktur table villages
+          const desaNames = [...new Set(data.map(village => 
+            village.name || village.village_name || village.desa || village.nama_desa
+          ))].filter(Boolean);
+          
+          if (desaNames.length > 0) {
+            setDaftarDesa(desaNames);
+            // Set default desa pertama dari database
+            if (newPelanggan.desa === '') {
+              setNewPelanggan(prev => ({...prev, desa: desaNames[0]}));
+            }
+            console.log('Successfully loaded villages from database:', desaNames);
+          } else {
+            console.warn('No valid village names found in database response');
+            setDaftarDesa([]);
+          }
+        } else {
+          console.warn('Invalid or empty villages data from database');
+          setDaftarDesa([]);
         }
+      } else if (response.status === 401) {
+        handleAuthError('/villages', 'Unauthorized access to villages data');
+        setAuthStatus(prev => ({ ...prev, isValid: false }));
+        setDaftarDesa([]);
       } else {
-        console.error('Failed to fetch villages data');
-        // Fallback ke data default jika gagal
-        const defaultDesa = ['Desa Braja Gemilang', 'Desa Braja Fajar'];
-        setDaftarDesa(defaultDesa);
-        if (newPelanggan.desa === '') {
-          setNewPelanggan(prev => ({...prev, desa: defaultDesa[0]}));
-        }
+        console.error(`Failed to fetch villages from database: ${response.status} ${response.statusText}`);
+        setDaftarDesa([]);
       }
     } catch (error) {
-      console.error('Error fetching villages data:', error);
-      // Fallback ke data default jika gagal
-      const defaultDesa = ['Desa Braja Gemilang', 'Desa Braja Fajar'];
-      setDaftarDesa(defaultDesa);
-      if (newPelanggan.desa === '') {
-        setNewPelanggan(prev => ({...prev, desa: defaultDesa[0]}));
-      }
+      console.error('Network error fetching villages from database:', error);
+      setDaftarDesa([]);
     } finally {
       setLoadingDesa(false);
     }
   };
 
   const fetchAgentData = async () => {
+    setLoadingAgen(true);
+    
     try {
-      setLoadingAgen(true);
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${getBaseApiUrl()}/agents`, {
+      const token = getValidToken();
+      
+      // Jika tidak ada token valid, retry tanpa token atau tampilkan error
+      if (!token) {
+        console.warn('No valid authentication token found for agents data');
+        // Set state bahwa tidak ada token
+        setAuthStatus(prev => ({ ...prev, hasToken: false }));
+        setDaftarAgen([]); // Kosongkan daftar agent
+        return;
+      }
+      
+      // Fetch dari database auth_db table agents
+      const response = await fetch(`${getBaseApiUrl()}/api/agents`, {
+        method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         }
       });
       
       if (response.ok) {
         const data = await response.json();
-        // Ambil hanya nama agent untuk dropdown dan hapus duplikat
-        const agentNames = [...new Set(data.map(agent => agent.name))];
-        setDaftarAgen(agentNames);
+        console.log('Agents data fetched from database:', data);
+        
+        // Pastikan data adalah array
+        if (Array.isArray(data) && data.length > 0) {
+          // Ambil nama agent dari database - sesuaikan dengan struktur table agents
+          const agentNames = [...new Set(data.map(agent => 
+            agent.name || agent.agent_name || agent.agen || agent.nama_agen
+          ))].filter(Boolean);
+          
+          if (agentNames.length > 0) {
+            setDaftarAgen(agentNames);
+            console.log('Successfully loaded agents from database:', agentNames);
+          } else {
+            console.warn('No valid agent names found in database response');
+            setDaftarAgen([]);
+          }
+        } else {
+          console.warn('Invalid or empty agents data from database');
+          setDaftarAgen([]);
+        }
+      } else if (response.status === 401) {
+        handleAuthError('/agents', 'Unauthorized access to agents data');
+        setAuthStatus(prev => ({ ...prev, isValid: false }));
+        setDaftarAgen([]);
       } else {
-        console.error('Failed to fetch agents data');
-        // Fallback ke data default jika gagal
-        const defaultAgen = ['YOGA', 'ANDI', 'SARI', 'BUDI', 'LINA'];
-        setDaftarAgen(defaultAgen);
+        console.error(`Failed to fetch agents from database: ${response.status} ${response.statusText}`);
+        setDaftarAgen([]);
       }
     } catch (error) {
-      console.error('Error fetching agents data:', error);
-      // Fallback ke data default jika gagal
-      const defaultAgen = ['YOGA', 'ANDI', 'SARI', 'BUDI', 'LINA'];
-      setDaftarAgen(defaultAgen);
+      console.error('Network error fetching agents from database:', error);
+      setDaftarAgen([]);
     } finally {
       setLoadingAgen(false);
     }
@@ -366,7 +547,7 @@ function DaftarPemasangan() {
         
         if (response.ok) {
           await fetchPemasanganData(); // Refresh data
-          setNewPelanggan({ nama: '', telepon: '', alamat: '', desa: 'Desa Braja Gemilang', agen: '', tanggal_daftar: getCurrentDate() });
+          setNewPelanggan({ nama: '', telepon: '', alamat: '', desa: '', agen: '', tanggal_daftar: getCurrentDate() });
           setShowAddModal(false);
           showNotification(
             'success',
@@ -692,6 +873,32 @@ function DaftarPemasangan() {
         </div>
       </div>
 
+      {/* Authentication Status Warning */}
+      {!authStatus.hasToken && (
+        <div className="auth-warning">
+          <div className="auth-warning-content">
+            <i className="bi bi-exclamation-triangle"></i>
+            <div className="auth-warning-text">
+              <strong>Database Connection Notice:</strong> No authentication token found. Cannot load villages and agents data from database (auth_db). Please login to access complete data.
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Data Loading Status */}
+      {(loadingDesa || loadingAgen) && (
+        <div className="loading-notice">
+          <div className="loading-content">
+            <i className="bi bi-database-check"></i>
+            <div className="loading-text">
+              Loading data from database auth_db...
+              {loadingDesa && <span>• Loading villages table</span>}
+              {loadingAgen && <span>• Loading agents table</span>}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Statistics Cards */}
       <div className="stats-grid">
         <div className="stat-card total">
@@ -863,13 +1070,13 @@ function DaftarPemasangan() {
                   <td>
                     <div className="desa-cell">
                       <i className="bi bi-geo-alt"></i>
-                      <span className="desa-name">{pelanggan.desa || 'Desa Braja Gemilang'}</span>
+                      <span className="desa-name">{pelanggan.desa}</span>
                     </div>
                   </td>
                   <td>
                     <div className="agen-cell">
                       <i className="bi bi-person-badge"></i>
-                      <span className="agen-name">{pelanggan.agen || 'YOGA'}</span>
+                      <span className="agen-name">{pelanggan.agen}</span>
                     </div>
                   </td>
                   <td>{formatDate(getTanggalDaftar(pelanggan))}</td>
@@ -921,58 +1128,62 @@ function DaftarPemasangan() {
                     )}
                   </td>
                   <td>
-                    <div className="action-buttons">
-                      {pelanggan.status === 'menunggu' && (
+                    <div className="action-buttons-compact">
+                      <div className="action-row-1">
+                        {pelanggan.status === 'menunggu' && (
+                          <button
+                            className="action-btn-sm confirm"
+                            onClick={() => {
+                              setSelectedPelanggan(pelanggan);
+                              // Auto-fill dengan tanggal dan jam saat ini
+                              setKonfirmasiData({
+                                tanggal_pasang: getCurrentDate(),
+                                jam_pasang: getCurrentTime(),
+                                teknisi: '',
+                                catatan: ''
+                              });
+                              setShowConfirmModal(true);
+                            }}
+                            title="Konfirmasi Pemasangan"
+                          >
+                            <i className="bi bi-check-lg"></i>
+                          </button>
+                        )}
                         <button
-                          className="action-btn confirm"
-                          onClick={() => {
-                            setSelectedPelanggan(pelanggan);
-                            // Auto-fill dengan tanggal dan jam saat ini
-                            setKonfirmasiData({
-                              tanggal_pasang: getCurrentDate(),
-                              jam_pasang: getCurrentTime(),
-                              teknisi: '',
-                              catatan: ''
-                            });
-                            setShowConfirmModal(true);
-                          }}
-                          title="Konfirmasi Pemasangan"
+                          className="action-btn-sm detail"
+                          onClick={() => handleDetailPelanggan(pelanggan)}
+                          title="Detail Pelanggan"
                         >
-                          <i className="bi bi-check-lg"></i>
+                          <i className="bi bi-info-circle"></i>
                         </button>
-                      )}
-                      <button
-                        className="action-btn detail"
-                        onClick={() => handleDetailPelanggan(pelanggan)}
-                        title="Detail Pelanggan"
-                      >
-                        <i className="bi bi-info-circle"></i>
-                      </button>
-                      <button
-                        className="action-btn edit"
-                        onClick={() => {
-                          setEditPelanggan({
-                            id: pelanggan.id,
-                            nama: pelanggan.nama,
-                            telepon: pelanggan.telepon,
-                            alamat: pelanggan.alamat,
-                            desa: pelanggan.desa || 'Desa Braja Gemilang',
-                            agen: pelanggan.agen,
-                            tanggal_daftar: getTanggalDaftar(pelanggan) ? getTanggalDaftar(pelanggan).split('T')[0] : getCurrentDate()
-                          });
-                          setShowEditModal(true);
-                        }}
-                        title="Edit Pelanggan"
-                      >
-                        <i className="bi bi-pencil"></i>
-                      </button>
-                      <button
-                        className="action-btn delete"
-                        onClick={() => handleDeletePelanggan(pelanggan)}
-                        title="Hapus Pelanggan"
-                      >
-                        <i className="bi bi-trash"></i>
-                      </button>
+                      </div>
+                      <div className="action-row-2">
+                        <button
+                          className="action-btn-sm edit"
+                          onClick={() => {
+                            setEditPelanggan({
+                              id: pelanggan.id,
+                              nama: pelanggan.nama,
+                              telepon: pelanggan.telepon,
+                              alamat: pelanggan.alamat,
+                              desa: pelanggan.desa,
+                              agen: pelanggan.agen,
+                              tanggal_daftar: getTanggalDaftar(pelanggan) ? getTanggalDaftar(pelanggan).split('T')[0] : getCurrentDate()
+                            });
+                            setShowEditModal(true);
+                          }}
+                          title="Edit Pelanggan"
+                        >
+                          <i className="bi bi-pencil"></i>
+                        </button>
+                        <button
+                          className="action-btn-sm delete"
+                          onClick={() => handleDeletePelanggan(pelanggan)}
+                          title="Hapus Pelanggan"
+                        >
+                          <i className="bi bi-trash"></i>
+                        </button>
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -1012,7 +1223,7 @@ function DaftarPemasangan() {
                 <div className="card-field-value">
                   <span className="card-desa-badge">
                     <i className="bi bi-geo-alt"></i>
-                    {pelanggan.desa || 'Desa Braja Gemilang'}
+                    {pelanggan.desa}
                   </span>
                 </div>
               </div>
@@ -1081,7 +1292,7 @@ function DaftarPemasangan() {
                     nama: pelanggan.nama,
                     telepon: pelanggan.telepon,
                     alamat: pelanggan.alamat,
-                    desa: pelanggan.desa || 'Desa Braja Gemilang',
+                    desa: pelanggan.desa,
                     agen: pelanggan.agen,
                     tanggal_daftar: getTanggalDaftar(pelanggan) ? getTanggalDaftar(pelanggan).split('T')[0] : getCurrentDate()
                   });
@@ -1590,7 +1801,7 @@ function DaftarPemasangan() {
                     <i className="bi bi-geo"></i>
                     Desa
                   </div>
-                  <div className="detail-info-value">{selectedDetailPelanggan.desa || 'Desa Braja Gemilang'}</div>
+                  <div className="detail-info-value">{selectedDetailPelanggan.desa}</div>
                 </div>
                 
                 <div className="detail-info-card">
@@ -1598,7 +1809,7 @@ function DaftarPemasangan() {
                     <i className="bi bi-person-badge"></i>
                     Agen
                   </div>
-                  <div className="detail-info-value">{selectedDetailPelanggan.agen || 'YOGA'}</div>
+                  <div className="detail-info-value">{selectedDetailPelanggan.agen}</div>
                 </div>
                 
                 <div className="detail-info-card">

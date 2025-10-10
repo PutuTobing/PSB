@@ -8,7 +8,7 @@
   overflow-x: hidden;
 }
 
-/* Desktop Layout (>1366px) - Keep Original Full Layout */
+/* Desktop Layout (>1366px) - Enhanced Full Layout */
 @media (min-width: 1367px) {
   .daftar-pemasangan {
     padding: 24px 32px;
@@ -28,13 +28,326 @@
   
   .pemasangan-table th,
   .pemasangan-table td {
-    padding: 15px 12px;
-    font-size: 14px;
+    padding: 18px 14px;
+    font-size: 15px;
   }
   
   /* Desktop - Full visibility */
   .address-cell {
     font-size: 14px;
+  }
+  
+  /* Desktop Enhanced Action Buttons - Force Override */
+  .action-buttons-compact {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    align-items: center !important;
+    min-width: 100px !important;
+    padding: 6px !important;
+  }
+  
+  .action-buttons {
+    display: flex !important;
+    gap: 6px !important;
+    justify-content: center !important;
+  }
+  
+  .action-row-1,
+  .action-row-2 {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+  }
+  
+  .action-btn-sm {
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+    border-radius: 8px !important;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 40px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .action-btn-sm::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s ease;
+  }
+  
+  .action-btn-sm:hover::before {
+    left: 100%;
+  }
+  
+  .action-btn-sm.confirm {
+    background: linear-gradient(145deg, #22c55e 0%, #16a34a 30%, #15803d 100%);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .action-btn-sm.confirm:hover {
+    background: linear-gradient(145deg, #16a34a 0%, #15803d 30%, #166534 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(34, 197, 94, 0.4);
+  }
+  
+  .action-btn-sm.detail {
+    background: linear-gradient(145deg, #3b82f6 0%, #2563eb 30%, #1d4ed8 100%);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .action-btn-sm.detail:hover {
+    background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 30%, #1e40af 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
+  }
+  
+  .action-btn-sm.edit {
+    background: linear-gradient(145deg, #eab308 0%, #ca8a04 30%, #a16207 100%);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .action-btn-sm.edit:hover {
+    background: linear-gradient(145deg, #ca8a04 0%, #a16207 30%, #92400e 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(234, 179, 8, 0.4);
+  }
+  
+  .action-btn-sm.delete {
+    background: linear-gradient(145deg, #ef4444 0%, #dc2626 30%, #b91c1c 100%);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .action-btn-sm.delete:hover {
+    background: linear-gradient(145deg, #dc2626 0%, #b91c1c 30%, #991b1b 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(239, 68, 68, 0.4);
+  }
+  
+  /* Override any default action-btn styles for desktop */
+  .action-btn {
+    padding: 8px 12px !important;
+    border: none !important;
+    border-radius: 8px !important;
+    cursor: pointer;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    transition: all 0.3s ease !important;
+    min-width: 40px !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15) !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+  
+  .action-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s ease;
+  }
+  
+  .action-btn:hover::before {
+    left: 100%;
+  }
+  
+  .action-btn.confirm {
+    background: linear-gradient(145deg, #22c55e 0%, #16a34a 30%, #15803d 100%) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+  
+  .action-btn.confirm:hover {
+    background: linear-gradient(145deg, #16a34a 0%, #15803d 30%, #166534 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 15px rgba(34, 197, 94, 0.4) !important;
+  }
+  
+  .action-btn.edit {
+    background: linear-gradient(145deg, #eab308 0%, #ca8a04 30%, #a16207 100%) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+  
+  .action-btn.edit:hover {
+    background: linear-gradient(145deg, #ca8a04 0%, #a16207 30%, #92400e 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 15px rgba(234, 179, 8, 0.4) !important;
+  }
+  
+  .action-btn.delete {
+    background: linear-gradient(145deg, #ef4444 0%, #dc2626 30%, #b91c1c 100%) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+  
+  .action-btn.delete:hover {
+    background: linear-gradient(145deg, #dc2626 0%, #b91c1c 30%, #991b1b 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 15px rgba(239, 68, 68, 0.4) !important;
+  }
+}
+
+/* Large Desktop Layout (>1680px) - Extra Enhanced */
+@media (min-width: 1681px) {
+  .action-btn-sm {
+    padding: 10px 16px !important;
+    font-size: 16px !important;
+    border-radius: 10px !important;
+    min-width: 48px !important;
+    height: 36px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  }
+  
+  .action-btn {
+    padding: 10px 16px !important;
+    font-size: 16px !important;
+    border-radius: 10px !important;
+    min-width: 48px !important;
+    height: 36px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  }
+  
+  .action-buttons-compact {
+    min-width: 120px;
+    gap: 8px;
+  }
+  
+  .action-row-1,
+  .action-row-2 {
+    gap: 8px;
+  }
+  
+  .pemasangan-table th,
+  .pemasangan-table td {
+    padding: 20px 16px;
+    font-size: 16px;
+  }
+}
+
+/* Force Enhanced Styling for All Action Buttons on Desktop and Large Screens */
+@media (min-width: 1024px) {
+  /* Ensure all action buttons get enhanced styling */
+  .pemasangan-table .action-btn,
+  .pemasangan-table .action-btn-sm,
+  .action-buttons .action-btn,
+  .action-buttons-compact .action-btn-sm {
+    background: none !important;
+    border: none !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 32px !important;
+    height: 28px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    padding: 6px 10px !important;
+  }
+  
+  /* Enhanced confirm buttons */
+  .pemasangan-table .action-btn.confirm,
+  .pemasangan-table .action-btn-sm.confirm,
+  .action-buttons .action-btn.confirm,
+  .action-buttons-compact .action-btn-sm.confirm {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+    color: white !important;
+  }
+  
+  .pemasangan-table .action-btn.confirm:hover,
+  .pemasangan-table .action-btn-sm.confirm:hover,
+  .action-buttons .action-btn.confirm:hover,
+  .action-buttons-compact .action-btn-sm.confirm:hover {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4) !important;
+  }
+  
+  /* Enhanced detail buttons */
+  .pemasangan-table .action-btn.detail,
+  .pemasangan-table .action-btn-sm.detail,
+  .action-buttons .action-btn.detail,
+  .action-buttons-compact .action-btn-sm.detail {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    color: white !important;
+  }
+  
+  .pemasangan-table .action-btn.detail:hover,
+  .pemasangan-table .action-btn-sm.detail:hover,
+  .action-buttons .action-btn.detail:hover,
+  .action-buttons-compact .action-btn-sm.detail:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+  }
+  
+  /* Enhanced edit buttons */
+  .pemasangan-table .action-btn.edit,
+  .pemasangan-table .action-btn-sm.edit,
+  .action-buttons .action-btn.edit,
+  .action-buttons-compact .action-btn-sm.edit {
+    background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%) !important;
+    color: white !important;
+  }
+  
+  .pemasangan-table .action-btn.edit:hover,
+  .pemasangan-table .action-btn-sm.edit:hover,
+  .action-buttons .action-btn.edit:hover,
+  .action-buttons-compact .action-btn-sm.edit:hover {
+    background: linear-gradient(135deg, #ca8a04 0%, #a16207 100%) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(234, 179, 8, 0.4) !important;
+  }
+  
+  /* Enhanced delete buttons */
+  .pemasangan-table .action-btn.delete,
+  .pemasangan-table .action-btn-sm.delete,
+  .action-buttons .action-btn.delete,
+  .action-buttons-compact .action-btn-sm.delete {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    color: white !important;
+  }
+  
+  .pemasangan-table .action-btn.delete:hover,
+  .pemasangan-table .action-btn-sm.delete:hover,
+  .action-buttons .action-btn.delete:hover,
+  .action-buttons-compact .action-btn-sm.delete:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4) !important;
   }
 }
 
@@ -390,37 +703,830 @@
 
 .pemasangan-table {
   width: 100%;
-  min-width: 1550px;
-  border-collapse: collapse;
+  min-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
   table-layout: fixed;
-  border: 1px solid #e5e7eb;
+  border: 2px solid #e5e7eb;
+  font-size: 15px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-/* Fixed Column Widths for Better Display */
-.pemasangan-table th:nth-child(1) { width: 50px; text-align: center; }     /* No */
-.pemasangan-table th:nth-child(2) { width: 180px; }    /* Nama Pelanggan */
-.pemasangan-table th:nth-child(3) { width: 140px; }    /* Telepon */
-.pemasangan-table th:nth-child(4) { width: 220px; }    /* Alamat */
-.pemasangan-table th:nth-child(5) { width: 140px; }    /* Desa */
-.pemasangan-table th:nth-child(6) { width: 90px; }     /* Agen */
-.pemasangan-table th:nth-child(7) { width: 110px; }    /* Tanggal Daftar */
-.pemasangan-table th:nth-child(8) { width: 110px; }    /* Tanggal Pasang */
-.pemasangan-table th:nth-child(9) { width: 130px; }    /* Status Pemasangan */
-.pemasangan-table th:nth-child(10) { width: 110px; }   /* Komisi Agen */
-.pemasangan-table th:nth-child(11) { width: 90px; }    /* Aksi */
+/* Responsive Column Widths - Default (Desktop First) */
+.pemasangan-table th:nth-child(1) { width: 4%; text-align: center; min-width: 60px; }     /* No */
+.pemasangan-table th:nth-child(2) { width: 15%; min-width: 200px; }    /* Nama Pelanggan */
+.pemasangan-table th:nth-child(3) { width: 12%; min-width: 150px; }    /* Telepon */
+.pemasangan-table th:nth-child(4) { width: 18%; min-width: 250px; }    /* Alamat */
+.pemasangan-table th:nth-child(5) { width: 12%; min-width: 140px; }    /* Desa */
+.pemasangan-table th:nth-child(6) { width: 8%; min-width: 100px; }     /* Agen */
+.pemasangan-table th:nth-child(7) { width: 10%; min-width: 120px; }    /* Tanggal Daftar */
+.pemasangan-table th:nth-child(8) { width: 10%; min-width: 120px; }    /* Tanggal Pasang */
+.pemasangan-table th:nth-child(9) { width: 12%; min-width: 140px; }    /* Status Pemasangan */
+.pemasangan-table th:nth-child(10) { width: 11%; min-width: 130px; }   /* Komisi Agen */
+.pemasangan-table th:nth-child(11) { width: 10%; min-width: 120px; }    /* Aksi */
 
 /* Center align untuk kolom nomor dan tanggal */
 .pemasangan-table td:nth-child(1) { text-align: center; }     /* No - rata tengah */
-.pemasangan-table td:nth-child(3) { 
-  padding: 8px 12px; 
-  min-width: 140px;
-  width: 140px;
-}     /* Telepon - padding dan width tetap */
 .pemasangan-table td:nth-child(7) { text-align: center; }     /* Tanggal Daftar - rata tengah */
 .pemasangan-table td:nth-child(8) { text-align: center; }     /* Tanggal Pasang - rata tengah */
 
-/* Desktop Table - Full Width Usage */
-@media (min-width: 1280px) {
+/* Enhanced table styling for better visibility */
+.table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* Header styling dengan garis pembatas yang jelas */
+.pemasangan-table th {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+  text-align: left;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 16px 12px;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  border-right: 2px solid rgba(255,255,255,0.3);
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.pemasangan-table th:last-child {
+  border-right: none;
+}
+
+/* Sel data dengan garis pembatas yang jelas */
+.pemasangan-table td {
+  padding: 16px 14px;
+  border-right: 1px solid #e5e7eb;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  font-size: 15px;
+  line-height: 1.5;
+  background: white;
+  transition: background-color 0.2s ease;
+}
+
+.pemasangan-table td:last-child {
+  border-right: none;
+}
+
+/* Garis pembatas khusus untuk setiap baris data */
+.pemasangan-table tbody tr {
+  border-bottom: 2px solid #f8fafc;
+}
+
+.pemasangan-table tbody tr:nth-child(even) {
+  background-color: #fafbfc;
+}
+
+.pemasangan-table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+/* Garis pembatas vertikal yang lebih tegas */
+.pemasangan-table th:not(:last-child),
+.pemasangan-table td:not(:last-child) {
+  border-right: 2px solid #e5e7eb;
+}
+
+/* Khusus untuk kolom NO - garis pembatas yang lebih tegas */
+.pemasangan-table th:nth-child(1),
+.pemasangan-table td:nth-child(1) {
+  border-right: 3px solid #d1d5db !important;
+  background-color: #f9fafb;
+  font-weight: 600;
+}
+
+/* Hover effects for better UX */
+.pemasangan-table tbody tr:hover {
+  background-color: #e6f3ff !important;
+  border-left: 4px solid #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+/* Utility classes for responsive design */
+.responsive-text {
+  font-size: clamp(12px, 2.5vw, 16px);
+}
+
+.responsive-button {
+  padding: clamp(6px, 1.5vw, 12px) clamp(12px, 3vw, 24px);
+  font-size: clamp(12px, 2.5vw, 14px);
+}
+
+/* Smooth responsive table yang menyesuaikan otomatis */
+.pemasangan-table {
+  font-size: clamp(11px, 1.2vw + 0.5rem, 16px) !important;
+  transition: all 0.3s ease;
+  min-width: 900px; /* Minimum width untuk menjaga struktur */
+}
+
+.pemasangan-table th {
+  font-size: clamp(10px, 1vw + 0.4rem, 15px) !important;
+  padding: clamp(6px, 1.2vw, 16px) clamp(4px, 0.8vw, 12px) !important;
+  white-space: nowrap;
+}
+
+.pemasangan-table td {
+  font-size: clamp(10px, 1vw + 0.4rem, 15px) !important;
+  padding: clamp(6px, 1.2vw, 14px) clamp(4px, 0.8vw, 12px) !important;
+  word-wrap: break-word;
+  max-width: 0; /* Memungkinkan text wrap */
+}
+
+/* Fluid responsive container */
+.table-responsive {
+  transform: scale(1);
+  transform-origin: top left;
+  transition: transform 0.3s ease;
+}
+
+/* CLEAN LAPTOP LAYOUT - Natural sizing without excessive scaling */
+@media screen and (min-width: 1200px) and (max-width: 1500px) {
+  .main-content {
+    padding: 15px 20px !important;
+  }
+  
+  .pemasangan-table {
+    table-layout: fixed !important;
+    font-size: 13px !important;
+    transform: none !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .table-container {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .table-responsive {
+    overflow-x: auto !important;
+    transform: none !important;
+  }
+  
+  /* Natural padding untuk laptop */
+  .pemasangan-table th,
+  .pemasangan-table td {
+    padding: 12px 8px !important;
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    border-right: 2px solid #e5e7eb !important;
+  }
+  
+  /* Button sizes yang readable */
+  .btn-sm {
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+  }
+  
+  .customer-info {
+    gap: 8px !important;
+  }
+  
+  .customer-avatar {
+    font-size: 20px !important;
+  }
+}
+
+/* Auto-scale berdasarkan viewport width */
+@media (max-width: 1400px) {
+  .table-responsive {
+    transform: scale(0.95);
+  }
+}
+
+@media (max-width: 1200px) {
+  .table-responsive {
+    transform: scale(0.9);
+  }
+}
+
+@media (max-width: 1000px) {
+  .table-responsive {
+    transform: scale(0.85);
+  }
+}
+
+@media (max-width: 900px) {
+  .table-responsive {
+    transform: scale(0.8);
+  }
+}
+
+/* LAPTOP FINE-TUNING - Untuk resolusi umum laptop */
+@media screen and (min-width: 1300px) and (max-width: 1400px) {
+  /* Laptop dengan resolusi 1366x768 atau serupa */
+  .pemasangan-table {
+    font-size: 13px !important;
+  }
+  
+  .pemasangan-table th,
+  .pemasangan-table td {
+    padding: 12px 8px !important;
+    font-size: 12px !important;
+  }
+  
+  .container-fluid {
+    padding: 15px !important;
+  }
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1299px) {
+  /* Laptop kecil 1280x720/800 */
+  .pemasangan-table {
+    font-size: 12px !important;
+  }
+  
+  .pemasangan-table th,
+  .pemasangan-table td {
+    padding: 10px 6px !important;
+    font-size: 11px !important;
+  }
+  
+  .container-fluid {
+    padding: 10px !important;
+  }
+}
+
+/* Container responsive untuk smooth transition */
+.container-fluid {
+  transition: all 0.3s ease;
+  padding: clamp(10px, 2vw, 20px);
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Viewport meta tag simulation untuk smooth resize */
+body {
+  transition: all 0.3s ease;
+}
+
+/* LAPTOP LAYOUT FIXES - untuk mengatasi layout yang tidak sesuai */
+@media screen and (min-width: 1200px) and (max-width: 1500px) {
+  /* Header optimizations */
+  .page-header {
+    padding: 15px 0 !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .page-header h1 {
+    font-size: 24px !important;
+  }
+  
+  .page-header p {
+    font-size: 14px !important;
+  }
+  
+  /* Stats cards optimization */
+  .stats-container {
+    margin-bottom: 10px !important;
+  }
+  
+  .stat-card {
+    padding: 12px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .stat-card h3 {
+    font-size: 22px !important;
+  }
+  
+  .stat-card p {
+    font-size: 13px !important;
+  }
+  
+  /* Filter container optimization */
+  .filter-container {
+    padding: 12px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .filter-container .form-control,
+  .filter-container .form-select {
+    font-size: 12px !important;
+    padding: 6px 10px !important;
+  }
+  
+  .filter-container .btn {
+    font-size: 12px !important;
+    padding: 6px 12px !important;
+  }
+  
+  /* Sidebar adjustments */
+  .sidebar {
+    width: 220px !important;
+  }
+  
+  .main-content {
+    margin-left: 220px !important;
+    padding: 15px !important;
+  }
+}
+
+/* Table container yang responsive untuk window minimize */
+.table-container {
+  position: relative;
+  overflow: visible;
+  max-width: 100%;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* LAPTOP OPTIMIZATION - Berdasarkan screenshot terbaru */
+@media screen and (min-width: 1200px) and (max-width: 1600px) {
+  /* Reset semua zoom dan transform, gunakan natural sizing */
+  body {
+    zoom: 1 !important;
+  }
+  
+  .container-fluid {
+    padding: 15px 10px !important;
+    max-width: 100vw;
+  }
+  
+  /* Tabel ukuran optimal untuk laptop */
+  .pemasangan-table {
+    font-size: 15px !important;
+    width: 100% !important;
+    min-width: 1200px !important;
+    transform: none !important;
+    margin: 0 !important;
+  }
+  
+  .pemasangan-table th {
+    padding: 15px 12px !important;
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+    white-space: nowrap !important;
+    font-weight: 600 !important;
+  }
+  
+  .pemasangan-table td {
+    padding: 15px 12px !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+  }
+  
+  .table-container {
+    margin: 15px 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    transform: none !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+  }
+  
+  .table-responsive {
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+    overflow-x: auto !important;
+  }
+  
+  /* Enhanced Compact action buttons layout */
+  .action-buttons-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    min-width: 90px;
+    padding: 4px;
+  }
+  
+  .action-row-1,
+  .action-row-2 {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+  }
+  
+  .action-btn-sm {
+    padding: 6px 8px !important;
+    font-size: 12px !important;
+    border-radius: 6px !important;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 36px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .action-btn-sm::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .action-btn-sm:hover::before {
+    left: 100%;
+  }
+  
+  .action-btn-sm.confirm {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+  }
+  
+  .action-btn-sm.confirm:hover {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
+  }
+  
+  .action-btn-sm.detail {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+  }
+  
+  .action-btn-sm.detail:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+  }
+  
+  .action-btn-sm.edit {
+    background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+    color: white;
+  }
+  
+  .action-btn-sm.edit:hover {
+    background: linear-gradient(135deg, #ca8a04 0%, #a16207 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(234, 179, 8, 0.3);
+  }
+  
+  .action-btn-sm.delete {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+  }
+  
+  .action-btn-sm.delete:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+  }
+  
+  /* Maksimalkan button visibility */
+  .pemasangan-table .btn {
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+    margin: 1px !important;
+    border-radius: 4px !important;
+  }
+  
+  /* Customer info optimization */
+  .customer-info .customer-name {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+  }
+  
+  .customer-info .customer-detail {
+    font-size: 12px !important;
+    color: #666 !important;
+  }
+  
+  /* Authentication warning */
+  .auth-warning {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(245, 158, 11, 0.1);
+  }
+  
+  .auth-warning-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+  
+  .auth-warning-content i {
+    font-size: 18px;
+    color: #d97706;
+    flex-shrink: 0;
+  }
+  
+  .auth-warning-text {
+    color: #92400e;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  
+  .auth-warning-text strong {
+    color: #78350f;
+  }
+  
+  /* Loading notice */
+  .loading-notice {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    border: 1px solid #3b82f6;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+  }
+  
+  .loading-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+  
+  .loading-content i {
+    font-size: 18px;
+    color: #2563eb;
+    flex-shrink: 0;
+    animation: pulse 2s ease-in-out infinite alternate;
+  }
+  
+  @keyframes pulse {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
+  }
+  
+  .loading-text {
+    color: #1e40af;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  
+  .loading-text span {
+    display: block;
+    margin-left: 10px;
+    font-size: 12px;
+    color: #3730a3;
+  }
+  
+  /* Column widths optimized untuk laptop - maksimized display */
+  .pemasangan-table th:nth-child(1) { width: 4% !important; }   /* No */
+  .pemasangan-table th:nth-child(2) { width: 15% !important; }  /* Nama */
+  .pemasangan-table th:nth-child(3) { width: 12% !important; }  /* Telepon */
+  .pemasangan-table th:nth-child(4) { width: 16% !important; }  /* Alamat */
+  .pemasangan-table th:nth-child(5) { width: 9% !important; }   /* Desa */
+  .pemasangan-table th:nth-child(6) { width: 7% !important; }   /* Agen */
+  .pemasangan-table th:nth-child(7) { width: 10% !important; }  /* Tanggal Daftar */
+  .pemasangan-table th:nth-child(8) { width: 10% !important; }  /* Tanggal Pasang */
+  .pemasangan-table th:nth-child(9) { width: 11% !important; }  /* Status */
+  .pemasangan-table th:nth-child(10) { width: 9% !important; }  /* Komisi */
+  .pemasangan-table th:nth-child(11) { width: 10% !important; } /* Aksi - compact layout */
+  
+  /* Alamat column optimization untuk laptop display */
+  .pemasangan-table td:nth-child(4) {
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+    padding: 12px 8px !important;
+    word-wrap: break-word !important;
+    white-space: normal !important;
+    max-width: 200px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    vertical-align: top !important;
+  }
+  
+  /* Icon WhatsApp di kolom alamat */
+  .pemasangan-table td:nth-child(4) .btn {
+    padding: 2px 4px !important;
+    font-size: 10px !important;
+    margin: 2px 1px !important;
+  }
+}
+
+/* Adaptive scaling berdasarkan window width */
+@media (max-width: 1600px) {
+  .pemasangan-table {
+    font-size: clamp(10px, 0.8vw + 0.2rem, 14px) !important;
+  }
+}
+
+@media (max-width: 1400px) {
+  .pemasangan-table {
+    font-size: clamp(9px, 0.7vw + 0.2rem, 13px) !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  .pemasangan-table {
+    font-size: clamp(8px, 0.6vw + 0.2rem, 12px) !important;
+  }
+}
+
+/* Responsive breakpoints yang lebih smooth */
+@media (max-width: 1920px) and (min-width: 1600px) {
+  /* Large Desktop */
+  .pemasangan-table {
+    font-size: 15px !important;
+  }
+  .pemasangan-table th, .pemasangan-table td {
+    padding: 16px 14px !important;
+    font-size: 15px !important;
+  }
+}
+
+@media (max-width: 1599px) and (min-width: 1440px) {
+  /* Standard Desktop */
+  .pemasangan-table {
+    font-size: 14px !important;
+  }
+  .pemasangan-table th, .pemasangan-table td {
+    padding: 14px 12px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* LAPTOP SPECIFIC - Resolusi umum laptop 1366x768, 1280x720, 1440x900 */
+@media (max-width: 1439px) and (min-width: 1280px) {
+  /* Laptop Screen Optimization */
+  .pemasangan-table {
+    font-size: 12px !important;
+    min-width: 1200px !important;
+    transform: scale(0.85);
+    transform-origin: top left;
+  }
+  
+  .pemasangan-table th, .pemasangan-table td {
+    padding: 10px 8px !important;
+    font-size: 12px !important;
+  }
+  
+  .table-container {
+    margin-left: -50px;
+    margin-right: -50px;
+    width: calc(100% + 100px);
+  }
+  
+  .table-responsive {
+    padding: 0 50px;
+  }
+  
+  /* Adjust column widths untuk laptop */
+  .pemasangan-table th:nth-child(1) { width: 5%; }     /* No */
+  .pemasangan-table th:nth-child(2) { width: 12%; }    /* Nama */
+  .pemasangan-table th:nth-child(3) { width: 10%; }    /* Telepon */
+  .pemasangan-table th:nth-child(4) { width: 15%; }    /* Alamat */
+  .pemasangan-table th:nth-child(5) { width: 8%; }     /* Desa */
+  .pemasangan-table th:nth-child(6) { width: 8%; }     /* Agen */
+  .pemasangan-table th:nth-child(7) { width: 10%; }    /* Tanggal Daftar */
+  .pemasangan-table th:nth-child(8) { width: 10%; }    /* Tanggal Pasang */
+  .pemasangan-table th:nth-child(9) { width: 10%; }    /* Status */
+  .pemasangan-table th:nth-child(10) { width: 8%; }    /* Komisi */
+  .pemasangan-table th:nth-child(11) { width: 10%; }   /* Aksi */
+}
+
+@media (max-width: 1279px) and (min-width: 1024px) {
+  /* Small Laptop - 1024x768 */
+  .pemasangan-table {
+    font-size: 11px !important;
+    transform: scale(0.75);
+    transform-origin: top left;
+  }
+  
+  .pemasangan-table th, .pemasangan-table td {
+    padding: 8px 6px !important;
+    font-size: 11px !important;
+  }
+  
+  .table-container {
+    margin-left: -80px;
+    margin-right: -80px;
+    width: calc(100% + 160px);
+  }
+  
+  .table-responsive {
+    padding: 0 80px;
+  }
+  
+  /* Sembunyikan kolom Tanggal Pasang untuk space */
+  .pemasangan-table th:nth-child(8),
+  .pemasangan-table td:nth-child(8) {
+    display: none;
+  }
+}
+
+@media (max-width: 991px) and (min-width: 768px) {
+  /* Tablet */
+  .pemasangan-table {
+    font-size: 12px !important;
+  }
+  .pemasangan-table th, .pemasangan-table td {
+    padding: 10px 8px !important;
+    font-size: 12px !important;
+  }
+  
+  /* Sembunyikan beberapa kolom */
+  .pemasangan-table th:nth-child(7),
+  .pemasangan-table td:nth-child(7),
+  .pemasangan-table th:nth-child(8),
+  .pemasangan-table td:nth-child(8) {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Mobile */
+  .pemasangan-table {
+    font-size: 11px !important;
+  }
+  .pemasangan-table th, .pemasangan-table td {
+    padding: 8px 6px !important;
+    font-size: 11px !important;
+  }
+  
+  /* Tampilkan hanya kolom penting */
+  .pemasangan-table th:nth-child(4),
+  .pemasangan-table td:nth-child(4),
+  .pemasangan-table th:nth-child(5),
+  .pemasangan-table td:nth-child(5),
+  .pemasangan-table th:nth-child(6),
+  .pemasangan-table td:nth-child(6),
+  .pemasangan-table th:nth-child(7),
+  .pemasangan-table td:nth-child(7),
+  .pemasangan-table th:nth-child(8),
+  .pemasangan-table td:nth-child(8) {
+    display: none;
+  }
+}
+
+/* Print media query */
+@media print {
+  .pemasangan-table {
+    font-size: 10px;
+  }
+  
+  .btn, .filter-container {
+    display: none !important;
+  }
+  
+  .table-container {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+}
+
+/* Large Desktop (>1920px) - Extra Large Screens */
+@media (min-width: 1921px) {
+  .pemasangan-table {
+    font-size: 16px;
+  }
+  
+  .pemasangan-table th {
+    padding: 20px 16px;
+    font-size: 15px;
+  }
+  
+  .pemasangan-table td {
+    padding: 18px 16px;
+    font-size: 16px;
+  }
+}
+
+/* Desktop Large (1600px-1920px) - Large Screens */
+@media (min-width: 1601px) and (max-width: 1920px) {
+  .pemasangan-table th {
+    padding: 18px 14px;
+    font-size: 14px;
+  }
+  
+  .pemasangan-table td {
+    padding: 16px 14px;
+    font-size: 15px;
+  }
+}
+
+/* Desktop Standard (1280px-1600px) - Standard Desktop */
+@media (min-width: 1280px) and (max-width: 1600px) {
   .table-responsive {
     overflow-x: visible;
   }
@@ -430,31 +1536,22 @@
     table-layout: fixed;
   }
   
-  .pemasangan-table th:nth-child(1) { width: 2%; text-align: center; }    /* No */
-  .pemasangan-table th:nth-child(2) { width: 12%; text-align: center; }   /* Nama Pelanggan */
-  .pemasangan-table th:nth-child(3) { width: 10%; text-align: center; }   /* Telepon */
-  .pemasangan-table th:nth-child(4) { width: 16%; text-align: center; }   /* Alamat */
-  .pemasangan-table th:nth-child(5) { width: 12%; text-align: center; }   /* Desa */
-  .pemasangan-table th:nth-child(6) { width: 7%; text-align: center; }    /* Agen */
-  .pemasangan-table th:nth-child(7) { width: 8%; text-align: center; }    /* Tanggal Daftar */
-  .pemasangan-table th:nth-child(8) { width: 8%; text-align: center; }    /* Tanggal Pasang */
-  .pemasangan-table th:nth-child(9) { width: 9%; text-align: center; }    /* Status */
-  .pemasangan-table th:nth-child(10) { width: 9%; text-align: center; }   /* Komisi */
-  .pemasangan-table th:nth-child(11) { width: 8%; text-align: center; }   /* Aksi */
+  .pemasangan-table th {
+    padding: 16px 12px;
+    font-size: 14px;
+  }
+  
+  .pemasangan-table td {
+    padding: 14px 12px;
+    font-size: 15px;
+    white-space: normal;
+    word-wrap: break-word;
+  }
   
   /* Center align untuk kolom nomor dan tanggal di desktop */
   .pemasangan-table td:nth-child(1) { text-align: center; }     /* No - rata tengah */
-  .pemasangan-table td:nth-child(3) { padding: 6px 10px; }     /* Telepon - padding responsif */
   .pemasangan-table td:nth-child(7) { text-align: center; }     /* Tanggal Daftar - rata tengah */
   .pemasangan-table td:nth-child(8) { text-align: center; }     /* Tanggal Pasang - rata tengah */
-  
-  
-  .pemasangan-table th,
-  .pemasangan-table td {
-    white-space: normal;
-    word-wrap: break-word;
-    padding: 15px 12px;
-  }
   
   .address-cell {
     max-width: none;
@@ -463,50 +1560,65 @@
   }
 }
 
-/* Laptop Layout - Conservative Fix (1024px-1366px) */
-@media (min-width: 1024px) and (max-width: 1366px) {
-  /* Reduce padding to save space */
-  .pemasangan-table th,
-  .pemasangan-table td {
-    padding: 10px 6px;
+/* Laptop Layout (1024px-1279px) */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .pemasangan-table {
+    min-width: 1200px;
+  }
+  
+  .pemasangan-table th {
+    padding: 14px 10px;
     font-size: 13px;
   }
   
-  /* Hide Komisi Agen column on laptop to save space */
-  .pemasangan-table th:nth-child(9),
-  .pemasangan-table td:nth-child(9) {
-    display: none;
+  .pemasangan-table td {
+    padding: 12px 10px;
+    font-size: 14px;
   }
   
-  /* Adjust last visible column border after hiding column 9 */
+  /* Adjust column widths for laptop */
+  .pemasangan-table th:nth-child(1) { width: 3%; }     /* No */
+  .pemasangan-table th:nth-child(2) { width: 14%; }    /* Nama Pelanggan */
+  .pemasangan-table th:nth-child(3) { width: 11%; }    /* Telepon */
+  .pemasangan-table th:nth-child(4) { width: 19%; }    /* Alamat */
+  .pemasangan-table th:nth-child(5) { width: 11%; }    /* Desa */
+  .pemasangan-table th:nth-child(6) { width: 8%; }     /* Agen */
+  .pemasangan-table th:nth-child(7) { width: 9%; }     /* Tanggal Daftar */
+  .pemasangan-table th:nth-child(8) { width: 9%; }     /* Tanggal Pasang */
+  .pemasangan-table th:nth-child(9) { width: 10%; }    /* Status Pemasangan */
+  .pemasangan-table th:nth-child(10) { width: 10%; }   /* Komisi Agen */
+  .pemasangan-table th:nth-child(11) { width: 8%; }    /* Aksi */
+}
+
+/* Tablet Layout (768px-1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .table-responsive {
+    overflow-x: auto;
+  }
+  
+  .pemasangan-table {
+    min-width: 1000px;
+  }
+  
+  .pemasangan-table th {
+    padding: 12px 8px;
+    font-size: 12px;
+  }
+  
+  .pemasangan-table td {
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+  
+  /* Hide some columns on tablet */
+  .pemasangan-table th:nth-child(8),
+  .pemasangan-table td:nth-child(8) {
+    display: none; /* Hide Tanggal Pasang */
+  }
+  
   .pemasangan-table th:nth-child(10),
   .pemasangan-table td:nth-child(10) {
-    border-right: 1px solid #e5e7eb !important;
-  }
-  
-  /* Kolom Aksi tetap tanpa border kanan */
-  .pemasangan-table th:nth-child(11),
-  .pemasangan-table td:nth-child(11) {
-    border-right: none !important;
-  }
-  
-  /* Laptop specific optimizations */
-  .customer-name {
-    font-size: 13px;
-  }
-  
-  .phone-number {
-    font-size: 12px;
-  }
-  
-  .address-cell {
-    font-size: 12px;
-    line-height: 1.3;
-  }
-  
-  .agen-name {
-    font-size: 11px;
-    padding: 3px 6px;
+    display: none; /* Hide Komisi Agen */
   }
   
   .status-badge {
@@ -519,16 +1631,16 @@
   }
 }
 
-/* Tablet Table - Hide Some Columns (768px-1023px) */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .pemasangan-table {
-    min-width: 900px;
+/* Mobile Layout (max-width: 767px) */
+@media (max-width: 767px) {
+  .table-container {
+    display: none; /* Hide table on mobile */
   }
   
-  /* Hide Tanggal Daftar and Komisi columns on tablet */
-  .pemasangan-table th:nth-child(6),
-  .pemasangan-table td:nth-child(6),
-  .pemasangan-table th:nth-child(9),
+  .mobile-card-container {
+    display: block; /* Show cards on mobile */
+  }
+  
   .pemasangan-table td:nth-child(9) {
     display: none;
   }
@@ -544,30 +1656,6 @@
     padding: 12px 10px;
     font-size: 13px;
   }
-}
-
-.pemasangan-table th {
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  padding: 10px 8px;
-  text-align: left;
-  font-weight: 600;
-  color: #1e293b;
-  font-size: 12px;
-  border-bottom: 2px solid #e2e8f0;
-  border-right: 1px solid #e5e7eb;
-  white-space: nowrap;
-}
-
-.pemasangan-table th:last-child {
-  border-right: none;
-}
-
-.pemasangan-table td {
-  padding: 8px 6px;
-  border-bottom: 1px solid #f1f5f9;
-  border-right: 1px solid #e5e7eb;
-  vertical-align: top;
-  font-size: 12px;
 }
 
 .pemasangan-table td:last-child {
@@ -598,9 +1686,10 @@
 }
 
 .customer-avatar {
-  font-size: 24px;
+  font-size: 28px;
   color: #667eea;
   flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(102, 126, 234, 0.2));
 }
 
 .customer-details {
@@ -615,20 +1704,21 @@
   margin-bottom: 2px;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  line-height: 1.2;
-  font-size: 12px;
+  line-height: 1.3;
+  font-size: 14px;
 }
 
 .teknisi-info {
-  font-size: 10px;
+  font-size: 11px;
   color: #64748b;
   background: #f1f5f9;
-  padding: 1px 4px;
-  border-radius: 4px;
+  padding: 2px 6px;
+  border-radius: 6px;
   display: inline-block;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  line-height: 1.1;
+  line-height: 1.2;
+  font-weight: 500;
 }
 
 /* Phone Actions - No individual scroll */
@@ -643,101 +1733,109 @@
 
 .phone-number {
   font-family: monospace;
-  font-weight: 500;
+  font-weight: 600;
   color: #000000;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  font-size: 12px;
+  font-size: 13px;
   flex: 1;
   text-align: left;
+  letter-spacing: 0.5px;
 }
 
 .whatsapp-btn {
-  padding: 4px 6px;
+  padding: 6px 8px;
   background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   color: white;
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
   flex-shrink: 0;
-  min-width: 24px;
-  height: 24px;
+  min-width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 4px rgba(37, 211, 102, 0.2);
 }
 
 .whatsapp-btn:hover {
   transform: scale(1.1);
-  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+  background: linear-gradient(135deg, #128c7e 0%, #25d366 100%);
 }
 
-/* Address Cell - Compact and elegant */
+/* Address Cell - Enhanced visibility */
 .address-cell {
   color: #000000;
-  line-height: 1.3;
+  line-height: 1.4;
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
   white-space: normal;
-  padding: 2px;
+  padding: 4px;
   vertical-align: top;
   height: auto;
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 400;
 }
 
-/* Desa Cell - Compact */
+/* Desa Cell - Enhanced */
 .desa-cell {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   font-weight: 600;
   color: #059669;
 }
 
 .desa-cell i {
-  font-size: 12px;
+  font-size: 14px;
   color: #10b981;
 }
 
 .desa-name {
-  font-size: 10px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
-/* Agen Cell - Compact */
+/* Agen Cell - Enhanced */
 .agen-cell {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   font-weight: 600;
   color: #6366f1;
 }
 
 .agen-cell i {
-  font-size: 12px;
+  font-size: 14px;
   color: #8b5cf6;
 }
 
 .agen-name {
   background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
-  padding: 2px 6px;
-  border-radius: 8px;
-  font-size: 9px;
+  padding: 4px 8px;
+  border-radius: 10px;
+  font-size: 11px;
   font-weight: 700;
   color: #4338ca;
+  box-shadow: 0 1px 3px rgba(67, 56, 202, 0.2);
 }
 
-/* Status Badge */
+/* Status Badge - Enhanced */
 .status-badge {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 10px;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 14px;
+  font-size: 11px;
   font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
 }
 
 .status-badge.menunggu {
@@ -760,95 +1858,132 @@
 .komisi-badge {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 3px 6px;
-  border-radius: 8px;
-  font-size: 9px;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 11px;
   font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
 }
 
 .komisi-badge.dibayar {
   background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
   color: #065f46;
+  border: 1px solid #86efac;
 }
 
 .komisi-badge.belum {
   background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
   color: #991b1b;
+  border: 1px solid #fca5a5;
 }
 
 .komisi-badge.pending {
   background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
   color: #6b7280;
   font-style: italic;
+  border: 1px solid #d1d5db;
 }
 
 .komisi-btn {
   background: none;
   border: none;
-  padding: 3px;
+  padding: 6px;
   border-radius: 50%;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .komisi-btn.mark-paid {
   color: #16a34a;
   background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
 }
 
 .komisi-btn.mark-paid:hover {
   background: rgba(34, 197, 94, 0.2);
-  transform: scale(1.1);
+  transform: scale(1.15);
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.3);
 }
 
 .komisi-btn.mark-unpaid {
   color: #dc2626;
   background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 .komisi-btn.mark-unpaid:hover {
   background: rgba(239, 68, 68, 0.2);
-  transform: scale(1.1);
+  transform: scale(1.15);
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
 }
 
-/* Action Buttons - Compact */
+/* Enhanced Action Buttons - Default */
 .action-buttons {
   display: flex;
-  gap: 4px;
+  gap: 6px;
+  justify-content: center;
 }
 
 .action-btn {
-  padding: 4px 6px;
+  padding: 6px 10px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 600;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 28px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.action-btn:hover::before {
+  left: 100%;
 }
 
 .action-btn.confirm {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
   color: white;
 }
 
 .action-btn.confirm:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
 }
 
 .action-btn.edit {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
   color: white;
 }
 
 .action-btn.edit:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(135deg, #ca8a04 0%, #a16207 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(234, 179, 8, 0.4);
 }
 
 .action-btn.delete {
@@ -857,8 +1992,20 @@
 }
 
 .action-btn.delete:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.action-btn.detail {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+}
+
+.action-btn.detail:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
 /* Modal Styles */

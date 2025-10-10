@@ -376,7 +376,7 @@ app.get('/api/desa', (req, res) => {
 // ========== MANAJEMEN AKUN API ROUTES ==========
 
 // Get current user profile
-app.get('/auth/profile', verifyToken, (req, res) => {
+app.get('/api/auth/profile', verifyToken, (req, res) => {
     const query = 'SELECT id, email, name, phone, address, role FROM users WHERE id = ?';
     
     db.query(query, [req.user.id], (err, results) => {
@@ -394,7 +394,7 @@ app.get('/auth/profile', verifyToken, (req, res) => {
 });
 
 // Update user profile
-app.put('/auth/profile', verifyToken, (req, res) => {
+app.put('/api/auth/profile', verifyToken, (req, res) => {
     const { name, email, phone, address } = req.body;
     
     if (!name || !email) {
@@ -427,7 +427,7 @@ app.put('/auth/profile', verifyToken, (req, res) => {
 });
 
 // Change password
-app.post('/auth/change-password', verifyToken, async (req, res) => {
+app.post('/api/auth/change-password', verifyToken, async (req, res) => {
     const { currentPassword, newPassword } = req.body;
     
     if (!currentPassword || !newPassword) {
@@ -484,7 +484,7 @@ app.post('/auth/change-password', verifyToken, async (req, res) => {
 });
 
 // Reset user password (Admin only)
-app.post('/users/:id/reset-password', verifyToken, async (req, res) => {
+app.post('/api/users/:id/reset-password', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { newPassword, confirmPassword } = req.body;
     
@@ -551,7 +551,7 @@ app.post('/users/:id/reset-password', verifyToken, async (req, res) => {
 });
 
 // Get all users (Admin only)
-app.get('/users', verifyToken, (req, res) => {
+app.get('/api/users', verifyToken, (req, res) => {
     // Check if user is admin
     const checkAdminQuery = 'SELECT role FROM users WHERE id = ?';
     
@@ -579,7 +579,7 @@ app.get('/users', verifyToken, (req, res) => {
 });
 
 // Create new user (Admin only)
-app.post('/users', verifyToken, async (req, res) => {
+app.post('/api/users', verifyToken, async (req, res) => {
     const { name, email, password, role, phone, address } = req.body;
     
     if (!name || !email || !password || !role) {
@@ -639,7 +639,7 @@ app.post('/users', verifyToken, async (req, res) => {
 });
 
 // Update user (Admin only)
-app.put('/users/:id', verifyToken, (req, res) => {
+app.put('/api/users/:id', verifyToken, (req, res) => {
     const { id } = req.params;
     const { name, email, role, phone, address } = req.body;
     
@@ -692,7 +692,7 @@ app.put('/users/:id', verifyToken, (req, res) => {
 });
 
 // Delete user (Admin only)
-app.delete('/users/:id', verifyToken, (req, res) => {
+app.delete('/api/users/:id', verifyToken, (req, res) => {
     const { id } = req.params;
     
     // Check if user is admin
@@ -731,7 +731,7 @@ app.delete('/users/:id', verifyToken, (req, res) => {
 });
 
 // Get all agents
-app.get('/agents', verifyToken, (req, res) => {
+app.get('/api/agents', verifyToken, (req, res) => {
     const query = 'SELECT id, name, phone, email, address, created_at FROM agents ORDER BY name ASC';
     
     db.query(query, (err, results) => {
@@ -745,7 +745,7 @@ app.get('/agents', verifyToken, (req, res) => {
 });
 
 // Create new agent
-app.post('/agents', verifyToken, (req, res) => {
+app.post('/api/agents', verifyToken, (req, res) => {
     const { name, phone, email, address } = req.body;
     
     if (!name || !phone) {
@@ -768,7 +768,7 @@ app.post('/agents', verifyToken, (req, res) => {
 });
 
 // Update agent
-app.put('/agents/:id', verifyToken, (req, res) => {
+app.put('/api/agents/:id', verifyToken, (req, res) => {
     const { id } = req.params;
     const { name, phone, email, address } = req.body;
     
@@ -793,7 +793,7 @@ app.put('/agents/:id', verifyToken, (req, res) => {
 });
 
 // Delete agent
-app.delete('/agents/:id', verifyToken, (req, res) => {
+app.delete('/api/agents/:id', verifyToken, (req, res) => {
     const { id } = req.params;
     
     const deleteQuery = 'DELETE FROM agents WHERE id = ?';
@@ -813,7 +813,7 @@ app.delete('/agents/:id', verifyToken, (req, res) => {
 });
 
 // Get all villages
-app.get('/villages', verifyToken, (req, res) => {
+app.get('/api/villages', verifyToken, (req, res) => {
     const query = 'SELECT id, name, kecamatan, kabupaten, created_at FROM villages ORDER BY name ASC';
     
     db.query(query, (err, results) => {
@@ -827,7 +827,7 @@ app.get('/villages', verifyToken, (req, res) => {
 });
 
 // Create new village
-app.post('/villages', verifyToken, (req, res) => {
+app.post('/api/villages', verifyToken, (req, res) => {
     const { name, kecamatan, kabupaten } = req.body;
     
     if (!name || !kecamatan || !kabupaten) {
@@ -850,7 +850,7 @@ app.post('/villages', verifyToken, (req, res) => {
 });
 
 // Update village
-app.put('/villages/:id', verifyToken, (req, res) => {
+app.put('/api/villages/:id', verifyToken, (req, res) => {
     const { id } = req.params;
     const { name, kecamatan, kabupaten } = req.body;
     
@@ -875,7 +875,7 @@ app.put('/villages/:id', verifyToken, (req, res) => {
 });
 
 // Delete village
-app.delete('/villages/:id', verifyToken, (req, res) => {
+app.delete('/api/villages/:id', verifyToken, (req, res) => {
     const { id } = req.params;
     
     const deleteQuery = 'DELETE FROM villages WHERE id = ?';
@@ -895,7 +895,7 @@ app.delete('/villages/:id', verifyToken, (req, res) => {
 });
 
 // Get activity logs (Admin only)
-app.get('/activity-logs', verifyToken, (req, res) => {
+app.get('/api/activity-logs', verifyToken, (req, res) => {
     // Check if user is admin
     const checkAdminQuery = 'SELECT role FROM users WHERE id = ?';
     

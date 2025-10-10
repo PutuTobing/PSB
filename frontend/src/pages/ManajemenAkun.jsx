@@ -123,7 +123,7 @@ const ManajemenAkun = () => {
                 return;
             }
 
-            const response = await fetch(`${getApiUrl()}/auth/profile`, {
+            const response = await fetch(`${getApiUrl()}/api/auth/profile`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -164,7 +164,7 @@ const ManajemenAkun = () => {
                 return;
             }
 
-            const response = await fetch(`${getApiUrl()}/users`, {
+            const response = await fetch(`${getApiUrl()}/api/users`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -201,7 +201,7 @@ const ManajemenAkun = () => {
                 return;
             }
 
-            const response = await fetch(`${getApiUrl()}/agents`, {
+            const response = await fetch(`${getApiUrl()}/api/agents`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -236,7 +236,7 @@ const ManajemenAkun = () => {
                 return;
             }
 
-            const response = await fetch(`${getApiUrl()}/villages`, {
+            const response = await fetch(`${getApiUrl()}/api/villages`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -271,7 +271,7 @@ const ManajemenAkun = () => {
                 return;
             }
 
-            const response = await fetch(`${getApiUrl()}/activity-logs`, {
+            const response = await fetch(`${getApiUrl()}/api/activity-logs`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -350,7 +350,7 @@ const ManajemenAkun = () => {
         setIsLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${getApiUrl()}/auth/change-password`, {
+            const response = await fetch(`${getApiUrl()}/api/auth/change-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -383,7 +383,7 @@ const ManajemenAkun = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${getApiUrl()}/auth/profile`, {
+            const response = await fetch(`${getApiUrl()}/api/auth/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -415,8 +415,8 @@ const ManajemenAkun = () => {
         try {
             const token = localStorage.getItem('token');
             const url = editingUser 
-                ? `${getApiUrl()}/users/${editingUser.id}`
-                : `${getApiUrl()}/users`;
+                ? `${getApiUrl()}/api/users/${editingUser.id}`
+                : `${getApiUrl()}/api/users`;
             
             const method = editingUser ? 'PUT' : 'POST';
             
@@ -456,7 +456,7 @@ const ManajemenAkun = () => {
         setIsLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${getApiUrl()}/users/${deletingUser.id}`, {
+            const response = await fetch(`${getApiUrl()}/api/users/${deletingUser.id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -495,7 +495,7 @@ const ManajemenAkun = () => {
         setIsLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${getApiUrl()}/users/${resettingUser.id}/reset-password`, {
+            const response = await fetch(`${getApiUrl()}/api/users/${resettingUser.id}/reset-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -534,8 +534,8 @@ const ManajemenAkun = () => {
         try {
             const token = localStorage.getItem('token');
             const url = editingAgent 
-                ? `${getApiUrl()}/agents/${editingAgent.id}`
-                : `${getApiUrl()}/agents`;
+                ? `${getApiUrl()}/api/agents/${editingAgent.id}`
+                : `${getApiUrl()}/api/agents`;
             
             const method = editingAgent ? 'PUT' : 'POST';
             
@@ -575,7 +575,7 @@ const ManajemenAkun = () => {
         setIsLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${getApiUrl()}/agents/${deletingAgent.id}`, {
+            const response = await fetch(`${getApiUrl()}/api/agents/${deletingAgent.id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -606,8 +606,8 @@ const ManajemenAkun = () => {
         try {
             const token = localStorage.getItem('token');
             const url = editingVillage 
-                ? `${getApiUrl()}/villages/${editingVillage.id}`
-                : `${getApiUrl()}/villages`;
+                ? `${getApiUrl()}/api/villages/${editingVillage.id}`
+                : `${getApiUrl()}/api/villages`;
             
             const method = editingVillage ? 'PUT' : 'POST';
             
@@ -647,7 +647,7 @@ const ManajemenAkun = () => {
         setIsLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${getApiUrl()}/villages/${deletingVillage.id}`, {
+            const response = await fetch(`${getApiUrl()}/api/villages/${deletingVillage.id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -822,7 +822,7 @@ const ManajemenAkun = () => {
                                             className="btn btn-secondary"
                                             onClick={() => setShowPasswordModal(true)}
                                         >
-                                            <i className="fas fa-key"></i>
+                                            <i className="bi bi-key"></i>
                                             Ubah Password
                                         </button>
                                     </div>
@@ -884,14 +884,14 @@ const ManajemenAkun = () => {
                                                         onClick={() => openEditUser(user)}
                                                         title="Edit"
                                                     >
-                                                        <i className="fas fa-edit"></i>
+                                                        <i className="bi bi-pencil-square"></i>
                                                     </button>
                                                     <button 
                                                         className="action-btn reset-password"
                                                         onClick={() => openResetPassword(user)}
                                                         title="Reset Password"
                                                     >
-                                                        <i className="fas fa-key"></i>
+                                                        <i className="bi bi-key"></i>
                                                     </button>
                                                     <button 
                                                         className="action-btn delete"
@@ -899,7 +899,7 @@ const ManajemenAkun = () => {
                                                         title="Hapus"
                                                         disabled={user.id === currentUser?.id}
                                                     >
-                                                        <i className="fas fa-trash"></i>
+                                                        <i className="bi bi-trash3"></i>
                                                     </button>
                                                 </div>
                                             </td>
@@ -947,7 +947,7 @@ const ManajemenAkun = () => {
                                                 onClick={() => user && openEditUser(user)}
                                                 disabled={!user}
                                             >
-                                                <i className="fas fa-edit"></i>
+                                                <i className="bi bi-pencil-square"></i>
                                                 Edit
                                             </button>
                                             <button 
@@ -955,7 +955,7 @@ const ManajemenAkun = () => {
                                                 onClick={() => user && openResetPassword(user)}
                                                 disabled={!user}
                                             >
-                                                <i className="fas fa-key"></i>
+                                                <i className="bi bi-key"></i>
                                                 Reset
                                             </button>
                                             <button 
@@ -963,7 +963,7 @@ const ManajemenAkun = () => {
                                                 onClick={() => user && user.id && handleDeleteUser(user)}
                                                 disabled={!user || !user.id || (user.id === currentUser?.id)}
                                             >
-                                                <i className="fas fa-trash"></i>
+                                                <i className="bi bi-trash3"></i>
                                                 Hapus
                                             </button>
                                         </div>
@@ -1023,14 +1023,14 @@ const ManajemenAkun = () => {
                                                                 onClick={() => openEditAgent(agent)}
                                                                 title="Edit"
                                                             >
-                                                                <i className="fas fa-edit"></i>
+                                                                <i className="bi bi-pencil-square"></i>
                                                             </button>
                                                             <button 
                                                                 className="action-btn delete"
                                                                 onClick={() => handleDeleteAgent(agent)}
                                                                 title="Hapus"
                                                             >
-                                                                <i className="fas fa-trash"></i>
+                                                                <i className="bi bi-trash3"></i>
                                                             </button>
                                                         </div>
                                                     </td>
@@ -1075,14 +1075,14 @@ const ManajemenAkun = () => {
                                                     className="card-action-btn-mobile edit"
                                                     onClick={() => openEditAgent(agent)}
                                                 >
-                                                    <i className="fas fa-edit"></i>
+                                                    <i className="bi bi-pencil-square"></i>
                                                     Edit
                                                 </button>
                                                 <button 
                                                     className="card-action-btn-mobile delete"
                                                     onClick={() => handleDeleteAgent(agent)}
                                                 >
-                                                    <i className="fas fa-trash"></i>
+                                                    <i className="bi bi-trash3"></i>
                                                     Hapus
                                                 </button>
                                             </div>
@@ -1150,14 +1150,14 @@ const ManajemenAkun = () => {
                                                                 onClick={() => openEditVillage(village)}
                                                                 title="Edit"
                                                             >
-                                                                <i className="fas fa-edit"></i>
+                                                                <i className="bi bi-pencil-square"></i>
                                                             </button>
                                                             <button 
                                                                 className="action-btn delete"
                                                                 onClick={() => handleDeleteVillage(village)}
                                                                 title="Hapus"
                                                             >
-                                                                <i className="fas fa-trash"></i>
+                                                                <i className="bi bi-trash3"></i>
                                                             </button>
                                                         </div>
                                                     </td>
@@ -1198,14 +1198,14 @@ const ManajemenAkun = () => {
                                                     className="card-action-btn-mobile edit"
                                                     onClick={() => openEditVillage(village)}
                                                 >
-                                                    <i className="fas fa-edit"></i>
+                                                    <i className="bi bi-pencil-square"></i>
                                                     Edit
                                                 </button>
                                                 <button 
                                                     className="card-action-btn-mobile delete"
                                                     onClick={() => handleDeleteVillage(village)}
                                                 >
-                                                    <i className="fas fa-trash"></i>
+                                                    <i className="bi bi-trash3"></i>
                                                     Hapus
                                                 </button>
                                             </div>
@@ -1308,7 +1308,7 @@ const ManajemenAkun = () => {
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
                         <div className="modal-header">
                             <h3>
-                                <i className="fas fa-key"></i>
+                                <i className="bi bi-key"></i>
                                 Ubah Password
                             </h3>
                             <button 
@@ -1709,7 +1709,7 @@ const ManajemenAkun = () => {
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
                         <div className="modal-header">
                             <h3>
-                                <i className="fas fa-key"></i>
+                                <i className="bi bi-key"></i>
                                 Reset Password Pengguna
                             </h3>
                             <button 
