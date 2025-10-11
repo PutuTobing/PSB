@@ -1,6 +1,21 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './DaftarPemasangan.css';
 
+// ✅ Clean logging utility dengan environment control
+const isDev = import.meta.env.DEV;
+const enableDebugLogs = import.meta.env.VITE_ENABLE_DEBUG_LOGS !== 'false';
+const enableApiLogs = import.meta.env.VITE_ENABLE_API_LOGS !== 'false';
+
+const log = {
+  info: (...args) => (isDev && enableDebugLogs) && console.log('ℹ️', ...args),
+  success: (...args) => (isDev && enableApiLogs) && console.log('✅', ...args),
+  warn: (...args) => console.warn('⚠️', ...args),
+  error: (...args) => console.error('❌', ...args),
+  group: (title) => (isDev && enableDebugLogs) && console.group(`🔍 ${title}`),
+  groupEnd: () => (isDev && enableDebugLogs) && console.groupEnd(),
+  // API logging terpisah
+  api: (...args) => (isDev && enableApiLogs) && console.log('🌐', ...args)
+};
 
 // Helper function untuk akses database auth_db melalui API
 // Database: auth_db
@@ -40,7 +55,7 @@ const getValidToken = () => {
 
 // Helper function untuk handle authentication errors
 const handleAuthError = (endpoint, error) => {
-  console.error(`Authentication failed for ${endpoint}:`, error);
+  log.error(`Authentication failed for ${endpoint}:`, error);
   
   // Check if user needs to re-login
   const token = localStorage.getItem('token');
@@ -151,18 +166,9 @@ function DaftarPemasangan() {
     lastChecked: null
   });
 
-  // Debug function untuk memeriksa status authentication
+  // Debug function untuk memeriksa status authentication (hanya di development)
   const debugAuthStatus = () => {
     const token = localStorage.getItem('token');
-    console.group('🔐 Authentication Debug Info');
-    console.log('Token exists:', !!token);
-    if (token) {
-      console.log('Token length:', token.length);
-      console.log('Token preview:', token.substring(0, 20) + '...');
-      console.log('Token type:', typeof token);
-    } else {
-      console.warn('No token found in localStorage');
-    }
     
     // Update auth status
     setAuthStatus({
@@ -171,9 +177,15 @@ function DaftarPemasangan() {
       lastChecked: new Date().toISOString()
     });
     
-    // List all localStorage keys
-    console.log('All localStorage keys:', Object.keys(localStorage));
-    console.groupEnd();
+    // Hanya tampilkan debug info di development mode
+    log.group('Authentication Status');
+    log.info('Token exists:', !!token);
+    if (token) {
+      log.info('Token length:', token.length);
+    } else {
+      log.warn('No token found in localStorage');
+    }
+    log.groupEnd();
   };
 
   // Set default values setelah data dari database dimuat
@@ -192,10 +204,7 @@ function DaftarPemasangan() {
     debugAuthStatus();
     
     // Fetch data dari database auth_db
-    console.log('Loading data from database auth_db...');
-    console.log('- Table: pemasangan');
-    console.log('- Table: villages'); 
-    console.log('- Table: agents');
+    log.api('Loading data from database auth_db (pemasangan, villages, agents)');
     
     fetchPemasanganData();
     fetchDesaData();
@@ -229,27 +238,29 @@ function DaftarPemasangan() {
         // Pastikan data adalah array
         if (Array.isArray(data)) {
           setPemasanganData(data);
-          console.log('Pemasangan data fetched from database successfully:', data.length, 'records');
+          
+          // Log success
+          log.success('Pemasangan data loaded:', data.length, 'records');
           
           // Update auth status sebagai valid jika berhasil
           if (token) {
             setAuthStatus(prev => ({ ...prev, isValid: true }));
           }
         } else {
-          console.warn('Invalid pemasangan data format from database');
+          log.warn('Invalid pemasangan data format from database');
           setPemasanganData([]);
         }
       } else if (response.status === 401) {
         handleAuthError('/pemasangan', 'Unauthorized access to pemasangan data');
         setAuthStatus(prev => ({ ...prev, isValid: false }));
-        console.warn('Authentication failed for pemasangan data - please check login status');
+        log.warn('Authentication failed for pemasangan data - please check login status');
         setPemasanganData([]);
       } else {
-        console.error(`Failed to fetch pemasangan data from database: ${response.status} ${response.statusText}`);
+        log.error(`Failed to fetch pemasangan data: ${response.status} ${response.statusText}`);
         setPemasanganData([]);
       }
     } catch (error) {
-      console.error('Network error fetching pemasangan data from database:', error);
+      log.error('Network error fetching pemasangan data:', error);
       setPemasanganData([]);
     }
   };
@@ -281,7 +292,9 @@ function DaftarPemasangan() {
       
       if (response.ok) {
         const data = await response.json();
-        console.log('Villages data fetched from database:', data);
+        
+        // Log villages data
+        log.api('Villages data loaded:', data.length, 'villages');
         
         // Pastikan data adalah array
         if (Array.isArray(data) && data.length > 0) {
@@ -296,9 +309,11 @@ function DaftarPemasangan() {
             if (newPelanggan.desa === '') {
               setNewPelanggan(prev => ({...prev, desa: desaNames[0]}));
             }
-            console.log('Successfully loaded villages from database:', desaNames);
+            
+            // Log success
+            log.success('Villages loaded successfully:', desaNames.length, 'unique villages');
           } else {
-            console.warn('No valid village names found in database response');
+            log.warn('No valid village names found in database response');
             setDaftarDesa([]);
           }
         } else {
@@ -310,11 +325,11 @@ function DaftarPemasangan() {
         setAuthStatus(prev => ({ ...prev, isValid: false }));
         setDaftarDesa([]);
       } else {
-        console.error(`Failed to fetch villages from database: ${response.status} ${response.statusText}`);
+        log.error(`Failed to fetch villages: ${response.status} ${response.statusText}`);
         setDaftarDesa([]);
       }
     } catch (error) {
-      console.error('Network error fetching villages from database:', error);
+      log.error('Network error fetching villages:', error);
       setDaftarDesa([]);
     } finally {
       setLoadingDesa(false);
@@ -348,7 +363,9 @@ function DaftarPemasangan() {
       
       if (response.ok) {
         const data = await response.json();
-        console.log('Agents data fetched from database:', data);
+        
+        // Log agents data
+        log.api('Agents data loaded:', data.length, 'agents');
         
         // Pastikan data adalah array
         if (Array.isArray(data) && data.length > 0) {
@@ -359,9 +376,11 @@ function DaftarPemasangan() {
           
           if (agentNames.length > 0) {
             setDaftarAgen(agentNames);
-            console.log('Successfully loaded agents from database:', agentNames);
+            
+            // Log success
+            log.success('Agents loaded successfully:', agentNames.length, 'unique agents');
           } else {
-            console.warn('No valid agent names found in database response');
+            log.warn('No valid agent names found in database response');
             setDaftarAgen([]);
           }
         } else {
@@ -373,11 +392,11 @@ function DaftarPemasangan() {
         setAuthStatus(prev => ({ ...prev, isValid: false }));
         setDaftarAgen([]);
       } else {
-        console.error(`Failed to fetch agents from database: ${response.status} ${response.statusText}`);
+        log.error(`Failed to fetch agents: ${response.status} ${response.statusText}`);
         setDaftarAgen([]);
       }
     } catch (error) {
-      console.error('Network error fetching agents from database:', error);
+      log.error('Network error fetching agents:', error);
       setDaftarAgen([]);
     } finally {
       setLoadingAgen(false);
@@ -862,13 +881,7 @@ function DaftarPemasangan() {
             </div>
           </div>
           <div className="header-actions">
-            <button 
-              className="btn btn-primary"
-              onClick={() => setShowAddModal(true)}
-            >
-              <i className="bi bi-plus-circle"></i>
-              Tambah Pelanggan
-            </button>
+            {/* Tombol Tambah Pelanggan dipindahkan ke table-controls */}
           </div>
         </div>
       </div>
@@ -930,91 +943,113 @@ function DaftarPemasangan() {
         </div>
       </div>
 
-      {/* Filters and Search */}
+      {/* Enhanced Filters and Search */}
       <div className="table-controls">
-        <div className="search-box">
-          <i className="bi bi-search"></i>
-          <input
-            type="text"
-            placeholder="Cari nama, telepon, atau alamat..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        
-        {/* Date Filters */}
-        <div className="date-filters">
-          <div className="filter-group">
-            <i className="bi bi-calendar-month"></i>
-            <select 
-              value={selectedMonth} 
-              onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-              className="date-select"
-            >
-              <option value={0}>Semua Bulan</option>
-              {monthNames.map((month, index) => (
-                <option key={index + 1} value={index + 1}>
-                  {month}
-                </option>
-              ))}
-            </select>
+        <div className="controls-main">
+          <div className="controls-left">
+            {/* Enhanced Search */}
+            <div className="search-wrapper">
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Cari nama, telepon, atau alamat pelanggan..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            
+            {/* Enhanced Filters */}
+            <div className="filters-group">
+              <div className="filter-item">
+                <select 
+                  value={selectedMonth} 
+                  onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                  className="filter-select"
+                >
+                  <option value={0}>Semua Bulan</option>
+                  {monthNames.map((month, index) => (
+                    <option key={index + 1} value={index + 1}>
+                      {month}
+                    </option>
+                  ))}
+                </select>
+                <label className="filter-label">Bulan</label>
+              </div>
+              
+              <div className="filter-item">
+                <select 
+                  value={selectedYear} 
+                  onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                  className="filter-select"
+                >
+                  {getYearOptions().map(year => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+                <label className="filter-label">Tahun</label>
+              </div>
+              
+              <div className="filter-item">
+                <select 
+                  value={filterDesa} 
+                  onChange={(e) => setFilterDesa(e.target.value)}
+                  className="filter-select"
+                >
+                  <option value="all">Semua Desa</option>
+                  {daftarDesa.map((desa, index) => (
+                    <option key={`filter-desa-${index}`} value={desa}>
+                      {desa}
+                    </option>
+                  ))}
+                </select>
+                <label className="filter-label">Desa</label>
+              </div>
+            </div>
           </div>
           
-          <div className="filter-group">
-            <i className="bi bi-calendar-event"></i>
-            <select 
-              value={selectedYear} 
-              onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-              className="date-select"
-            >
-              {getYearOptions().map(year => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
+          <div className="controls-right">
+            {/* Enhanced Status Buttons */}
+            <div className="status-buttons">
+              <button 
+                className={`status-filter-btn ${filterStatus === 'all' ? 'active semua' : ''}`}
+                onClick={() => setFilterStatus('all')}
+              >
+                <span className="status-icon">📊</span>
+                Semua
+              </button>
+              <button 
+                className={`status-filter-btn ${filterStatus === 'menunggu' ? 'active menunggu' : ''}`}
+                onClick={() => setFilterStatus('menunggu')}
+              >
+                <span className="status-icon">⏳</span>
+                Menunggu
+              </button>
+              <button 
+                className={`status-filter-btn ${filterStatus === 'terpasang' ? 'active terpasang' : ''}`}
+                onClick={() => setFilterStatus('terpasang')}
+              >
+                <span className="status-icon">✅</span>
+                Terpasang
+              </button>
+            </div>
+            
+            {/* Tombol Tambah Pelanggan */}
+            <div className="add-customer-section">
+              <button 
+                className="btn btn-primary add-customer-btn"
+                onClick={() => setShowAddModal(true)}
+              >
+                <i className="bi bi-plus-circle"></i>
+                Tambah Pelanggan
+              </button>
+            </div>
           </div>
-          
-          <div className="filter-group">
-            <i className="bi bi-geo-alt"></i>
-            <select 
-              value={filterDesa} 
-              onChange={(e) => setFilterDesa(e.target.value)}
-              className="date-select"
-            >
-              <option value="all">Semua Desa</option>
-              {daftarDesa.map((desa, index) => (
-                <option key={`filter-desa-${index}`} value={desa}>
-                  {desa}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        
-        <div className="filter-buttons">
-          <button 
-            className={`filter-btn ${filterStatus === 'all' ? 'active' : ''}`}
-            onClick={() => setFilterStatus('all')}
-          >
-            Semua
-          </button>
-          <button 
-            className={`filter-btn ${filterStatus === 'menunggu' ? 'active' : ''}`}
-            onClick={() => setFilterStatus('menunggu')}
-          >
-            Menunggu
-          </button>
-          <button 
-            className={`filter-btn ${filterStatus === 'terpasang' ? 'active' : ''}`}
-            onClick={() => setFilterStatus('terpasang')}
-          >
-            Terpasang
-          </button>
         </div>
       </div>
 
-      {/* Data Table */}
+      {/* Data Table - Desktop/Tablet */}
       <div className="table-container">
         <div className="table-responsive">
           <table className="pemasangan-table">
@@ -1063,7 +1098,7 @@ function DaftarPemasangan() {
                     </div>
                   </td>
                   <td>
-                    <div className="address-cell">
+                    <div className="address-cell-full">
                       {pelanggan.alamat}
                     </div>
                   </td>
@@ -1098,7 +1133,7 @@ function DaftarPemasangan() {
                   </td>
                   <td>
                     {pelanggan.status === 'terpasang' ? (
-                      <div className="komisi-status">
+                      <div className="komisi-status-horizontal">
                         <span className={`komisi-badge ${pelanggan.komisi_dibayar ? 'dibayar' : 'belum'}`}>
                           {pelanggan.komisi_dibayar ? (
                             <>
@@ -1113,7 +1148,7 @@ function DaftarPemasangan() {
                           )}
                         </span>
                         <button
-                          className={`komisi-btn ${pelanggan.komisi_dibayar ? 'mark-unpaid' : 'mark-paid'}`}
+                          className={`komisi-btn-compact ${pelanggan.komisi_dibayar ? 'mark-unpaid' : 'mark-paid'}`}
                           onClick={() => handleKomisiClick(pelanggan)}
                           title="Update Status Komisi"
                         >
@@ -1193,162 +1228,172 @@ function DaftarPemasangan() {
         </div>
       </div>
 
-      {/* Mobile Card Layout */}
+      {/* Mobile Card Layout - Responsive */}
       <div className="mobile-card-container">
         {filteredData.map((pelanggan, index) => (
-          <div key={pelanggan.id} className="customer-card">
-            <div className="card-number">{index + 1}</div>
-            
-            <div className="card-header">
-              <div className="card-avatar">
-                <i className="bi bi-person-circle"></i>
+          <div key={pelanggan.id} className="mobile-card">
+            <div className="mobile-card-header">
+              <div>
+                <div className="mobile-card-title">{pelanggan.nama}</div>
+                <div className="mobile-card-id">#{pelanggan.id}</div>
               </div>
-              <div className="card-header-info">
-                <h4 className="card-customer-name">{pelanggan.nama}</h4>
-                <p className="card-customer-phone">
+              <span className={`mobile-card-status ${pelanggan.status === 'menunggu' ? 'pending' : 'confirmed'}`}>
+                {pelanggan.status === 'menunggu' ? (
+                  <>
+                    <i className="bi bi-clock"></i>
+                    Menunggu
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-check-circle"></i>
+                    Terpasang
+                  </>
+                )}
+              </span>
+            </div>
+            
+            <div className="mobile-card-details">
+              <div className="mobile-card-detail">
+                <div className="mobile-card-label">
                   <i className="bi bi-telephone"></i>
-                  {pelanggan.telepon}
-                </p>
+                  Telepon
+                </div>
+                <div className="mobile-card-value">{pelanggan.telepon}</div>
+              </div>
+              <div className="mobile-card-detail">
+                <div className="mobile-card-label">
+                  <i className="bi bi-geo"></i>
+                  Desa
+                </div>
+                <div className="mobile-card-value">{pelanggan.desa}</div>
+              </div>
+              <div className="mobile-card-detail">
+                <div className="mobile-card-label">
+                  <i className="bi bi-person-badge"></i>
+                  Agen
+                </div>
+                <div className="mobile-card-value">{pelanggan.agen}</div>
+              </div>
+              <div className="mobile-card-detail">
+                <div className="mobile-card-label">
+                  <i className="bi bi-calendar-plus"></i>
+                  Tgl Daftar
+                </div>
+                <div className="mobile-card-value">{formatDate(getTanggalDaftar(pelanggan))}</div>
+              </div>
+              <div className="mobile-card-detail">
+                <div className="mobile-card-label">
+                  <i className="bi bi-calendar-check"></i>
+                  Tgl Pasang
+                </div>
+                <div className="mobile-card-value">
+                  {pelanggan.tanggal_pasang ? formatDate(pelanggan.tanggal_pasang) : 'Belum Terpasang'}
+                </div>
+              </div>
+              <div className="mobile-card-detail">
+                <div className="mobile-card-label">
+                  <i className="bi bi-currency-dollar"></i>
+                  Komisi Agen
+                </div>
+                <div className="mobile-card-value">
+                  {pelanggan.status === 'terpasang' ? (
+                    <span className={`mobile-komisi-badge ${pelanggan.komisi_dibayar ? 'dibayar' : 'belum'}`}>
+                      {pelanggan.komisi_dibayar ? (
+                        <>
+                          <i className="bi bi-check-circle"></i>
+                          Sudah Diberikan
+                        </>
+                      ) : (
+                        <>
+                          <i className="bi bi-exclamation-circle"></i>
+                          Belum Diberikan
+                        </>
+                      )}
+                    </span>
+                  ) : (
+                    <span className="mobile-komisi-badge pending">
+                      <i className="bi bi-dash-circle"></i>
+                      Menunggu
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
             
-            <div className="card-body">
-              <div className="card-field full-width">
-                <div className="card-field-label">Alamat</div>
-                <div className="card-field-value card-address">{pelanggan.alamat}</div>
+            <div className="mobile-card-detail mobile-card-alamat">
+              <div className="mobile-card-label">
+                <i className="bi bi-geo-alt"></i>
+                Alamat Lengkap
               </div>
-              
-              <div className="card-field">
-                <div className="card-field-label">Desa</div>
-                <div className="card-field-value">
-                  <span className="card-desa-badge">
-                    <i className="bi bi-geo-alt"></i>
-                    {pelanggan.desa}
-                  </span>
-                </div>
-              </div>
-              
-              <div className="card-field">
-                <div className="card-field-label">Agen</div>
-                <div className="card-field-value">
-                  <span className="card-agen-badge">
-                    <i className="bi bi-person-badge"></i>
-                    {pelanggan.agen}
-                  </span>
-                </div>
-              </div>
-              
-              <div className="card-field">
-                <div className="card-field-label">Status</div>
-                <div className="card-field-value">
-                  <span className={`card-status-badge ${pelanggan.status}`}>
-                    <i className={`bi ${pelanggan.status === 'terpasang' ? 'bi-check-circle' : 'bi-clock'}`}></i>
-                    {pelanggan.status === 'menunggu' ? 'Menunggu' : 'Terpasang'}
-                  </span>
-                </div>
-              </div>
-              
-              <div className="card-field">
-                <div className="card-field-label">Tanggal Daftar</div>
-                <div className="card-field-value">{formatDate(getTanggalDaftar(pelanggan))}</div>
-              </div>
-              
-              <div className="card-field">
-                <div className="card-field-label">Tanggal Pasang</div>
-                <div className="card-field-value">{formatDate(pelanggan.tanggal_pasang)}</div>
-              </div>
+              <div className="mobile-card-value">{pelanggan.alamat}</div>
             </div>
             
-            <div className="card-footer">
-              <button 
-                className="card-action-btn whatsapp"
-                onClick={() => openWhatsApp(pelanggan.telepon)}
-              >
-                <i className="bi bi-whatsapp"></i>
-                WhatsApp
-              </button>
-              
-              <button 
-                className="card-action-btn komisi"
-                onClick={() => handleKomisiClick(pelanggan)}
-              >
-                <i className="bi bi-cash-coin"></i>
-                Komisi
-              </button>
-              
-              <button 
-                className="card-action-btn detail"
-                onClick={() => handleDetailPelanggan(pelanggan)}
-              >
-                <i className="bi bi-info-circle"></i>
-                Detail
-              </button>
-              
-              <button 
-                className="card-action-btn edit"
-                onClick={() => {
-                  setEditPelanggan({
-                    id: pelanggan.id,
-                    nama: pelanggan.nama,
-                    telepon: pelanggan.telepon,
-                    alamat: pelanggan.alamat,
-                    desa: pelanggan.desa,
-                    agen: pelanggan.agen,
-                    tanggal_daftar: getTanggalDaftar(pelanggan) ? getTanggalDaftar(pelanggan).split('T')[0] : getCurrentDate()
-                  });
-                  setShowEditModal(true);
-                }}
-              >
-                <i className="bi bi-pencil"></i>
-                Edit
-              </button>
-              
-              {pelanggan.status === 'menunggu' && (
-                <button 
-                  className="card-action-btn confirm"
+            <div className="mobile-card-actions">
+              <div className="mobile-actions-row-1">
+                {pelanggan.status === 'menunggu' && (
+                  <button
+                    className="btn mobile-confirm"
+                    onClick={() => {
+                      setSelectedPelanggan(pelanggan);
+                      setKonfirmasiData({
+                        tanggal_pasang: getCurrentDate(),
+                        jam_pasang: getCurrentTime(),
+                        teknisi: '',
+                        catatan: ''
+                      });
+                      setShowConfirmModal(true);
+                    }}
+                  >
+                    <i className="bi bi-check-lg"></i> Konfirmasi
+                  </button>
+                )}
+                <button
+                  className="btn mobile-whatsapp"
+                  onClick={() => openWhatsApp(pelanggan.telepon)}
+                >
+                  <i className="bi bi-whatsapp"></i> WhatsApp
+                </button>
+                {pelanggan.status === 'terpasang' && (
+                  <button
+                    className="btn mobile-komisi"
+                    onClick={() => handleKomisiClick(pelanggan)}
+                  >
+                    <i className="bi bi-currency-dollar"></i>
+                    {pelanggan.komisi_dibayar ? 'Belum' : 'Sudah'}
+                  </button>
+                )}
+              </div>
+              <div className="mobile-actions-row-2">
+                <button
+                  className="btn mobile-detail"
+                  onClick={() => handleDetailPelanggan(pelanggan)}
+                >
+                  <i className="bi bi-info-circle"></i> Detail
+                </button>
+                <button
+                  className="btn mobile-edit"
                   onClick={() => {
-                    setSelectedPelanggan(pelanggan);
-                    // Auto-fill dengan tanggal dan jam saat ini
-                    setKonfirmasiData({
-                      tanggal_pasang: getCurrentDate(),
-                      jam_pasang: getCurrentTime(),
-                      teknisi: '',
-                      catatan: ''
+                    setEditPelanggan({
+                      id: pelanggan.id,
+                      nama: pelanggan.nama,
+                      telepon: pelanggan.telepon,
+                      alamat: pelanggan.alamat,
+                      desa: pelanggan.desa,
+                      agen: pelanggan.agen,
+                      tanggal_daftar: getTanggalDaftar(pelanggan) ? getTanggalDaftar(pelanggan).split('T')[0] : getCurrentDate()
                     });
-                    setShowConfirmModal(true);
+                    setShowEditModal(true);
                   }}
                 >
-                  <i className="bi bi-check-lg"></i>
-                  Konfirmasi
+                  <i className="bi bi-pencil"></i> Edit
                 </button>
-              )}
-              
-              <button 
-                className="card-action-btn delete"
-                onClick={() => handleDeletePelanggan(pelanggan)}
-              >
-                <i className="bi bi-trash"></i>
-                Hapus
-              </button>
-            </div>
-            
-            <div className="card-komisi-info">
-              {pelanggan.status === 'menunggu' ? (
-                <span className="card-komisi-badge pending">
-                  <i className="bi bi-clock"></i>
-                  Menunggu Pemasangan
-                </span>
-              ) : pelanggan.komisi_dibayar ? (
-                <span className="card-komisi-badge dibayar">
-                  <i className="bi bi-check-circle"></i>
-                  Komisi Dibayar
-                </span>
-              ) : (
-                <span className="card-komisi-badge belum">
-                  <i className="bi bi-exclamation-circle"></i>
-                  Komisi Belum Dibayar
-                </span>
-              )}
+                <button
+                  className="btn mobile-delete"
+                  onClick={() => handleDeletePelanggan(pelanggan)}
+                >
+                  <i className="bi bi-trash"></i> Hapus
+                </button>
+              </div>
             </div>
           </div>
         ))}
@@ -1366,7 +1411,7 @@ function DaftarPemasangan() {
             </div>
             <div className="modal-body">
               <div className="form-group">
-                <label>Nama Pelanggan</label>
+                <label><i className="bi bi-person"></i>Nama Pelanggan</label>
                 <input
                   type="text"
                   value={newPelanggan.nama}
@@ -1375,7 +1420,7 @@ function DaftarPemasangan() {
                 />
               </div>
               <div className="form-group">
-                <label>Nomor Telepon</label>
+                <label><i className="bi bi-telephone"></i>Nomor Telepon</label>
                 <input
                   type="tel"
                   value={newPelanggan.telepon}
@@ -1384,7 +1429,7 @@ function DaftarPemasangan() {
                 />
               </div>
               <div className="form-group">
-                <label>Alamat Lengkap</label>
+                <label><i className="bi bi-geo-alt"></i>Alamat Lengkap</label>
                 <textarea
                   value={newPelanggan.alamat}
                   onChange={(e) => setNewPelanggan({...newPelanggan, alamat: e.target.value})}
@@ -1393,7 +1438,7 @@ function DaftarPemasangan() {
                 />
               </div>
               <div className="form-group">
-                <label>Nama Desa</label>
+                <label><i className="bi bi-geo"></i>Nama Desa</label>
                 <select
                   value={newPelanggan.desa}
                   onChange={(e) => setNewPelanggan({...newPelanggan, desa: e.target.value})}
@@ -1411,7 +1456,7 @@ function DaftarPemasangan() {
                 </select>
               </div>
               <div className="form-group">
-                <label>Nama Agen</label>
+                <label><i className="bi bi-person-badge"></i>Nama Agen</label>
                 <select
                   value={newPelanggan.agen}
                   onChange={(e) => setNewPelanggan({...newPelanggan, agen: e.target.value})}
@@ -1429,7 +1474,7 @@ function DaftarPemasangan() {
                 </select>
               </div>
               <div className="form-group">
-                <label>Tanggal Daftar</label>
+                <label><i className="bi bi-calendar-plus"></i>Tanggal Daftar</label>
                 <input
                   type="date"
                   value={newPelanggan.tanggal_daftar}
@@ -1457,7 +1502,7 @@ function DaftarPemasangan() {
       {/* Edit Customer Modal */}
       {showEditModal && (
         <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content modal-content-compact" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3><i className="bi bi-pencil"></i> Edit Pelanggan</h3>
               <button className="modal-close" onClick={() => setShowEditModal(false)}>
@@ -1466,7 +1511,7 @@ function DaftarPemasangan() {
             </div>
             <div className="modal-body">
               <div className="form-group">
-                <label>Nama Pelanggan</label>
+                <label><i className="bi bi-person"></i>Nama Pelanggan</label>
                 <input
                   type="text"
                   value={editPelanggan.nama}
@@ -1475,7 +1520,7 @@ function DaftarPemasangan() {
                 />
               </div>
               <div className="form-group">
-                <label>Nomor Telepon</label>
+                <label><i className="bi bi-telephone"></i>Nomor Telepon</label>
                 <input
                   type="tel"
                   value={editPelanggan.telepon}
@@ -1484,7 +1529,7 @@ function DaftarPemasangan() {
                 />
               </div>
               <div className="form-group">
-                <label>Alamat Lengkap</label>
+                <label><i className="bi bi-geo-alt"></i>Alamat Lengkap</label>
                 <textarea
                   value={editPelanggan.alamat}
                   onChange={(e) => setEditPelanggan({...editPelanggan, alamat: e.target.value})}
@@ -1493,7 +1538,7 @@ function DaftarPemasangan() {
                 />
               </div>
               <div className="form-group">
-                <label>Nama Desa</label>
+                <label><i className="bi bi-geo"></i>Nama Desa</label>
                 <select
                   value={editPelanggan.desa}
                   onChange={(e) => setEditPelanggan({...editPelanggan, desa: e.target.value})}
@@ -1511,7 +1556,7 @@ function DaftarPemasangan() {
                 </select>
               </div>
               <div className="form-group">
-                <label>Nama Agen</label>
+                <label><i className="bi bi-person-badge"></i>Nama Agen</label>
                 <select
                   value={editPelanggan.agen}
                   onChange={(e) => setEditPelanggan({...editPelanggan, agen: e.target.value})}
@@ -1529,7 +1574,7 @@ function DaftarPemasangan() {
                 </select>
               </div>
               <div className="form-group">
-                <label>Tanggal Daftar</label>
+                <label><i className="bi bi-calendar-plus"></i>Tanggal Daftar</label>
                 <input
                   type="date"
                   value={editPelanggan.tanggal_daftar}
@@ -1557,7 +1602,7 @@ function DaftarPemasangan() {
       {/* Confirmation Modal */}
       {showConfirmModal && selectedPelanggan && (
         <div className="modal-overlay" onClick={() => setShowConfirmModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content modal-content-compact" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3><i className="bi bi-check-circle"></i> Konfirmasi Pemasangan</h3>
               <button className="modal-close" onClick={() => setShowConfirmModal(false)}>
@@ -1571,7 +1616,7 @@ function DaftarPemasangan() {
                 <p>Alamat: {selectedPelanggan.alamat}</p>
               </div>
               <div className="form-group">
-                <label>Tanggal Pemasangan</label>
+                <label><i className="bi bi-calendar-check"></i>Tanggal Pemasangan</label>
                 <input
                   type="date"
                   value={konfirmasiData.tanggal_pasang}
@@ -1583,7 +1628,7 @@ function DaftarPemasangan() {
                 </small>
               </div>
               <div className="form-group">
-                <label>Jam Pemasangan</label>
+                <label><i className="bi bi-clock"></i>Jam Pemasangan</label>
                 <input
                   type="time"
                   value={konfirmasiData.jam_pasang}
@@ -1595,7 +1640,7 @@ function DaftarPemasangan() {
                 </small>
               </div>
               <div className="form-group">
-                <label>Nama Teknisi <span className="required-field">*</span></label>
+                <label><i className="bi bi-person-gear"></i>Nama Teknisi <span className="required-field">*</span></label>
                 <input
                   type="text"
                   value={konfirmasiData.teknisi}
@@ -1609,7 +1654,7 @@ function DaftarPemasangan() {
                 </small>
               </div>
               <div className="form-group">
-                <label>Catatan Pemasangan</label>
+                <label><i className="bi bi-journal-text"></i>Catatan Pemasangan</label>
                 <textarea
                   value={konfirmasiData.catatan}
                   onChange={(e) => setKonfirmasiData({...konfirmasiData, catatan: e.target.value})}
@@ -1743,7 +1788,7 @@ function DaftarPemasangan() {
       {/* Detail Pelanggan Modal */}
       {showDetailModal && selectedDetailPelanggan && (
         <div className="modal-overlay" onClick={() => setShowDetailModal(false)}>
-          <div className="detail-dialog" onClick={(e) => e.stopPropagation()}>
+          <div className="detail-dialog detail-dialog-compact" onClick={(e) => e.stopPropagation()}>
             <div className="detail-dialog-header">
               <div className="detail-dialog-icon">
                 <i className="bi bi-info-circle"></i>

@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
+import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import DaftarPemasangan from './pages/DaftarPemasangan';
 import ManajemenAkun from './pages/ManajemenAkun';
@@ -37,39 +36,21 @@ function App() {
         ) : (
           <>
             <Route path="/beranda" element={
-              <div className="d-flex">
-                <Sidebar />
-                <div className="flex-fill" style={{ background: '#f5f7fa' }}>
-                  <Header onLogout={handleLogout} />
-                  <div className="p-4">
-                    <Dashboard />
-                  </div>
-                </div>
-              </div>
+              <Layout onLogout={handleLogout} pageClassName="page-beranda">
+                <Dashboard />
+              </Layout>
             } />
             <Route path="/daftar-pemasangan" element={
-              <div className="d-flex">
-                <Sidebar />
-                <div className="flex-fill" style={{ background: '#f5f7fa' }}>
-                  <Header onLogout={handleLogout} />
-                  <div className="p-4">
-                    <ErrorBoundary>
-                      <DaftarPemasangan />
-                    </ErrorBoundary>
-                  </div>
-                </div>
-              </div>
+              <Layout onLogout={handleLogout} pageClassName="page-daftar-pemasangan">
+                <ErrorBoundary>
+                  <DaftarPemasangan />
+                </ErrorBoundary>
+              </Layout>
             } />
             <Route path="/manajemen-akun" element={
-              <div className="d-flex">
-                <Sidebar />
-                <div className="flex-fill" style={{ background: '#f5f7fa' }}>
-                  <Header onLogout={handleLogout} />
-                  <div className="p-4">
-                    <ManajemenAkun />
-                  </div>
-                </div>
-              </div>
+              <Layout onLogout={handleLogout} pageClassName="page-manajemen-akun">
+                <ManajemenAkun />
+              </Layout>
             } />
             <Route path="/" element={<Navigate to="/beranda" replace />} />
             <Route path="*" element={<Navigate to="/beranda" replace />} />

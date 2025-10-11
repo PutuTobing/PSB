@@ -1,0 +1,114 @@
+/* Layout Styles - Desktop Only */
+.app-layout {
+  display: block;
+  min-height: 100vh;
+  background: #f5f7fa;
+  position: relative;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Prevents flex item from overflowing */
+  min-height: 100vh;
+  /* Default: no margin, will be added by CSS Media Query */
+}
+
+/* Desktop Layout Only - Apply margin only on desktop */
+@media (min-width: 769px) {
+  .main-content {
+    margin-left: 280px;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* When sidebar is minimized */
+  .main-content.sidebar-minimized {
+    margin-left: 80px;
+  }
+}
+
+.content-wrapper {
+  flex: 1;
+  padding: 24px;
+  background: #f5f7fa;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Tablet Layout */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .main-content {
+    margin-left: 240px;
+  }
+
+  .main-content.sidebar-minimized {
+    margin-left: 70px;
+  }
+}
+
+/* Mobile Layout - NO margin for sidebar */
+@media (max-width: 768px) {
+  .app-layout {
+    display: block;
+  }
+
+  .main-content,
+  .main-content.sidebar-minimized {
+    margin-left: 0;
+    width: 100%;
+    transition: none; /* Remove transition on mobile */
+  }
+
+  .content-wrapper {
+    padding: 16px;
+  }
+
+  /* Adjust content when mobile sidebar is open */
+  body.sidebar-open .main-content {
+    filter: blur(2px);
+    pointer-events: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-wrapper {
+    padding: 12px;
+  }
+}
+
+/* Smooth transitions for layout changes */
+.app-layout,
+.main-content,
+.content-wrapper {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Prevent horizontal scrolling */
+.app-layout {
+  overflow-x: hidden;
+}
+
+/* Ensure proper stacking context */
+.main-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Focus management */
+.content-wrapper:focus {
+  outline: none;
+}
+
+/* Page-Specific Adjustments */
+.page-daftar-pemasangan .content-wrapper {
+  padding: 0; /* Remove default padding for this page */
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .app-layout,
+  .main-content,
+  .content-wrapper {
+    transition: none !important;
+  }
+}

@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Sidebar.css';
 
 function Sidebar() {
@@ -14,18 +14,77 @@ function Sidebar() {
   ];
 
   const toggleSidebar = () => {
-    setIsMinimized(!isMinimized);
+    const newMinimizedState = !isMinimized;
+    setIsMinimized(newMinimizedState);
+    
+    // Dispatch custom event to notify Layout component
+    window.dispatchEvent(new CustomEvent('sidebarToggle', {
+      detail: { isMinimized: newMinimizedState }
+    }));
   };
 
   const toggleMobileSidebar = () => {
-    setIsMobileOpen(!isMobileOpen);
+    const newState = !isMobileOpen;
+    setIsMobileOpen(newState);
+    
+    if (newState) {
+      document.body.classList.add('sidebar-open');
+    } else {
+      document.body.classList.remove('sidebar-open');
+    }
   };
 
   const handleMenuClick = () => {
     if (window.innerWidth <= 768) {
       setIsMobileOpen(false);
+      // Remove body scroll lock
+      document.body.classList.remove('sidebar-open');
     }
   };
+
+  // Handle escape key to close mobile sidebar
+  useEffect(() => {
+    const handleEscapeKey = (event) => {
+      if (event.key === 'Escape' && isMobileOpen) {
+        setIsMobileOpen(false);
+        document.body.classList.remove('sidebar-open');
+      }
+    };
+
+    document.addEventListener('keydown', handleEscapeKey);
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [isMobileOpen]);
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768 && isMobileOpen) {
+        setIsMobileOpen(false);
+        document.body.classList.remove('sidebar-open');
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [isMobileOpen]);
+
+  // Handle body scroll lock for mobile
+  useEffect(() => {
+    if (isMobileOpen) {
+      document.body.classList.add('sidebar-open');
+    } else {
+      document.body.classList.remove('sidebar-open');
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove('sidebar-open');
+    };
+  }, [isMobileOpen]);
 
   return (
     <>
@@ -35,7 +94,13 @@ function Sidebar() {
       </button>
 
       {/* Mobile Overlay */}
-        {isMobileOpen && <div className="mobile-overlay" onClick={toggleMobileSidebar}></div>}
+      {isMobileOpen && (
+        <div 
+          className={`mobile-overlay ${isMobileOpen ? 'show' : ''}`} 
+          onClick={toggleMobileSidebar}
+          onTouchStart={toggleMobileSidebar}
+        ></div>
+      )}
 
         <div className={`sidebar ${isMinimized ? 'minimized' : ''} ${isMobileOpen ? 'mobile-open' : ''}`}>
           <div className="sidebar-header">

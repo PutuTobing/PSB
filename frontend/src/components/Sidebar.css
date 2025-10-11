@@ -5,11 +5,22 @@
   background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
   display: flex;
   flex-direction: column;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
   box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Fallback for browsers that don't support position: fixed */
+@supports not (position: fixed) {
+  .sidebar {
+    position: absolute;
+  }
 }
 
 .sidebar.minimized {
@@ -58,7 +69,7 @@
 .mobile-toggle-btn {
   display: none;
   position: fixed;
-  bottom: 20px;
+  top: 20px;
   left: 20px;
   width: 50px;
   height: 50px;
@@ -68,9 +79,10 @@
   color: white;
   font-size: 22px;
   cursor: pointer;
-  z-index: 1002;
+  z-index: 1001;
   box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
 }
 
 .mobile-toggle-btn:hover {
@@ -82,6 +94,11 @@
   transform: scale(0.95);
 }
 
+.mobile-toggle-btn:focus {
+  outline: 3px solid rgba(102, 126, 234, 0.5);
+  outline-offset: 2px;
+}
+
 .mobile-overlay {
   display: none;
   position: fixed;
@@ -89,9 +106,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 999;
   animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(4px);
+  touch-action: none;
 }
 
 @keyframes fadeIn {
@@ -179,6 +198,28 @@
 .sidebar-menu::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 3px;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Sidebar scrollbar styling */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .menu-item {
@@ -364,7 +405,7 @@
 }
 
 /* Tablet Responsive */
-@media (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 1024px) {
   .sidebar {
     width: 240px;
   }
@@ -391,42 +432,77 @@
     left: -280px;
     width: 280px;
     z-index: 1000;
+    height: 100vh;
+    overflow-y: auto;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .sidebar.mobile-open {
     left: 0;
-    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.6);
   }
 
   .sidebar.minimized {
+    width: 280px;
+    left: -280px;
+  }
+
+  .sidebar.minimized.mobile-open {
+    left: 0;
     width: 280px;
   }
 
   .mobile-overlay {
     display: block;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
   }
 
-  .sidebar.mobile-open ~ .mobile-overlay {
-    display: block;
+  .sidebar.mobile-open ~ .mobile-overlay,
+  .mobile-overlay.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Prevent body scroll when sidebar is open */
+  body.sidebar-open {
+    overflow: hidden;
+  }
+
+  /* Adjust main content margin when sidebar is open */
+  .main-content {
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
 /* Small Mobile */
 @media (max-width: 480px) {
   .sidebar {
-    width: 260px;
-    left: -260px;
+    width: 100vw;
+    left: -100vw;
+    max-width: 280px;
   }
 
   .sidebar.mobile-open {
     left: 0;
   }
 
+  .sidebar.minimized {
+    width: 100vw;
+    max-width: 280px;
+    left: -100vw;
+  }
+
+  .sidebar.minimized.mobile-open {
+    left: 0;
+  }
+
   .mobile-toggle-btn {
-    width: 45px;
-    height: 45px;
+    width: 48px;
+    height: 48px;
     font-size: 20px;
-    bottom: 15px;
+    top: 15px;
     left: 15px;
   }
 
@@ -442,7 +518,8 @@
   }
 
   .menu-item {
-    padding: 14px 20px;
+    padding: 16px 20px;
+    margin: 3px 12px;
   }
 
   .menu-icon {
@@ -451,5 +528,60 @@
 
   .menu-label {
     font-size: 14px;
+  }
+
+  .sidebar-header {
+    padding: 25px 20px;
+  }
+
+  .sidebar-footer {
+    padding: 15px 20px;
+  }
+}
+
+/* Landscape Mobile Optimization */
+@media (max-height: 500px) and (orientation: landscape) {
+  .sidebar {
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-header {
+    padding: 15px 20px;
+  }
+
+  .sidebar-footer {
+    padding: 10px 20px;
+  }
+
+  .menu-item {
+    padding: 12px 25px;
+  }
+
+  .mobile-toggle-btn {
+    top: 10px;
+    left: 10px;
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* High DPI Screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sidebar-logo {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .mobile-toggle-btn,
+  .mobile-overlay,
+  .menu-item,
+  .toggle-btn {
+    transition: none !important;
+    animation: none !important;
   }
 }
