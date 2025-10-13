@@ -6,18 +6,138 @@
    Animasi dan styling asli dipertahankan untuk pengalaman UI/UX yang optimal
    ============================================================================= */
 
-/* ✅ PERBAIKAN KHUSUS: Header text yang benar */
+/* =============================================================================
+   📱 MOBILE PERFORMANCE OPTIMIZATION (≤768px ONLY)
+   Desktop animations preserved, mobile optimized for smooth performance
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  /* ❌ DISABLE ALL COMPLEX ANIMATIONS ON MOBILE ONLY */
+  .page-daftar-pemasangan,
+  .page-daftar-pemasangan * {
+    /* Kill all page load animations for instant rendering */
+    animation: none !important;
+    /* Kill all hover transitions for performance */
+    transition: none !important;
+    /* Disable GPU hints for battery saving */
+    will-change: auto !important;
+    /* Reset all transforms */
+    transform: none !important;
+  }
+  
+  /* ✅ ONLY allow simple transitions for user interactions */
+  .page-daftar-pemasangan button:active,
+  .page-daftar-pemasangan .btn:active,
+  .page-daftar-pemasangan .mobile-card:active {
+    transition: opacity 0.1s ease !important;
+  }
+  
+  /* ✅ Simple page fade for mobile (optional - very lightweight) */
+  .page-daftar-pemasangan {
+    animation: simpleMobileFade 0.15s ease-out both !important;
+  }
+}
+
+/* Simple mobile fade - Ultra lightweight */
+@keyframes simpleMobileFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Touch device optimizations - Only disable hover effects */
+@media (hover: none) and (pointer: coarse) {
+  /* ❌ DISABLE HOVER EFFECTS ONLY (not all transforms/animations) */
+  .page-daftar-pemasangan *:hover {
+    transform: none !important;
+    box-shadow: inherit !important;
+    background: inherit !important;
+  }
+  
+  /* ✅ Keep transitions for active states */
+  .page-daftar-pemasangan button:active,
+  .page-daftar-pemasangan .btn:active {
+    opacity: 0.8;
+  }
+}
+
+@media (min-width: 1024px) and (hover: hover) {
+  .page-daftar-pemasangan .page-header:hover,
+  .page-daftar-pemasangan .stats-card:hover,
+  .page-daftar-pemasangan .btn:hover {
+    will-change: transform;
+  }
+}
+
+/* Reduce motion for users who explicitly request it only */
+@media (prefers-reduced-motion: reduce) {
+  .page-daftar-pemasangan .page-header,
+  .page-daftar-pemasangan .stats-grid,
+  .page-daftar-pemasangan .table-controls,
+  .page-daftar-pemasangan .table-container {
+    animation: none !important;
+  }
+  
+  .page-daftar-pemasangan .modal-overlay,
+  .page-daftar-pemasangan .modal-content {
+    animation: none !important;
+  }
+}
+
+/* ✅ PERBAIKAN TEXT CLARITY - NO BLUR & CRISP RENDERING */
+.page-daftar-pemasangan * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-smooth: always;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  /* Prevent text blur during transforms */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* Ensure crisp text during animations */
+  -webkit-perspective: 1000px;
+  perspective: 1000px;
+}
+
+/* Force sharp text rendering during hover states */
+.page-daftar-pemasangan *:hover {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
 .page-daftar-pemasangan .header-content h1 {
   color: #ffffff !important;
   font-weight: 600;
   font-size: 2rem;
   text-shadow: none;
+  letter-spacing: -0.025em;
 }
 
 .page-daftar-pemasangan .header-content p {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: rgba(255, 255, 255, 0.95) !important;
   font-size: 1rem;
-  opacity: 0.95;
+  opacity: 1;
+  letter-spacing: 0.01em;
+}
+
+/* Ensure all text is crisp and clear */
+.page-daftar-pemasangan h1, 
+.page-daftar-pemasangan h2, 
+.page-daftar-pemasangan h3,
+.page-daftar-pemasangan p,
+.page-daftar-pemasangan span,
+.page-daftar-pemasangan td,
+.page-daftar-pemasangan th,
+.page-daftar-pemasangan input,
+.page-daftar-pemasangan select,
+.page-daftar-pemasangan button {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-smooth: always;
 }
 
 /* ✅ PERBAIKAN KHUSUS: Visibilitas data tabel */
@@ -70,7 +190,8 @@
 
 /* ✅ ANIMASI UI/UX - PAGE LOADING & TRANSITIONS */
 
-/* Keyframes untuk animasi smooth */
+/* ✅ SIMPLE FAST FADE - Optimized for Performance */
+/* ✨ KEYFRAMES - DESKTOP ANIMATIONS (Disabled on mobile via media query) */
 @keyframes fadeInDown {
   from {
     opacity: 0;
@@ -155,70 +276,256 @@
   }
 }
 
-/* ✅ ANIMASI LOADING HALAMAN */
-.page-daftar-pemasangan .page-header {
-  animation: fadeInDown 0.8s ease-out;
+/* ✅ ANIMASI LOADING HALAMAN - ENHANCED DROPDOWN EFFECT - MOVED TO MAIN SECTION */
+
+/* Enhanced dropdown animation for page header */
+@keyframes headerDropdown {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(-10px) scale(0.98);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Page Header Animation */
+@keyframes pageHeaderSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-80px);
+  }
+  60% {
+    opacity: 0.8;
+    transform: translateX(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes headerTitleSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes breadcrumbSlide {
+  0% {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Enhanced slide animations with bounce effect */
+@keyframes headerIconBounce {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-180deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1) rotate(-90deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes headerTextReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
 }
 
 .page-daftar-pemasangan .stats-grid {
-  animation: fadeInUp 0.8s ease-out 0.2s both;
+  animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
 }
 
 .page-daftar-pemasangan .table-controls {
-  animation: fadeInLeft 0.8s ease-out 0.4s both;
+  animation: fadeInLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s both;
 }
 
 .page-daftar-pemasangan .table-container {
-  animation: fadeInUp 0.8s ease-out 0.6s both;
+  animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s both;
 }
 
-/* ✅ ANIMASI HOVER UNTUK PAGE HEADER */
-.page-daftar-pemasangan .page-header:hover {
-  transform: translateY(-3px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* ✅ ANIMASI HOVER UNTUK PAGE HEADER - DESKTOP SMOOTH */
+/* ✅ HOVER EFFECTS MOVED TO MAIN PAGE HEADER SECTION */
+
+/* Desktop-specific header hover */
+@media (min-width: 1024px) {
+  .page-daftar-pemasangan .page-header:hover {
+    transform: translateY(-1px) translateZ(0);
+  }
+  
+  .page-daftar-pemasangan .page-header:hover .header-content {
+    transform: scale(1.005) translateZ(0);
+  }
 }
 
-.page-daftar-pemasangan .page-header:hover .header-content {
-  transform: scale(1.02);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ✅ ANIMASI HOVER UNTUK STATS CARDS */
+/* ✅ ANIMASI HOVER UNTUK STATS CARDS - DESKTOP SMOOTH */
 .page-daftar-pemasangan .stats-card {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
 }
 
 .page-daftar-pemasangan .stats-card:hover {
-  transform: translateY(-8px) scale(1.05);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px) scale(1.02) translateZ(0);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
   z-index: 10;
 }
 
-.page-daftar-pemasangan .stats-card:hover .stats-icon {
-  transform: scale(1.2) rotate(5deg);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.page-daftar-pemasangan .stats-card .stats-icon {
+  transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transform: translateZ(0);
+  will-change: transform;
 }
 
-/* ✅ ANIMASI HOVER UNTUK TABLE CONTROLS */
+.page-daftar-pemasangan .stats-card:hover .stats-icon {
+  transform: scale(1.1) rotate(3deg) translateZ(0);
+}
+
+/* Desktop-specific stats card hover */
+@media (min-width: 1024px) {
+  .page-daftar-pemasangan .stats-card:hover {
+    transform: translateY(-3px) scale(1.015) translateZ(0);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .page-daftar-pemasangan .stats-card:hover .stats-icon {
+    transform: scale(1.08) rotate(2deg) translateZ(0);
+  }
+}
+
+/* ✅ ANIMASI HOVER UNTUK TABLE CONTROLS - DESKTOP SMOOTH */
 .page-daftar-pemasangan .table-controls {
-  transition: all 0.3s ease-out;
+  transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
 }
 
 .page-daftar-pemasangan .table-controls:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px) translateZ(0);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.page-daftar-pemasangan .search-input,
+.page-daftar-pemasangan .filter-select {
+  transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
 }
 
 .page-daftar-pemasangan .search-input:focus {
-  transform: scale(1.02);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(1.01) translateZ(0);
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.15);
 }
 
 .page-daftar-pemasangan .filter-select:focus {
-  transform: scale(1.02);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(1.01) translateZ(0);
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.15);
+}
+
+/* Desktop-specific table controls */
+@media (min-width: 1024px) {
+  .page-daftar-pemasangan .table-controls:hover {
+    transform: translateY(-0.5px) translateZ(0);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  }
+  
+  .page-daftar-pemasangan .search-input:focus,
+  .page-daftar-pemasangan .filter-select:focus {
+    transform: scale(1.005) translateZ(0);
+  }
+}
+
+/* ✅ REMOVE SELECT DROPDOWN ARROWS GLOBALLY */
+.page-daftar-pemasangan select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none;
+}
+
+.page-daftar-pemasangan select::-ms-expand {
+  display: none;
+}
+
+/* Extra compact for very small screens */
+@media (max-width: 480px) {
+  .page-daftar-pemasangan .table-controls {
+    padding: 8px !important;
+    margin: 4px !important;
+    gap: 8px !important;
+  }
+  
+  .page-daftar-pemasangan .search-input {
+    padding: 6px 8px !important;
+    font-size: 13px !important;
+  }
+  
+  .page-daftar-pemasangan .filter-select {
+    padding: 4px 6px !important;
+    font-size: 12px !important;
+  }
+  
+  .page-daftar-pemasangan .controls-filters {
+    grid-template-columns: 1fr 2fr 1fr !important;
+    gap: 4px !important;
+  }
+  
+  .page-daftar-pemasangan .add-customer-btn {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    min-width: 90px !important;
+  }
+  
+  .page-daftar-pemasangan .filter-label {
+    font-size: 9px !important;
+    margin-bottom: 2px !important;
+  }
+}
+
+/* Desktop select styling */
+@media (min-width: 769px) {
+  .page-daftar-pemasangan .filter-select {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: none;
+  }
 }
 
 /* ✅ STYLING TOMBOL TAMBAH PELANGGAN DI TABLE CONTROLS */
@@ -256,7 +563,7 @@
   font-size: 1rem;
 }
 
-/* ✅ ANIMASI MODAL POP-UPS */
+/* ✅ ANIMASI MODAL POP-UPS - RESTORED ORIGINAL SMOOTH */
 .page-daftar-pemasangan .modal-overlay {
   animation: modalFadeIn 0.3s ease-out;
 }
@@ -277,11 +584,14 @@
   animation: fadeInUp 0.5s ease-out 0.3s both;
 }
 
-/* ✅ ANIMASI ACTION BUTTONS */
+/* ✅ ANIMASI ACTION BUTTONS - DESKTOP OPTIMIZED */
 .page-daftar-pemasangan .btn {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
 }
 
 .page-daftar-pemasangan .btn::before {
@@ -293,23 +603,40 @@
   height: 0;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
+  transform: translate(-50%, -50%) translateZ(0);
+  transition: width 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), height 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+  will-change: width, height;
 }
 
 .page-daftar-pemasangan .btn:active::before {
-  width: 300px;
-  height: 300px;
+  width: 200px;
+  height: 200px;
 }
 
 .page-daftar-pemasangan .btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px) translateZ(0);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
 }
 
 .page-daftar-pemasangan .btn:active {
-  transform: translateY(0);
-  transition: transform 0.1s;
+  transform: translateY(0) translateZ(0);
+  transition: transform 0.1s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+/* Desktop-specific button optimizations */
+@media (min-width: 1024px) {
+  .page-daftar-pemasangan .btn {
+    transition-duration: 0.15s;
+  }
+  
+  .page-daftar-pemasangan .btn:hover {
+    transform: translateY(-0.5px) translateZ(0);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .page-daftar-pemasangan .btn::before {
+    transition-duration: 0.3s;
+  }
 }
 
 /* ✅ ANIMASI TOMBOL AKSI SPESIFIK */
@@ -421,24 +748,387 @@
   animation: shimmer 1.2s ease-in-out infinite;
 }
 
-/* Responsive untuk mobile */
+/* ✅ COMPACT MOBILE TABLE CONTROLS */
 @media (max-width: 768px) {
+  .page-daftar-pemasangan .table-controls {
+    padding: 12px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    margin: 8px;
+    border: 1px solid #e5e7eb;
+    /* Compact grid layout */
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  /* Disable heavy pseudo-elements on mobile */
+  .page-daftar-pemasangan .table-controls::before,
+  .page-daftar-pemasangan .table-controls::after {
+    display: none;
+  }
+  
+  /* Compact search section */
+  .page-daftar-pemasangan .search-wrapper {
+    margin-bottom: 0;
+  }
+  
+  /* Filters in compact row */
+  .page-daftar-pemasangan .controls-filters {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  /* Compact buttons row */
+  .page-daftar-pemasangan .controls-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .page-daftar-pemasangan .search-input {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: #f9fafb;
+    transition: border-color 0.2s ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Compact placeholder */
+    &::placeholder {
+      font-size: 13px;
+      color: #9ca3af;
+    }
+  }
+  
+  /* Compact month/year/village selects */
+  .page-daftar-pemasangan .filter-select {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 13px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    /* Remove custom dropdown arrows for mobile */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  
+  /* Mobile controls layout */
+  .page-daftar-pemasangan .controls-main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .page-daftar-pemasangan .controls-left {
+    width: 100%;
+  }
+  
+  .page-daftar-pemasangan .controls-right {
+    width: 100%;
+  }
+  
+  /* Mobile filters group */
+  .page-daftar-pemasangan .filters-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  .page-daftar-pemasangan .filter-item {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Mobile status buttons */
+  .page-daftar-pemasangan .status-buttons {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+    overflow-x: auto;
+  }
+  
+  .page-daftar-pemasangan .status-filter-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 70px;
+    justify-content: center;
+    white-space: nowrap;
+  }
+  
+  .page-daftar-pemasangan .status-filter-btn.active {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+  }
+  
+  /* Mobile tambah pelanggan button */
   .page-daftar-pemasangan .add-customer-section {
-    margin-left: 0;
-    margin-top: 12px;
     width: 100%;
   }
   
   .page-daftar-pemasangan .add-customer-btn {
     width: 100%;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     justify-content: center;
-    padding: 14px 20px;
-    font-size: 1rem;
+  }
+  
+  .page-daftar-pemasangan .add-customer-btn i {
+    font-size: 16px;
+  }
+  
+  /* Compact labels */
+  .page-daftar-pemasangan .filter-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  /* Mobile grid layout for filters */
+  .page-daftar-pemasangan .mobile-filter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .page-daftar-pemasangan .mobile-filter-item {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Status indicator compact */
+  .page-daftar-pemasangan .status-count {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: #f3f4f6;
+    color: #4b5563;
+    margin-left: 4px;
+  }
+  
+  .page-daftar-pemasangan .search-input:focus {
+    border-color: #667eea;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    /* Maintain crisp text during focus */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transform: translateZ(0);
+  }
+  
+  .page-daftar-pemasangan .search-input::placeholder {
+    color: #9ca3af;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Enhanced Mobile Filters */
+  .page-daftar-pemasangan .filters-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  
+  /* Special styling for Desa filter to make it more visible */
+  .page-daftar-pemasangan .filter-item:last-child .filter-select {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-color: #0ea5e9;
+    color: #0c4a6e;
+    font-weight: 600;
+  }
+  
+  .page-daftar-pemasangan .filter-item:last-child .filter-label {
+    color: #0ea5e9;
+    font-weight: 700;
+  }
+  
+  .page-daftar-pemasangan .filter-item:last-child .filter-select:focus {
+    border-color: #0284c7;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+  }
+  
+  .page-daftar-pemasangan .filter-item {
+    position: relative;
+  }
+  
+  .page-daftar-pemasangan .filter-select {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    background: #ffffff;
+    color: #1f2937;
+    transition: all 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    background-image: none;
+    /* Crisp text rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    /* Custom dropdown indicator */
+    background-image: linear-gradient(45deg, transparent 50%, #6b7280 50%), 
+                      linear-gradient(135deg, #6b7280 50%, transparent 50%);
+    background-position: calc(100% - 20px) calc(1em + 2px), 
+                         calc(100% - 15px) calc(1em + 2px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 40px;
+  }
+  
+  .page-daftar-pemasangan .filter-select:hover {
+    border-color: #d1d5db;
+    background-color: #f9fafb;
+    /* Maintain text clarity */
+    -webkit-font-smoothing: antialiased;
+    transform: translateZ(0);
+  }
+  
+  /* Remove any default dropdown arrows */
+  .page-daftar-pemasangan .filter-select::-ms-expand {
+    display: none;
+  }
+  
+  .page-daftar-pemasangan .filter-select:hover {
+    border-color: #9ca3af;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    /* Enhanced dropdown indicator on hover */
+    background-image: linear-gradient(45deg, transparent 50%, #6b7280 50%), 
+                      linear-gradient(135deg, #6b7280 50%, transparent 50%);
+    /* Removed transform to prevent text blur */
+  }
+
+  .page-daftar-pemasangan .filter-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    outline: none;
+    background-color: #ffffff;
+    /* Enhanced dropdown indicator on focus */
+    background-image: linear-gradient(45deg, transparent 50%, #667eea 50%), 
+                      linear-gradient(135deg, #667eea 50%, transparent 50%);
+    /* Simple text clarity without transforms */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .page-daftar-pemasangan .filter-label {
+    position: absolute;
+    top: -8px;
+    left: 12px;
+    background: #ffffff;
+    padding: 0 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    letter-spacing: 0.025em;
+  }
+  
+  /* Enhanced Mobile Status Buttons */
+  .page-daftar-pemasangan .status-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .page-daftar-pemasangan .status-filter-btn {
+    padding: 12px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    background: #ffffff;
+    color: #6b7280;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .page-daftar-pemasangan .status-filter-btn.active {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  }
+  
+  .page-daftar-pemasangan .status-icon {
+    font-size: 16px;
+  }
+  
+  /* Enhanced Mobile Add Customer Button */
+  .page-daftar-pemasangan .add-customer-section {
+    margin: 0;
+    width: 100%;
+  }
+  
+  .page-daftar-pemasangan .add-customer-btn {
+    width: 100%;
+    padding: 16px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .page-daftar-pemasangan .add-customer-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  }
+  
+  .page-daftar-pemasangan .add-customer-btn i {
+    font-size: 18px;
   }
   
   /* Animasi mobile-specific */
   .page-daftar-pemasangan .page-header {
-    animation: fadeInDown 0.6s ease-out;
+    animation: headerDropdown 0.6s ease-out;
   }
   
   .page-daftar-pemasangan .stats-grid {
@@ -757,6 +1447,9 @@
   border-radius: 16px;
   margin-bottom: 20px;
   box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
+  /* ✨ DESKTOP: Beautiful slide-in animation */
+  animation: pageHeaderSlideIn 0.5s ease-out both;
+  transition: box-shadow 0.2s ease;
 }
 
 .header-content {
@@ -764,12 +1457,16 @@
   justify-content: space-between;
   align-items: center;
   gap: 16px;
+  /* ✨ DESKTOP: Delayed title animation */
+  animation: headerTitleSlide 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
 }
 
 .header-info {
   display: flex;
   align-items: center;
   gap: 12px;
+  /* ✨ DESKTOP: Staggered breadcrumb animation */
+  animation: breadcrumbSlide 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
 }
 
 .header-icon {
@@ -781,23 +1478,31 @@
   align-items: center;
   justify-content: center;
   font-size: 20px;
+  /* ✨ DESKTOP: Fun bounce animation */
+  animation: headerIconBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s both;
 }
 
 .header-text h1 {
   font-size: 20px;
   font-weight: 700;
   margin: 0 0 4px 0;
+  /* ✨ DESKTOP: Title reveal animation */
+  animation: headerTextReveal 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s both;
 }
 
 .header-text p {
   font-size: 13px;
   opacity: 0.9;
+  /* ✨ DESKTOP: Subtitle reveal animation */
+  animation: headerTextReveal 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s both;
   margin: 0;
 }
 
 .header-actions {
   display: flex;
   gap: 8px;
+  /* ✨ DESKTOP: Slide from right animation */
+  animation: fadeInRight 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.7s both;
 }
 
 .period-badge {
@@ -908,7 +1613,8 @@
   align-items: center;
   position: relative;
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Faster transitions for mobile */
+  transition: box-shadow 0.2s ease;
 }
 
 .table-controls::before {
@@ -917,11 +1623,18 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 5px;
-  background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
-  background-size: 200% 100%;
-  animation: gradientFlow 4s ease-in-out infinite;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
   border-radius: 20px 20px 0 0;
+  /* Disable animation on mobile for performance */
+}
+
+@media (min-width: 769px) {
+  .table-controls::before {
+    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+    background-size: 200% 100%;
+    animation: gradientFlow 4s ease-in-out infinite;
+  }
 }
 
 .table-controls::after {
@@ -1020,21 +1733,20 @@
 
 .search-input:hover {
   border-color: rgba(124, 58, 237, 0.2);
-  transform: translateY(-1px);
   box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  /* Removed transform to prevent text blur */
 }
 
 .search-input:focus {
   outline: none;
   border-color: #7c3aed;
-  background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+  background: #ffffff;
   box-shadow: 
     0 0 0 4px rgba(124, 58, 237, 0.12),
-    0 12px 32px rgba(124, 58, 237, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  transform: translateY(-2px) scale(1.02);
+    0 4px 12px rgba(124, 58, 237, 0.08);
+  /* Removed transforms that cause text blur */
 }
 
 .search-input::placeholder {
@@ -1290,6 +2002,8 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   border: 1px solid #e2e8f0;
   position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
 }
 
 .table-container::before {
@@ -1360,8 +2074,8 @@
 
 .pemasangan-table tbody tr:hover {
   background: linear-gradient(135deg, #faf5ff 0%, #f8fafc 100%);
-  transform: translateY(-1px);
   box-shadow: 0 4px 16px rgba(124, 58, 237, 0.1);
+  /* Removed transform to prevent text blur */
 }
 
 .pemasangan-table tbody tr:hover td:first-child {
@@ -1521,8 +2235,8 @@
 /* Table container enhancements */
 .table-container:hover {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
   transition: all 0.3s ease;
+  /* Removed transform to prevent text blur */
 }
 
 /* Scrollbar styling for table */
@@ -2134,6 +2848,7 @@
     0 2px 8px rgba(0, 0, 0, 0.04);
   border: 1px solid #e2e8f0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ✨ DESKTOP: Fade up animation (will be disabled on mobile via media query) */
   animation: fadeInUp 0.5s ease-out;
 }
 
@@ -2434,16 +3149,7 @@
   animation: modalFadeIn 0.3s ease-out;
 }
 
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    backdrop-filter: blur(0px);
-  }
-  to {
-    opacity: 1;
-    backdrop-filter: blur(8px);
-  }
-}
+/* modalFadeIn already defined above, removed duplicate */
 
 .modal-content {
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
@@ -2463,16 +3169,7 @@
   backdrop-filter: blur(10px);
 }
 
-@keyframes modalSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
+/* modalSlideUp already defined above, removed duplicate */
 
 .modal-content::before {
   content: '';
@@ -2758,14 +3455,15 @@
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px) scale(1.03);
   box-shadow: 
     0 8px 24px rgba(124, 58, 237, 0.35),
     0 0 20px rgba(168, 85, 247, 0.3);
+  /* Removed transform to prevent text blur */
 }
 
 .btn-primary:active {
-  transform: translateY(0) scale(0.98);
+  opacity: 0.9;
+  /* Removed transform to prevent text blur */
 }
 
 .btn-secondary {
@@ -2897,17 +3595,19 @@
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: #6b7280;
+  color: #374151 !important;
   margin-top: 6px;
   padding: 6px 10px;
   background: rgba(124, 58, 237, 0.05);
   border-radius: 8px;
   border-left: 3px solid #7c3aed;
+  font-weight: 500;
 }
 
 .form-help i {
-  color: #7c3aed;
+  color: #7c3aed !important;
   font-size: 12px;
+  font-weight: 600;
 }
 
 /* Required field indicator */
@@ -3040,17 +3740,7 @@
    RESPONSIVE DESIGN - MOBILE FIRST
    ============================================================================= */
 
-/* Additional animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* Additional animations - fadeInUp already defined above, removed duplicate */
 
 @keyframes slideInRight {
   from {
@@ -3159,6 +3849,9 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
+    /* Mobile specific animation timing */
+    animation-duration: 0.5s;
+    animation-delay: 0.1s;
   }
   
   .header-actions {
@@ -3728,16 +4421,103 @@
   box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
 }
 
-@keyframes modalSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(50px) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+/* Detail Dialog Header Styling - For "Detail Pelanggan" Title */
+.detail-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  border-radius: 16px;
+  box-shadow: 
+    0 4px 15px rgba(124, 58, 237, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
 }
+
+.detail-dialog-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.detail-dialog-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff !important;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.3px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 1;
+}
+
+.detail-dialog-icon {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.detail-dialog-icon i {
+  font-size: 20px;
+  color: #ffffff !important;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.detail-dialog-header .modal-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  cursor: pointer;
+  color: #ffffff !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 1;
+}
+
+.detail-dialog-header .modal-close:hover {
+  background: rgba(239, 68, 68, 0.9);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff !important;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.detail-dialog-header .modal-close i {
+  color: #ffffff !important;
+}
+
+.detail-dialog-body {
+  padding: 0;
+}
+
+/* modalSlideUp already defined above, removed duplicate */
 
 .modal-header {
   display: flex;
@@ -3804,14 +4584,16 @@
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: var(--gray-500);
+  color: #4b5563 !important;
   margin-top: 6px;
   font-style: italic;
+  font-weight: 500;
 }
 
 .form-help i {
   font-size: 14px;
-  color: var(--info);
+  color: #7c3aed !important;
+  font-weight: 600;
 }
 
 .required-field {
@@ -5042,56 +5824,120 @@
 }
 
 .detail-catatan-section {
-  background: var(--gray-50);
-  padding: var(--space-lg);
-  border-radius: var(--radius);
-  margin-bottom: var(--space-lg);
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  padding: 18px;
+  border-radius: 16px;
+  margin-top: 16px;
+  margin-bottom: 20px;
+  border: 2px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  position: relative;
+  overflow: hidden;
+}
+
+.detail-catatan-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
 }
 
 .detail-catatan-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
+  gap: 10px;
+  font-size: 13px;
   font-weight: 700;
-  color: var(--gray-700);
-  margin-bottom: var(--space);
+  color: #475569 !important;
+  margin-bottom: 12px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
+  padding-left: 12px;
+}
+
+.detail-catatan-header i {
+  font-size: 16px;
+  color: #3b82f6 !important;
+  font-weight: 600;
 }
 
 .detail-catatan-content {
   font-size: 14px;
-  color: var(--gray-600);
-  line-height: 1.6;
+  color: #334155 !important;
+  line-height: 1.7;
+  padding: 14px 16px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  font-weight: 500;
+  min-height: 50px;
+  margin-left: 12px;
+  font-style: italic;
+}
+
+.detail-catatan-content:empty::before {
+  content: 'Tidak ada catatan';
+  color: #94a3b8;
+  font-style: italic;
+  font-weight: 400;
 }
 
 .detail-dialog-footer {
   display: flex;
   justify-content: center;
-  padding-top: var(--space-lg);
-  border-top: 2px solid var(--gray-100);
+  padding-top: 20px;
+  margin-top: 4px;
 }
 
 .btn-detail-close {
   padding: 14px 32px;
-  border: 2px solid var(--gray-300);
-  background: var(--white);
-  color: var(--gray-700);
-  border-radius: var(--radius);
+  border: 2px solid transparent;
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  color: #ffffff !important;
+  border-radius: 12px;
   cursor: pointer;
   font-weight: 700;
   font-size: 15px;
-  transition: all var(--transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   gap: 10px;
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-detail-close::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-detail-close:hover::before {
+  opacity: 1;
 }
 
 .btn-detail-close:hover {
-  background: var(--gray-100);
+  background: linear-gradient(135deg, #475569 0%, #334155 100%);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 6px 20px rgba(100, 116, 139, 0.4);
+}
+
+.btn-detail-close i {
+  font-size: 18px;
+  color: #ffffff !important;
 }
 
 /* =============================================================================
@@ -5508,6 +6354,900 @@
 }
 
 /* =============================================================================
+   FINAL TEXT CLARITY ENHANCEMENTS - PREVENT BLUR ON HOVER/FOCUS
+   ============================================================================= */
+
+/* Global text clarity - prevent blur during interactions */
+.page-daftar-pemasangan {
+  /* Ensure consistent text rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Comprehensive text clarity for all interactive elements */
+.page-daftar-pemasangan input[type="text"],
+.page-daftar-pemasangan input[type="search"],
+.page-daftar-pemasangan select,
+.page-daftar-pemasangan button,
+.page-daftar-pemasangan .btn,
+.page-daftar-pemasangan .form-control,
+.page-daftar-pemasangan .table td,
+.page-daftar-pemasangan .table th {
+  /* Simple, effective text rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Special handling for dropdown options */
+.page-daftar-pemasangan select option {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-weight: 400;
+}
+
+/* Ensure buttons maintain clarity during press states */
+.page-daftar-pemasangan button:active,
+.page-daftar-pemasangan .btn:active {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  /* Removed transform to prevent text blur */
+  opacity: 0.9;
+}
+
+/* =============================================================================
    END OF PREMIUM CSS
    ============================================================================= */
+
+
+/* =============================================================================
+   📱 MOBILE RESPONSIVE OPTIMIZATION (≤768px)
+   Optimized untuk tampilan mobile tanpa mengubah desktop
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  /* ========================================
+     🚀 MOBILE PERFORMANCE OPTIMIZATION
+     Disable ALL animations for smooth experience
+     ======================================== */
+  
+  /* ❌ CRITICAL: Disable all animations and transitions */
+  .page-daftar-pemasangan,
+  .page-daftar-pemasangan *,
+  .page-daftar-pemasangan *::before,
+  .page-daftar-pemasangan *::after {
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+  
+  /* ✅ Enable ONLY simple opacity transition for active states */
+  .page-daftar-pemasangan button:active,
+  .page-daftar-pemasangan .btn:active,
+  .page-daftar-pemasangan .mobile-card:active {
+    transition: opacity 0.1s ease !important;
+  }
+  
+  /* ========================================
+     HEADER SECTION - Mobile Optimization
+     ======================================== */
+  
+  .page-header {
+    padding: 20px 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .header-info {
+    width: 100%;
+    gap: 12px;
+  }
+  
+  .header-icon {
+    width: 56px;
+    height: 56px;
+    font-size: 28px;
+    border-radius: 16px;
+    flex-shrink: 0;
+  }
+  
+  .header-text {
+    flex: 1;
+  }
+  
+  .header-text h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+  }
+  
+  .header-text p {
+    font-size: 13px;
+    opacity: 0.95;
+    margin: 0;
+    line-height: 1.4;
+  }
+  
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .period-badge {
+    flex: 1;
+    text-align: center;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  .period-badge i {
+    font-size: 14px;
+  }
+  
+  /* ========================================
+     STATISTICS CARDS - Mobile Compact Layout
+     3 cards dalam 1 baris horizontal untuk hemat space
+     ======================================== */
+  
+  .stats-grid {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+  
+  .stats-grid::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+  
+  .stat-card {
+    flex: 1;
+    min-width: 100px;
+    padding: 12px 8px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  .stat-card:hover {
+    transform: none; /* Disable hover on mobile */
+  }
+  
+  .stat-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+  }
+  
+  .stat-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+  
+  .stat-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: 100%;
+  }
+  
+  .stat-number {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1;
+  }
+  
+  .stat-label {
+    font-size: 10px;
+    margin: 0;
+    line-height: 1.2;
+    font-weight: 600;
+    color: #6b7280;
+  }
+  
+  .stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1;
+  }
+  
+  /* ========================================
+     TABLE CONTROLS - Mobile Optimization
+     ======================================== */
+  
+  .table-controls {
+    padding: 14px;
+    margin-bottom: 14px;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  
+  /* Controls main - stack vertically */
+  .controls-main {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    grid-template-columns: 1fr;
+  }
+  
+  /* Controls left - vertically stacked */
+  .controls-left {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+  
+  /* Controls right - vertically stacked */
+  .controls-right {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin-top: -2px;
+  }
+  
+  /* Search wrapper - more compact */
+  .search-wrapper {
+    min-width: unset;
+    max-width: unset;
+    width: 100%;
+  }
+  
+  .search-wrapper::before {
+    width: 16px;
+    height: 16px;
+    left: 12px;
+  }
+  
+  .search-input {
+    padding: 12px 14px 12px 40px;
+    font-size: 14px;
+    border-radius: 12px;
+  }
+  
+  .search-input::placeholder {
+    font-size: 13px;
+  }
+  
+  /* Filters group - horizontal compact layout */
+  .filters-group {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  
+  .filters-group::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .filter-item {
+    flex-shrink: 0;
+    min-width: 105px;
+    gap: 6px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-select {
+    padding: 10px 32px 10px 10px;
+    font-size: 13px;
+    min-width: 105px;
+    border-radius: 10px;
+    background-position: right 8px center;
+    background-size: 14px;
+    order: 2;
+  }
+  
+  .filter-label {
+    font-size: 11px !important;
+    letter-spacing: 0.8px !important;
+    color: #1f2937 !important;
+    font-weight: 800 !important;
+    opacity: 1 !important;
+    margin: 0 0 4px 0;
+    padding: 4px 8px;
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    border-radius: 6px;
+    text-align: center;
+    order: 1;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+    border: 1px solid #d1d5db;
+  }
+  
+  /* Status buttons - horizontal layout, prevent stacking */
+  .status-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 12px;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  
+  .status-buttons::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .status-filter-btn {
+    padding: 10px 14px;
+    font-size: 12px;
+    border-radius: 10px;
+    min-width: 90px;
+    flex-shrink: 0;
+    letter-spacing: 0.3px;
+  }
+  
+  .status-filter-btn .status-icon {
+    font-size: 13px;
+    margin-right: 4px;
+  }
+  
+  /* Fix status button active state - ensure text is visible */
+  .status-filter-btn.active {
+    color: white !important;
+    background: linear-gradient(135deg, #7c3aed, #a855f7) !important;
+  }
+  
+  .status-filter-btn.active.semua {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+    color: white !important;
+  }
+  
+  .status-filter-btn.active.menunggu {
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    color: white !important;
+  }
+  
+  .status-filter-btn.active.terpasang {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    color: white !important;
+  }
+  
+  /* Add customer button - full width */
+  .add-customer-section {
+    width: 100%;
+  }
+  
+  .add-customer-btn {
+    width: 100%;
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 12px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .add-customer-btn i {
+    font-size: 18px;
+  }
+  
+  .search-filter-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+  
+  .search-box,
+  .filter-group {
+    width: 100%;
+  }
+  
+  .search-box input {
+    font-size: 15px;
+    padding: 12px 16px 12px 44px;
+  }
+  
+  .search-box i {
+    left: 14px;
+    font-size: 18px;
+  }
+  
+  .filter-group select {
+    font-size: 15px;
+    padding: 12px 40px 12px 16px;
+  }
+  
+  .btn-add {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 12px;
+  }
+  
+  /* ========================================
+     TABLE CONTAINER - Hide on Mobile
+     Show Customer Cards Instead
+     ======================================== */
+  
+  .table-container {
+    display: none !important;
+  }
+  
+  /* Show mobile card container */
+  .mobile-card-container {
+    display: flex !important;
+    flex-direction: column;
+    gap: 14px;
+    padding: 0;
+  }
+  
+  /* ========================================
+     MOBILE CARD REDESIGN - Premium Style
+     ======================================== */
+  
+  .mobile-card {
+    background: white;
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 
+      0 2px 12px rgba(0, 0, 0, 0.08),
+      0 1px 4px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    animation: none;
+  }
+  
+  .mobile-card:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mobile-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f3f4f6;
+  }
+  
+  .mobile-card-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 4px;
+  }
+  
+  .mobile-card-title::before {
+    content: '👤';
+    font-size: 16px;
+    margin-right: 6px;
+  }
+  
+  .mobile-card-id {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 600;
+    background: #f3f4f6;
+    padding: 3px 8px;
+    border-radius: 8px;
+    display: inline-block;
+  }
+  
+  .mobile-card-status {
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+  
+  .mobile-card-status.pending {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+    border: 1px solid #fbbf24;
+  }
+  
+  .mobile-card-status.confirmed {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #065f46;
+    border: 1px solid #10b981;
+  }
+  
+  .mobile-card-details {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  
+  .mobile-card-detail {
+    display: flex;
+    flex-direction: column;
+    background: #f9fafb;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    transition: none;
+  }
+  
+  .mobile-card-detail:hover {
+    background: #f9fafb;
+    transform: none;
+  }
+  
+  .mobile-card-label {
+    font-size: 11px;
+    color: #6b7280;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .mobile-card-label i {
+    font-size: 13px;
+    color: #7c3aed;
+  }
+  
+  .mobile-card-value {
+    font-size: 14px;
+    color: #1f2937;
+    font-weight: 600;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+  
+  .mobile-card-alamat {
+    grid-column: 1;
+  }
+  
+  /* Mobile Komisi Badge */
+  .mobile-komisi-badge {
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .mobile-komisi-badge.dibayar {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+  }
+  
+  .mobile-komisi-badge.belum {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+  }
+  
+  .mobile-komisi-badge.pending {
+    background: #f3f4f6;
+    color: #6b7280;
+    border: 1px solid #d1d5db;
+  }
+  
+  /* Mobile Card Actions */
+  .mobile-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 2px solid #f3f4f6;
+  }
+  
+  .mobile-actions-row-1,
+  .mobile-actions-row-2 {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .mobile-actions-row-1 .btn,
+  .mobile-actions-row-2 .btn {
+    flex: 1;
+    padding: 12px 10px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-align: center;
+  }
+  
+  .mobile-actions-row-1 .btn i,
+  .mobile-actions-row-2 .btn i {
+    font-size: 16px;
+  }
+  
+  /* Button Colors */
+  .btn-confirm-mobile {
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    color: #166534;
+    border: 1px solid #22c55e !important;
+  }
+  
+  .btn-confirm-mobile:active {
+    background: linear-gradient(135deg, #bbf7d0 0%, #86efac 100%);
+    transform: scale(0.95);
+  }
+  
+  .btn-whatsapp-mobile {
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    color: #166534;
+    border: 1px solid #22c55e !important;
+  }
+  
+  .btn-whatsapp-mobile:active {
+    background: linear-gradient(135deg, #bbf7d0 0%, #86efac 100%);
+    transform: scale(0.95);
+  }
+  
+  .btn-detail-mobile {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #1e40af;
+    border: 1px solid #3b82f6 !important;
+  }
+  
+  .btn-detail-mobile:active {
+    background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
+    transform: scale(0.95);
+  }
+  
+  .btn-edit-mobile {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #1e40af;
+    border: 1px solid #3b82f6 !important;
+  }
+  
+  .btn-edit-mobile:active {
+    background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
+    transform: scale(0.95);
+  }
+  
+  .btn-delete-mobile {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #991b1b;
+    border: 1px solid #ef4444 !important;
+  }
+  
+  .btn-delete-mobile:active {
+    background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+    transform: scale(0.95);
+  }
+  
+  .btn-komisi-mobile {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+    border: 1px solid #fbbf24 !important;
+  }
+  
+  .btn-komisi-mobile:active {
+    background: linear-gradient(135deg, #fde68a 0%, #fcd34d 100%);
+    transform: scale(0.95);
+  }
+  
+  /* ========================================
+     MODAL DETAIL - Mobile Optimization
+     ======================================== */
+  
+  .modal-overlay {
+    padding: 16px;
+  }
+  
+  .detail-dialog-compact {
+    max-width: 100%;
+    width: 100%;
+    padding: 16px;
+    border-radius: 20px;
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+  }
+  
+  .detail-dialog-header {
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    border-radius: 14px;
+  }
+  
+  .detail-dialog-header h3 {
+    font-size: 18px;
+  }
+  
+  .detail-dialog-icon {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .detail-dialog-icon i {
+    font-size: 18px;
+  }
+  
+  .detail-dialog-header .modal-close {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+  
+  .detail-customer-header {
+    padding: 14px;
+    margin-bottom: 14px;
+    border-radius: 14px;
+  }
+  
+  .detail-customer-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+    border-radius: 14px;
+  }
+  
+  .detail-customer-title h2 {
+    font-size: 18px;
+  }
+  
+  .detail-info-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .detail-info-card {
+    padding: 12px;
+    border-radius: 12px;
+  }
+  
+  .detail-info-label {
+    font-size: 11px;
+  }
+  
+  .detail-info-value {
+    font-size: 13px;
+  }
+  
+  .detail-catatan-section {
+    padding: 14px;
+    border-radius: 14px;
+    margin-top: 12px;
+  }
+  
+  .detail-catatan-header {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  
+  .detail-catatan-content {
+    padding: 12px 14px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+  
+  .btn-detail-close {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 14px;
+  }
+}
+
+/* =============================================================================
+   📱 EXTRA SMALL MOBILE (≤480px)
+   Further optimization for very small screens
+   ============================================================================= */
+
+@media (max-width: 480px) {
+  .page-header {
+    padding: 18px 14px;
+    border-radius: 18px;
+  }
+  
+  .header-icon {
+    width: 52px;
+    height: 52px;
+    font-size: 26px;
+  }
+  
+  .header-text h1 {
+    font-size: 20px;
+  }
+  
+  .header-text p {
+    font-size: 12px;
+  }
+  
+  /* Stats cards even more compact */
+  .stat-card {
+    min-width: 90px;
+    padding: 10px 6px;
+    gap: 6px;
+  }
+  
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+  
+  .stat-number {
+    font-size: 22px;
+  }
+  
+  .stat-label {
+    font-size: 9px;
+  }
+  
+  .customer-card-mobile {
+    padding: 14px;
+  }
+  
+  .customer-name-mobile h3 {
+    font-size: 16px;
+  }
+  
+  .info-value-mobile {
+    font-size: 13px;
+  }
+  
+  .action-btn-mobile {
+    padding: 10px 6px;
+    font-size: 12px;
+  }
+  
+  .action-btn-mobile i {
+    font-size: 16px;
+  }
+}
+
 

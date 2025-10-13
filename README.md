@@ -1,49 +1,232 @@
-# Database Login Application
+# BTD Database Login Application
 
-A comprehensive customer management system for internet service installations with React frontend and Node.js backend.
+> **Modern Customer Management System for Internet Service Provider**
 
-## 🚀 Features
+A comprehensive full-stack application with React frontend and Node.js backend for managing customer installations, users, and master data.
 
-- **User Authentication & Management** - JWT-based secure login system
-- **Installation Management** - Complete CRUD for customer installations
-- **Master Data Management** - Agents and Villages management
-- **Role-Based Access Control** - Administrator and User roles
-- **Responsive Design** - Mobile-first approach with elegant UI
-- **Database Integration** - Complete MySQL integration with auth_db
-- **Real-time Updates** - Dynamic data fetching and updates
-- **Elegant Action Buttons** - Modern UI with gradients and animations
+## 🚀 Quick Features
 
-## 📚 Complete Documentation
+✅ **User Management** - Full CRUD with role-based access control  
+✅ **Installation Tracking** - Complete customer installation lifecycle  
+✅ **Master Data** - Agents and Villages management  
+✅ **JWT Authentication** - Secure token-based authentication  
+✅ **Mobile Optimized** - Responsive design for all devices  
+✅ **Modern UI/UX** - Elegant gradients, animations, and Bootstrap Icons  
 
-| Document | Purpose | Audience |
-|----------|---------|----------|
-| [PROJECT_OVERVIEW.md](./PROJECT_OVERVIEW.md) | Complete project architecture and features | All team members |
-| [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md) | Development patterns and troubleshooting | Developers |
-| [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) | Complete API reference | Developers & integrators |
-| [CHAT_CONTEXT.md](./CHAT_CONTEXT.md) | AI assistant context and quick reference | AI assistants & new chats |
+## 📚 Documentation
 
-## 📁 Project Structure
+**→ [MASTER_DOCUMENTATION.md](./MASTER_DOCUMENTATION.md)** - Complete guide for developers and AI assistants
+
+This master doc includes:
+- 📋 Project overview & architecture
+- ⚡ Quick start guide
+- 💻 Development patterns
+- 🌐 Complete API reference
+- 🗄️ Database schema
+- ⚛️ Frontend components
+- 🎨 Styling system & design patterns
+- 🔧 Troubleshooting guide
+- ✅ Best practices
+
+## �️ Tech Stack
+
+**Frontend**: React 19.2.0 + Vite 7.1.9 + Bootstrap Icons  
+**Backend**: Node.js + Express + MySQL2 + JWT  
+**Database**: MySQL 8.0 (auth_db)  
+**Styling**: Custom CSS with mobile-first approach  
+
+## ⚡ Quick Start
+
+### 1. Clone & Install
+```bash
+git clone https://github.com/PutuTobing/Database-Login.git
+cd Database-Login
+
+# Backend
+cd backend && npm install
+
+# Frontend (new terminal)
+cd frontend && npm install
+```
+
+### 2. Setup Database
+```bash
+# Start MySQL (XAMPP/LAMP)
+sudo /opt/lampp/lampp start
+
+# Import schema
+mysql -u root -p < database/customers-schema.sql
+```
+
+### 3. Configure Environment
+```bash
+# backend/.env
+PORT=3000
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=auth_db
+JWT_SECRET=your-secret-key
+```
+
+### 4. Start Development
+```bash
+# Backend (Terminal 1)
+cd backend && npm start
+# → http://localhost:3000
+
+# Frontend (Terminal 2)
+cd frontend && npm run dev
+# → http://localhost:5173
+```
+
+## 📱 Usage
+
+1. **Register**: Create new account at `/register`
+2. **Login**: Access system at `/login`
+3. **Dashboard**: View stats and quick actions
+4. **Daftar Pemasangan**: Manage customer installations
+5. **Manajemen Akun**: User and master data management (Admin only)
+
+## 🔐 Default Credentials
+
+```
+Admin Account:
+Email: admin@btd.com
+Password: password
+```
+
+## 📊 Project Structure
 
 ```
 Database-Login/
 ├── backend/
-│   ├── server.js           # Express server with all API endpoints
-│   └── package.json        # Backend dependencies
+│   ├── server.js              # Express API server
+│   └── package.json           # Dependencies
 ├── frontend/
-│   ├── src/pages/
-│   │   ├── DaftarPemasangan.jsx    # Installation management
-│   │   ├── ManajemenAkun.jsx       # User & master data management
-│   │   └── Login.jsx               # Authentication
-│   └── package.json        # Frontend dependencies (React + Vite)
+│   ├── src/
+│   │   ├── pages/             # Page components
+│   │   ├── components/        # Reusable components
+│   │   ├── App.jsx           # React router
+│   │   └── main.jsx          # Entry point
+│   └── vite.config.js        # Vite config
 ├── database/
-│   └── customers-schema.sql # Database schema
-├── docker-compose.yml      # MySQL & phpMyAdmin setup
-├── PROJECT_OVERVIEW.md     # Complete project documentation
-├── DEVELOPMENT_GUIDE.md    # Development patterns and guidelines
-├── API_DOCUMENTATION.md    # Complete API reference
-├── CHAT_CONTEXT.md        # AI assistant context file
-└── README.md              # This file
+│   └── *.sql                  # Database schemas
+├── MASTER_DOCUMENTATION.md    # Complete documentation
+└── README.md                  # This file
 ```
+
+## 🎨 Key Features
+
+### Mobile Optimization
+- ✅ Icon-only action buttons (44x44px)
+- ✅ Responsive table cards for mobile
+- ✅ Modal viewport positioning
+- ✅ Touch-friendly interactions
+
+### UI/UX Enhancements
+- ✅ Gradient action buttons with animations
+- ✅ Bootstrap Icons integration
+- ✅ Smooth transitions and hover effects
+- ✅ Loading states and error handling
+
+### Security
+- ✅ JWT token authentication
+- ✅ Password hashing (bcrypt)
+- ✅ Protected API routes
+- ✅ Role-based access control
+
+## 🔧 Development
+
+### Adding New Features
+1. Check `MASTER_DOCUMENTATION.md` for patterns
+2. Follow mobile-first CSS approach
+3. Use Bootstrap Icons for consistency
+4. Test on multiple screen sizes
+
+### Code Style
+- **React**: Functional components with hooks
+- **CSS**: BEM methodology, scoped styles
+- **JavaScript**: ES6+, async/await
+- **Git**: Conventional commits
+
+## 🐛 Troubleshooting
+
+Common issues and solutions:
+
+**401 Errors**: Login again, token may have expired  
+**Port in Use**: `sudo kill -9 $(lsof -t -i:3000)`  
+**Icons Missing**: Check Bootstrap Icons CDN in `index.html`  
+**Modal Position**: Already fixed in v2.0.0  
+
+**→ Full troubleshooting guide in MASTER_DOCUMENTATION.md**
+
+## 📝 API Endpoints
+
+```
+Authentication:
+POST   /api/auth/login          # User login
+POST   /api/auth/register       # New user
+GET    /api/auth/profile        # Current user
+
+Users (Admin only):
+GET    /api/users               # List users
+POST   /api/users               # Create user
+PUT    /api/users/:id           # Update user
+DELETE /api/users/:id           # Delete user
+
+Installations:
+GET    /api/pemasangan          # List installations
+POST   /api/pemasangan          # Create
+PUT    /api/pemasangan/:id      # Update
+DELETE /api/pemasangan/:id      # Delete
+
+Master Data:
+GET/POST/PUT/DELETE /api/agents
+GET/POST/PUT/DELETE /api/villages
+```
+
+**→ Complete API reference in MASTER_DOCUMENTATION.md**
+
+## 🎯 Version History
+
+**v2.0.0** (Current - Oct 2025)
+- Mobile optimization with icon-only buttons
+- Modal viewport positioning fix
+- Enhanced UI/UX with gradients
+- Bootstrap Icons integration
+- CSS isolation system
+
+**v1.5.0** (Oct 2025)
+- Database integration (auth_db)
+- Real-time data fetching
+
+**v1.0.0** (Oct 2025)
+- Initial release
+
+## 👤 Author
+
+**PutuTobing**  
+GitHub: [@PutuTobing](https://github.com/PutuTobing)
+
+## 📄 License
+
+MIT License - See [LICENSE](LICENSE) file
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'feat: Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+---
+
+**📚 For complete documentation, development patterns, and troubleshooting:**  
+**→ Read [MASTER_DOCUMENTATION.md](./MASTER_DOCUMENTATION.md)**
+
+**Happy Coding! 🚀**
 
 ## 🛠️ Tech Stack
 

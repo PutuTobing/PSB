@@ -65,33 +65,37 @@
   white-space: nowrap;
 }
 
-/* Mobile Toggle Button */
+/* Mobile Toggle Button - Moved to Bottom */
 .mobile-toggle-btn {
   display: none;
   position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 50px;
-  height: 50px;
+  bottom: 30px;
+  right: 30px;
+  width: 56px;
+  height: 56px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
   border-radius: 50%;
   color: white;
-  font-size: 22px;
+  font-size: 24px;
   cursor: pointer;
   z-index: 1001;
-  box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   backdrop-filter: blur(10px);
+  /* Enhanced floating effect */
+  animation: floatingButton 3s ease-in-out infinite;
 }
 
 .mobile-toggle-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.7);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 12px 40px rgba(102, 126, 234, 0.8);
+  animation-play-state: paused;
 }
 
 .mobile-toggle-btn:active {
-  transform: scale(0.95);
+  transform: translateY(0) scale(0.98);
+  transition-duration: 0.1s;
 }
 
 .mobile-toggle-btn:focus {
@@ -116,6 +120,17 @@
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@keyframes floatingButton {
+  0%, 100% {
+    transform: translateY(0px);
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+  }
+  50% {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.6);
+  }
 }
 
 /* Sidebar Header */
@@ -187,6 +202,30 @@
   overflow-y: auto;
 }
 
+/* Staggered animation for menu items on mobile */
+.sidebar.mobile-open .menu-item:nth-child(1) {
+  animation: slideInMenu 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s both;
+}
+
+.sidebar.mobile-open .menu-item:nth-child(2) {
+  animation: slideInMenu 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+}
+
+.sidebar.mobile-open .menu-item:nth-child(3) {
+  animation: slideInMenu 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
+}
+
+@keyframes slideInMenu {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .sidebar-menu::-webkit-scrollbar {
   width: 6px;
 }
@@ -228,10 +267,12 @@
   padding: 16px 25px;
   color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
   margin: 5px 15px;
   border-radius: 12px;
+  /* Enhanced mobile animation */
+  will-change: transform, background-color, color;
 }
 
 .sidebar.minimized .menu-item {
@@ -241,8 +282,9 @@
 
 .menu-item:hover {
   color: white;
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(8px);
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
 }
 
 .sidebar.minimized .menu-item:hover {
@@ -258,8 +300,9 @@
 .menu-icon {
   font-size: 22px;
   margin-right: 15px;
-  transition: transform 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   flex-shrink: 0;
+  will-change: transform;
 }
 
 .sidebar.minimized .menu-icon {
@@ -434,7 +477,8 @@
     z-index: 1000;
     height: 100vh;
     overflow-y: auto;
-    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: left;
   }
 
   .sidebar.mobile-open {
@@ -468,6 +512,18 @@
   /* Prevent body scroll when sidebar is open */
   body.sidebar-open {
     overflow: hidden;
+    touch-action: none;
+  }
+
+  /* Enhanced mobile menu interactions */
+  .menu-item {
+    -webkit-tap-highlight-color: rgba(102, 126, 234, 0.2);
+  }
+
+  .menu-item:active {
+    background: rgba(102, 126, 234, 0.3);
+    transform: scale(0.98);
+    transition-duration: 0.1s;
   }
 
   /* Adjust main content margin when sidebar is open */
@@ -499,11 +555,11 @@
   }
 
   .mobile-toggle-btn {
-    width: 48px;
-    height: 48px;
-    font-size: 20px;
-    top: 15px;
-    left: 15px;
+    width: 52px;
+    height: 52px;
+    font-size: 22px;
+    bottom: 20px;
+    right: 20px;
   }
 
   .sidebar-logo {
