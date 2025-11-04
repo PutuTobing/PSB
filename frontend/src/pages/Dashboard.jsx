@@ -2,20 +2,33 @@ import React, { useState, useEffect, useMemo } from 'react';
 import './Dashboard.css';
 
 // Helper functions untuk akses database auth_db melalui API
+// Menggunakan deteksi dinamis berdasarkan hostname dan port
 const getApiUrl = () => {
-  const host = window.location.hostname;
-  if (host === 'localhost' || host === '127.0.0.1') {
-    return 'http://localhost:3000/api';
+  const apiPort = import.meta.env.VITE_API_PORT || '3000';
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  
+  if (baseUrl) {
+    return `${baseUrl}/api`;
   }
-  return 'http://172.16.31.11:3000/api';
+  
+  // Auto-detect dari browser location
+  const protocol = window.location.protocol;
+  const hostname = window.location.hostname;
+  return `${protocol}//${hostname}:${apiPort}/api`;
 };
 
 const getBaseApiUrl = () => {
-  const host = window.location.hostname;
-  if (host === 'localhost' || host === '127.0.0.1') {
-    return 'http://localhost:3000';
+  const apiPort = import.meta.env.VITE_API_PORT || '3000';
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  
+  if (baseUrl) {
+    return baseUrl;
   }
-  return 'http://172.16.31.11:3000';
+  
+  // Auto-detect dari browser location
+  const protocol = window.location.protocol;
+  const hostname = window.location.hostname;
+  return `${protocol}//${hostname}:${apiPort}`;
 };
 
 // Helper function untuk mendapatkan token yang valid

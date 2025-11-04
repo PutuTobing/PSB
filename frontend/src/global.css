@@ -39,7 +39,9 @@ html {
 }
 
 /* Focus outline improvements */
-*:focus {
+button:focus-visible,
+a:focus-visible,
+select:focus-visible {
   outline: 2px solid #667eea;
   outline-offset: 2px;
 }
@@ -49,16 +51,8 @@ html {
   outline: none;
 }
 
-/* Improve button focus styles */
-button:focus-visible {
-  outline: 2px solid #667eea;
-  outline-offset: 2px;
-}
-
 /* Link focus styles */
 a:focus-visible {
-  outline: 2px solid #667eea;
-  outline-offset: 2px;
   text-decoration: none;
 }
 
@@ -71,13 +65,13 @@ a:focus-visible {
   }
 }
 
-/* Dark mode preparation */
-@media (prefers-color-scheme: dark) {
+/* Dark mode disabled - app uses light theme only */
+/* @media (prefers-color-scheme: dark) {
   body {
     background: #0f172a;
     color: #f8fafc;
   }
-}
+} */
 
 /* Mobile viewport fixes */
 @supports (-webkit-touch-callout: none) {

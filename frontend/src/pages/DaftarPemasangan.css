@@ -7,10 +7,521 @@
    ============================================================================= */
 
 /* =============================================================================
-   📱 MOBILE PERFORMANCE OPTIMIZATION (≤768px ONLY)
-   Desktop animations preserved, mobile optimized for smooth performance
+   ✅ MODAL STYLING - COPIED FROM ManajemenAkun.css
+   Modal untuk Add Customer, Edit Customer, Confirm Installation
+   1 blok kode untuk semua modal (efficient & easy to maintain)
    ============================================================================= */
 
+/* Modal Overlay - Dark backdrop with blur */
+.daftar-pemasangan .modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: rgba(0, 0, 0, 0.75) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 99999 !important;
+  padding: 20px !important;
+  animation: overlayFadeIn 0.3s ease-out !important;
+  overflow-y: auto !important;
+  /* Fallback centering untuk browser lama */
+  -webkit-box-align: center !important;
+  -webkit-box-pack: center !important;
+  -ms-flex-align: center !important;
+  -ms-flex-pack: center !important;
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* Modal Content - White box with shadow */
+.daftar-pemasangan .modal-content {
+  background: white !important;
+  border-radius: 16px !important;
+  padding: 20px !important;
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.15),
+    0 8px 32px rgba(124, 58, 237, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  max-width: 420px !important;
+  width: 100% !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  animation: modalSlideInEnhanced 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative !important;
+  z-index: 100000 !important;
+  border: none !important;
+  outline: none !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  /* Centering fallback untuk edge cases */
+  margin: auto !important;
+  /* Smooth scroll dalam modal */
+  -webkit-overflow-scrolling: touch !important;
+}
+
+.daftar-pemasangan .modal-content::-webkit-scrollbar {
+  display: none !important;
+}
+
+@keyframes modalSlideInEnhanced {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Modal Header - Purple gradient background */
+.daftar-pemasangan .modal-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 16px 20px 14px 20px !important;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  border-bottom: 2px solid rgba(124, 58, 237, 0.08) !important;
+  position: relative !important;
+  border-radius: 16px 16px 0 0 !important;
+  margin: -20px -20px 18px -20px !important;
+}
+
+.daftar-pemasangan .modal-header h3 {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  letter-spacing: -0.2px !important;
+}
+
+.daftar-pemasangan .modal-header h3 i {
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(135deg, #7c3aed, #a855f7) !important;
+  color: white !important;
+  border-radius: 10px !important;
+  font-size: 16px !important;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3) !important;
+}
+
+/* Close Button - Red X button */
+.daftar-pemasangan .modal-close {
+  width: 36px !important;
+  height: 36px !important;
+  border: none !important;
+  background: rgba(239, 68, 68, 0.08) !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  color: #ef4444 !important;
+  font-size: 18px !important;
+}
+
+.daftar-pemasangan .modal-close:hover {
+  background: rgba(239, 68, 68, 0.15) !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2) !important;
+}
+
+.daftar-pemasangan .modal-close:active {
+  transform: scale(0.95) !important;
+}
+
+.daftar-pemasangan .modal-close i {
+  color: #ef4444 !important;
+}
+
+/* Modal Body - Form content area */
+.daftar-pemasangan .modal-body {
+  padding: 20px !important;
+  background: white !important;
+}
+
+/* Form Groups - Input containers */
+.daftar-pemasangan .form-group {
+  margin-bottom: 16px !important;
+}
+
+.daftar-pemasangan .form-group:last-child {
+  margin-bottom: 0 !important;
+}
+
+.daftar-pemasangan .form-group label {
+  display: block !important;
+  margin-bottom: 8px !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+  font-size: 13px !important;
+  letter-spacing: 0.1px !important;
+}
+
+/* Form Inputs - Text fields, selects, textareas */
+.daftar-pemasangan .form-group input,
+.daftar-pemasangan .form-group textarea,
+.daftar-pemasangan .form-group select {
+  width: 100% !important;
+  padding: 12px 16px !important;
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+  font-family: inherit !important;
+}
+
+.daftar-pemasangan .form-group input::placeholder,
+.daftar-pemasangan .form-group textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+.daftar-pemasangan .form-group input:hover,
+.daftar-pemasangan .form-group textarea:hover,
+.daftar-pemasangan .form-group select:hover {
+  border-color: #cbd5e1 !important;
+}
+
+.daftar-pemasangan .form-group input:focus,
+.daftar-pemasangan .form-group textarea:focus,
+.daftar-pemasangan .form-group select:focus {
+  outline: none !important;
+  border-color: #7c3aed !important;
+  background: #faf5ff !important;
+  box-shadow: 
+    0 0 0 4px rgba(124, 58, 237, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.daftar-pemasangan .form-group textarea {
+  resize: vertical !important;
+  min-height: 100px !important;
+  line-height: 1.6 !important;
+}
+
+.daftar-pemasangan .form-group select {
+  cursor: pointer !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237c3aed' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 12px center !important;
+  padding-right: 36px !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+}
+
+/* Warning text */
+.daftar-pemasangan .form-group .text-warning {
+  display: block !important;
+  margin-top: 6px !important;
+  font-size: 12px !important;
+  color: #f59e0b !important;
+  font-weight: 500 !important;
+}
+
+/* Modal Footer - Button container */
+.daftar-pemasangan .modal-footer {
+  display: flex !important;
+  gap: 12px !important;
+  justify-content: flex-end !important;
+  margin-top: 20px !important;
+  padding: 16px 20px 20px 20px !important;
+  border-top: 2px solid rgba(124, 58, 237, 0.08) !important;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.02) 0%, rgba(124, 58, 237, 0.05) 100%) !important;
+  margin-left: -20px !important;
+  margin-right: -20px !important;
+  margin-bottom: -20px !important;
+  border-radius: 0 0 16px 16px !important;
+}
+
+/* Modal Buttons - Action buttons */
+.daftar-pemasangan .modal-footer .btn {
+  padding: 12px 20px !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer !important;
+  border: none !important;
+  letter-spacing: 0.1px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+.daftar-pemasangan .modal-footer .btn-secondary {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 2px solid #e2e8f0 !important;
+}
+
+.daftar-pemasangan .modal-footer .btn-secondary:hover {
+  background: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.daftar-pemasangan .modal-footer .btn-primary {
+  background: linear-gradient(135deg, #7c3aed, #a855f7) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3) !important;
+}
+
+.daftar-pemasangan .modal-footer .btn-primary:hover {
+  background: linear-gradient(135deg, #6d28d9, #9333ea) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4) !important;
+}
+
+.daftar-pemasangan .modal-footer .btn-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
+}
+
+.daftar-pemasangan .modal-footer .btn-danger:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4) !important;
+}
+
+.daftar-pemasangan .modal-footer .btn:active {
+  transform: translateY(0) scale(0.98) !important;
+}
+
+.daftar-pemasangan .modal-footer .btn:disabled {
+  background: #e2e8f0 !important;
+  color: #94a3b8 !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+  box-shadow: none !important;
+}
+
+/* Loading state for buttons */
+.daftar-pemasangan .btn.loading {
+  position: relative !important;
+  color: transparent !important;
+  pointer-events: none !important;
+}
+
+.daftar-pemasangan .btn.loading::after {
+  content: '' !important;
+  position: absolute !important;
+  width: 16px !important;
+  height: 16px !important;
+  border: 2px solid white !important;
+  border-top-color: transparent !important;
+  border-radius: 50% !important;
+  animation: spin 0.6s linear infinite !important;
+  left: 50% !important;
+  top: 50% !important;
+  margin-left: -8px !important;
+  margin-top: -8px !important;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Mobile Responsive - Optimized for small screens */
+@media (max-width: 768px) {
+  .daftar-pemasangan .modal-overlay {
+    padding: 16px 8px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    /* Pastikan modal tetap center di mobile */
+    display: flex !important;
+    -webkit-box-align: center !important;
+    -webkit-box-pack: center !important;
+  }
+
+  .daftar-pemasangan .modal-content {
+    max-height: 90vh !important;
+    width: calc(100% - 16px) !important;
+    max-width: 95vw !important;
+    /* Pastikan modal bisa scroll jika konten panjang */
+    overflow-y: auto !important;
+    /* Center alignment fallback */
+    margin: auto !important;
+  }
+
+  .daftar-pemasangan .modal-header {
+    padding: 14px 16px !important;
+  }
+
+  .daftar-pemasangan .modal-header h3 {
+    font-size: 15px !important;
+  }
+
+  .daftar-pemasangan .modal-header h3 i {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 12px !important;
+    border-radius: 8px !important;
+  }
+
+  .daftar-pemasangan .modal-close {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 8px !important;
+    font-size: 16px !important;
+  }
+
+  .daftar-pemasangan .modal-body {
+    padding: 12px 16px !important;
+  }
+
+  .daftar-pemasangan .form-group {
+    margin-bottom: 12px !important;
+  }
+
+  .daftar-pemasangan .form-group label {
+    margin-bottom: 5px !important;
+    font-size: 12.5px !important;
+  }
+
+  .daftar-pemasangan .form-group input,
+  .daftar-pemasangan .form-group textarea,
+  .daftar-pemasangan .form-group select {
+    padding: 10px 12px !important;
+    font-size: 15px !important;
+    border-radius: 10px !important;
+  }
+
+  .daftar-pemasangan .form-group textarea {
+    min-height: 70px !important;
+  }
+
+  .daftar-pemasangan .modal-footer {
+    padding: 12px 16px !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    justify-content: space-between !important;
+  }
+
+  .daftar-pemasangan .modal-footer .btn {
+    width: 48% !important;
+    padding: 11px 14px !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
+  }
+
+  .daftar-pemasangan .modal-footer .btn-secondary {
+    order: 1 !important;
+  }
+
+  .daftar-pemasangan .modal-footer .btn-primary,
+  .daftar-pemasangan .modal-footer .btn-danger {
+    order: 2 !important;
+  }
+}
+
+/* Extra Small Mobile (phones < 375px) - Ensure modal stays centered */
+@media (max-width: 374px) {
+  .daftar-pemasangan .modal-overlay {
+    padding: 12px 4px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .daftar-pemasangan .modal-content {
+    max-height: 92vh !important;
+    width: calc(100% - 8px) !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+  }
+
+  .daftar-pemasangan .modal-header h3 {
+    font-size: 14px !important;
+    gap: 6px !important;
+  }
+
+  .daftar-pemasangan .modal-header h3 i {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 11px !important;
+    border-radius: 6px !important;
+  }
+}
+
+/* Landscape Mode Mobile (phones rotated) - Ensure modal stays centered */
+@media (max-width: 768px) and (orientation: landscape) {
+  .daftar-pemasangan .modal-overlay {
+    padding: 8px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    /* Pastikan bisa scroll jika modal lebih tinggi dari viewport */
+    overflow-y: auto !important;
+  }
+
+  .daftar-pemasangan .modal-content {
+    max-height: 85vh !important;
+    /* Kurangi tinggi di landscape karena viewport lebih pendek */
+    margin: 10px auto !important;
+  }
+
+  .daftar-pemasangan .modal-header {
+    padding: 10px 16px !important;
+  }
+
+  .daftar-pemasangan .modal-body {
+    padding: 10px 16px !important;
+  }
+
+  .daftar-pemasangan .form-group {
+    margin-bottom: 10px !important;
+  }
+
+  .daftar-pemasangan .modal-footer {
+    padding: 8px 16px !important;
+  }
+
+  .daftar-pemasangan .modal-footer .btn {
+    padding: 9px 16px !important;
+  }
+}
+
+/* Tablet Portrait (iPad, etc) - Ensure modal stays centered */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .daftar-pemasangan .modal-overlay {
+    padding: 24px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .daftar-pemasangan .modal-content {
+    max-width: 480px !important;
+    max-height: 85vh !important;
+  }
+}
 @media (max-width: 768px) {
   /* ❌ DISABLE ALL COMPLEX ANIMATIONS ON MOBILE ONLY */
   .page-daftar-pemasangan,
@@ -23,6 +534,12 @@
     will-change: auto !important;
     /* Reset all transforms */
     transform: none !important;
+  }
+  
+  /* ✅ EXCEPTION: Allow page-header animation and display */
+  .page-daftar-pemasangan .page-header {
+    display: block !important;
+    animation: slideDown 0.4s ease-out !important;
   }
   
   /* ✅ ONLY allow simple transitions for user interactions */
@@ -47,15 +564,79 @@
 /* Touch device optimizations - Only disable hover effects */
 @media (hover: none) and (pointer: coarse) {
   /* ❌ DISABLE HOVER EFFECTS ONLY (not all transforms/animations) */
-  .page-daftar-pemasangan *:hover {
+  .daftar-pemasangan *:hover {
     transform: none !important;
     box-shadow: inherit !important;
     background: inherit !important;
   }
   
+  /* ✅ EXCEPTION: Preserve page-header background on touch */
+  .daftar-pemasangan .page-header:hover,
+  .daftar-pemasangan .page-header:active {
+    background: linear-gradient(135deg, #7c3aed, #a855f7) !important;
+  }
+  
+  /* ✅ EXCEPTION: Preserve modal-overlay and modal-content backgrounds */
+  .daftar-pemasangan .modal-overlay:hover,
+  .daftar-pemasangan .modal-overlay:active,
+  .daftar-pemasangan .modal-overlay:focus,
+  .daftar-pemasangan .modal-overlay:focus-within {
+    background: rgba(0, 0, 0, 0.75) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+  
+  .daftar-pemasangan .modal-content:hover,
+  .daftar-pemasangan .modal-content:active,
+  .daftar-pemasangan .modal-content:focus,
+  .daftar-pemasangan .modal-content:focus-within {
+    background: white !important;
+  }
+  
+  /* ✅ EXCEPTION: Preserve modal-header, modal-body, modal-footer backgrounds */
+  .daftar-pemasangan .modal-header:hover,
+  .daftar-pemasangan .modal-header:active,
+  .daftar-pemasangan .modal-header:focus,
+  .daftar-pemasangan .modal-header:focus-within {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  }
+  
+  .daftar-pemasangan .modal-body:hover,
+  .daftar-pemasangan .modal-body:active,
+  .daftar-pemasangan .modal-body:focus,
+  .daftar-pemasangan .modal-body:focus-within {
+    background: white !important;
+  }
+  
+  .daftar-pemasangan .modal-footer:hover,
+  .daftar-pemasangan .modal-footer:active,
+  .daftar-pemasangan .modal-footer:focus,
+  .daftar-pemasangan .modal-footer:focus-within {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.02) 0%, rgba(124, 58, 237, 0.05) 100%) !important;
+  }
+  
+  /* ✅ EXCEPTION: Preserve form input backgrounds on touch */
+  .daftar-pemasangan .form-input:hover,
+  .daftar-pemasangan .form-select:hover,
+  .daftar-pemasangan .form-textarea:hover,
+  .daftar-pemasangan .form-input:focus,
+  .daftar-pemasangan .form-select:focus,
+  .daftar-pemasangan .form-textarea:focus {
+    background: #ffffff !important;
+    box-shadow: 
+      0 0 0 4px rgba(124, 58, 237, 0.08),
+      0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  }
+  
+  .daftar-pemasangan .form-input:focus,
+  .daftar-pemasangan .form-select:focus,
+  .daftar-pemasangan .form-textarea:focus {
+    background: #faf5ff !important;
+  }
+  
   /* ✅ Keep transitions for active states */
-  .page-daftar-pemasangan button:active,
-  .page-daftar-pemasangan .btn:active {
+  .daftar-pemasangan button:active,
+  .daftar-pemasangan .btn:active {
     opacity: 0.8;
   }
 }
@@ -76,11 +657,177 @@
   .page-daftar-pemasangan .table-container {
     animation: none !important;
   }
-  
-  .page-daftar-pemasangan .modal-overlay,
-  .page-daftar-pemasangan .modal-content {
-    animation: none !important;
-  }
+  /* ❌ REMOVED: modal-overlay from reduce motion */
+}
+
+
+/* =============================================================================
+   MODAL VARIANTS - KOMISI, DELETE, DETAIL
+   Semua menggunakan base .modal-content dengan modifier class
+   ============================================================================= */
+
+/* Komisi Modal Variant */
+.modal-komisi {
+  max-width: 460px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 50%, #ffffff 100%) !important;
+  border: 2px solid rgba(16, 185, 129, 0.15) !important;
+}
+
+.modal-komisi::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #10b981 0%, #059669 50%, #047857 100%);
+  border-radius: 16px 16px 0 0;
+}
+
+.modal-header-komisi {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%) !important;
+  border-bottom: 2px solid rgba(16, 185, 129, 0.12) !important;
+}
+
+.modal-header-komisi h3 {
+  color: #047857 !important;
+}
+
+.modal-icon-komisi {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  margin-right: 12px;
+}
+
+.modal-footer-komisi {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  padding: 16px 20px !important;
+}
+
+.btn-komisi {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-komisi.btn-success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.btn-komisi.btn-success:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+}
+
+.btn-komisi.btn-warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+}
+
+.btn-komisi.btn-warning:hover {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+}
+
+/* Delete Modal Variant */
+.modal-delete {
+  max-width: 450px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #fef2f2 50%, #ffffff 100%) !important;
+  border: 2px solid rgba(239, 68, 68, 0.15) !important;
+}
+
+.modal-delete::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
+  border-radius: 16px 16px 0 0;
+}
+
+.modal-header-delete {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.03) 100%) !important;
+  border-bottom: 2px solid rgba(239, 68, 68, 0.12) !important;
+}
+
+.modal-header-delete h3 {
+  color: #b91c1c !important;
+}
+
+.modal-footer-delete {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
+}
+
+/* Detail Modal Variant */
+.modal-detail {
+  max-width: 480px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 2px solid rgba(59, 130, 246, 0.15) !important;
+}
+
+.modal-detail::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 50%, #2563eb 100%);
+  border-radius: 16px 16px 0 0;
+}
+
+.modal-header-detail {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.03) 100%) !important;
+  border-bottom: 2px solid rgba(59, 130, 246, 0.12) !important;
+}
+
+.modal-header-detail h3 {
+  color: #1d4ed8 !important;
+}
+
+.modal-content-compact {
+  max-width: 460px !important;
+  padding: 20px !important;
 }
 
 /* ✅ PERBAIKAN TEXT CLARITY - NO BLUR & CRISP RENDERING */
@@ -99,6 +846,19 @@
   perspective: 1000px;
 }
 
+/* ✅ EXCEPTION: Remove transform & perspective from modal to fix positioning */
+.daftar-pemasangan .modal-overlay,
+.daftar-pemasangan .modal-overlay *,
+.page-daftar-pemasangan .modal-overlay,
+.page-daftar-pemasangan .modal-overlay * {
+  -webkit-transform: none !important;
+  transform: none !important;
+  -webkit-perspective: none !important;
+  perspective: none !important;
+  -webkit-backface-visibility: visible !important;
+  backface-visibility: visible !important;
+}
+
 /* Force sharp text rendering during hover states */
 .page-daftar-pemasangan *:hover {
   -webkit-font-smoothing: antialiased;
@@ -106,6 +866,15 @@
   text-rendering: optimizeLegibility;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
+}
+
+/* ✅ EXCEPTION: Remove transform from modal on hover */
+.daftar-pemasangan .modal-overlay:hover,
+.daftar-pemasangan .modal-overlay *:hover,
+.page-daftar-pemasangan .modal-overlay:hover,
+.page-daftar-pemasangan .modal-overlay *:hover {
+  -webkit-transform: none !important;
+  transform: none !important;
 }
 
 .page-daftar-pemasangan .header-content h1 {
@@ -244,26 +1013,6 @@
   to {
     opacity: 1;
     transform: scale(1);
-  }
-}
-
-@keyframes modalSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(50px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
   }
 }
 
@@ -563,26 +1312,10 @@
   font-size: 1rem;
 }
 
-/* ✅ ANIMASI MODAL POP-UPS - RESTORED ORIGINAL SMOOTH */
-.page-daftar-pemasangan .modal-overlay {
-  animation: modalFadeIn 0.3s ease-out;
-}
 
-.page-daftar-pemasangan .modal-content {
-  animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
 
-.page-daftar-pemasangan .modal-header {
-  animation: fadeInDown 0.5s ease-out 0.1s both;
-}
 
-.page-daftar-pemasangan .modal-body {
-  animation: fadeInUp 0.5s ease-out 0.2s both;
-}
 
-.page-daftar-pemasangan .modal-footer {
-  animation: fadeInUp 0.5s ease-out 0.3s both;
-}
 
 /* ✅ ANIMASI ACTION BUTTONS - DESKTOP OPTIMIZED */
 .page-daftar-pemasangan .btn {
@@ -661,7 +1394,6 @@
   animation: pulseGlow 2s infinite;
 }
 
-/* ✅ ANIMASI FORM ELEMENTS DALAM MODAL */
 .page-daftar-pemasangan .form-group {
   animation: fadeInUp 0.4s ease-out;
   animation-fill-mode: both;
@@ -995,21 +1727,20 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     cursor: pointer;
-    background-image: none;
     /* Crisp text rendering */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
-    /* Custom dropdown indicator */
-    background-image: linear-gradient(45deg, transparent 50%, #6b7280 50%), 
+    /* ❌ REMOVED: Custom dropdown arrow yang menghalangi teks menu */
+    /* background-image: linear-gradient(45deg, transparent 50%, #6b7280 50%), 
                       linear-gradient(135deg, #6b7280 50%, transparent 50%);
     background-position: calc(100% - 20px) calc(1em + 2px), 
                          calc(100% - 15px) calc(1em + 2px);
     background-size: 5px 5px, 5px 5px;
-    background-repeat: no-repeat;
-    padding-right: 40px;
+    background-repeat: no-repeat; */
+    padding-right: 16px; /* Reduced from 40px since no custom arrow */
   }
   
   .page-daftar-pemasangan .filter-select:hover {
@@ -1028,10 +1759,7 @@
   .page-daftar-pemasangan .filter-select:hover {
     border-color: #9ca3af;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    /* Enhanced dropdown indicator on hover */
-    background-image: linear-gradient(45deg, transparent 50%, #6b7280 50%), 
-                      linear-gradient(135deg, #6b7280 50%, transparent 50%);
-    /* Removed transform to prevent text blur */
+    /* ❌ REMOVED: Dropdown arrow yang menghalangi teks */
   }
 
   .page-daftar-pemasangan .filter-select:focus {
@@ -1039,9 +1767,7 @@
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     outline: none;
     background-color: #ffffff;
-    /* Enhanced dropdown indicator on focus */
-    background-image: linear-gradient(45deg, transparent 50%, #667eea 50%), 
-                      linear-gradient(135deg, #667eea 50%, transparent 50%);
+    /* ❌ REMOVED: Dropdown arrow yang menghalangi teks */
     /* Simple text clarity without transforms */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -1437,100 +2163,75 @@
 }
 
 /* =============================================================================
-   HEADER SECTION
+   HEADER SECTION - UNIFIED STYLE (EXACT COPY FROM MANAJEMEN AKUN)
+   SEMBUNYIKAN DI DESKTOP, TAMPILKAN DI MOBILE
    ============================================================================= */
 
 .page-header {
-  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 30px;
   color: white;
-  padding: 16px;
-  border-radius: 16px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
-  /* ✨ DESKTOP: Beautiful slide-in animation */
-  animation: pageHeaderSlideIn 0.5s ease-out both;
-  transition: box-shadow 0.2s ease;
+  box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+  animation: slideDown 0.5s ease-out;
+  display: none !important; /* HIDDEN di Desktop - sudah ada keterangan di JSX global */
+}
+
+/* ✅ PREVENT BACKGROUND CHANGE on click/tap/hover */
+.page-header:hover,
+.page-header:active,
+.page-header:focus {
+  background: linear-gradient(135deg, #7c3aed, #a855f7) !important;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .header-content {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 16px;
-  /* ✨ DESKTOP: Delayed title animation */
-  animation: headerTitleSlide 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+  justify-content: space-between;
+  /* ✅ Ensure header-content doesn't interfere with parent background */
+  background: transparent !important;
 }
 
 .header-info {
   display: flex;
   align-items: center;
-  gap: 12px;
-  /* ✨ DESKTOP: Staggered breadcrumb animation */
-  animation: breadcrumbSlide 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
+  gap: 18px;
 }
 
 .header-icon {
-  width: 44px;
-  height: 44px;
+  width: 56px;
+  height: 56px;
   background: rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
+  border-radius: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  /* ✨ DESKTOP: Fun bounce animation */
-  animation: headerIconBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s both;
+  font-size: 26px;
 }
 
 .header-text h1 {
-  font-size: 20px;
+  margin: 0;
+  font-size: 28px;
   font-weight: 700;
-  margin: 0 0 4px 0;
-  /* ✨ DESKTOP: Title reveal animation */
-  animation: headerTextReveal 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s both;
+  margin-bottom: 6px;
 }
 
 .header-text p {
-  font-size: 13px;
-  opacity: 0.9;
-  /* ✨ DESKTOP: Subtitle reveal animation */
-  animation: headerTextReveal 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s both;
   margin: 0;
-}
-
-.header-actions {
-  display: flex;
-  gap: 8px;
-  /* ✨ DESKTOP: Slide from right animation */
-  animation: fadeInRight 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.7s both;
-}
-
-.period-badge {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.btn-add {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  color: white;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.btn-add:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
+  font-size: 15px;
+  opacity: 0.9;
 }
 
 /* =============================================================================
@@ -1856,8 +2557,8 @@
   transform: translateY(-2px) scale(1.02);
 }
 
-/* Dropdown arrow styling */
-.filter-select {
+/* ❌ REMOVED: Dropdown arrow SVG yang menghalangi teks menu */
+/* .filter-select {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
   background-position: right 12px center;
   background-repeat: no-repeat;
@@ -1873,6 +2574,7 @@
 .filter-select:focus {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%237c3aed' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
 }
+*/
 
 /* Status filter buttons */
 .status-buttons {
@@ -2003,7 +2705,7 @@
   border: 1px solid #e2e8f0;
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateZ(0);
+  /* transform: translateZ(0); REMOVED - Causes stacking context issue with modal */
 }
 
 .table-container::before {
@@ -3130,617 +3832,8 @@
 }
 
 /* =============================================================================
-   MODAL STYLES - ENHANCED DESIGN
-   ============================================================================= */
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 20px;
-  animation: modalFadeIn 0.3s ease-out;
-}
-
-/* modalFadeIn already defined above, removed duplicate */
-
-.modal-content {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border-radius: 16px;
-  padding: 20px;
-  max-width: 420px;
-  width: 100%;
-  max-height: 80vh;
-  overflow-y: auto;
-  box-shadow: 
-    0 20px 50px rgba(0, 0, 0, 0.15),
-    0 8px 32px rgba(124, 58, 237, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  position: relative;
-  animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  border: 2px solid rgba(124, 58, 237, 0.12);
-  backdrop-filter: blur(10px);
-}
-
-/* modalSlideUp already defined above, removed duplicate */
-
-.modal-content::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
-  border-radius: 16px 16px 0 0;
-  animation: gradientShift 3s ease-in-out infinite;
-}
-
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 18px;
-  padding-bottom: 14px;
-  border-bottom: 2px solid rgba(124, 58, 237, 0.08);
-  position: relative;
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.02) 0%, rgba(124, 58, 237, 0.05) 100%);
-  margin: -20px -20px 18px -20px;
-  padding: 16px 20px 14px 20px;
-  border-radius: 16px 16px 0 0;
-}
-
-.modal-header::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 40px;
-  height: 1px;
-  background: linear-gradient(90deg, #7c3aed, transparent);
-}
-
-.modal-title {
-  font-size: 18px;
-  font-weight: 700;
-  background: linear-gradient(135deg, #1e293b, #7c3aed);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0;
-  letter-spacing: -0.2px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.modal-title i {
-  background: linear-gradient(135deg, #7c3aed, #a855f7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-size: 20px;
-}
-
-.modal-close {
-  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-  border: 2px solid rgba(148, 163, 184, 0.3);
-  font-size: 16px;
-  cursor: pointer;
-  color: #64748b;
-  padding: 0;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-weight: 600;
-  position: relative;
-  overflow: hidden;
-}
-
-.modal-close::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.1), transparent);
-  transition: left 0.5s ease;
-}
-
-.modal-close:hover {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: white;
-  border-color: #dc2626;
-  transform: rotate(90deg) scale(1.1);
-  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
-}
-
-.modal-close:hover::before {
-  left: 100%;
-}
-
-.form-group {
-  margin-bottom: 16px;
-  animation: fadeInUp 0.4s ease-out;
-  animation-fill-mode: both;
-  position: relative;
-}
-
-.form-group:nth-child(1) { animation-delay: 0.1s; }
-.form-group:nth-child(2) { animation-delay: 0.2s; }
-.form-group:nth-child(3) { animation-delay: 0.3s; }
-.form-group:nth-child(4) { animation-delay: 0.4s; }
-
-.form-label {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 8px;
-  text-transform: none;
-  letter-spacing: 0.1px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.form-label i {
-  color: #7c3aed;
-  font-size: 14px;
-}
-
-.form-input,
-.form-select,
-.form-textarea {
-  width: 100%;
-  padding: 12px 16px;
-  border: 2px solid rgba(124, 58, 237, 0.1);
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-sizing: border-box;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  color: #1f2937;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-}
-
-.form-input:hover,
-.form-select:hover,
-.form-textarea:hover {
-  border-color: rgba(124, 58, 237, 0.25);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.08);
-  background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
-}
-
-.form-input:focus,
-.form-select:focus,
-.form-textarea:focus {
-  outline: none;
-  border-color: #7c3aed;
-  background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
-  box-shadow: 
-    0 0 0 4px rgba(124, 58, 237, 0.12),
-    0 8px 24px rgba(124, 58, 237, 0.08);
-  transform: translateY(-2px) scale(1.01);
-}
-
-.form-textarea {
-  resize: vertical;
-  min-height: 100px;
-  font-family: inherit;
-}
-
-/* Info box in modal */
-.modal-info-box {
-  background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
-  border: 2px solid #3b82f6;
-  border-radius: 14px;
-  padding: 16px 20px;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  animation: fadeInUp 0.4s ease-out;
-}
-
-.modal-info-icon {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 20px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-.modal-info-content {
-  flex: 1;
-}
-
-.modal-info-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: #1e40af;
-  margin: 0 0 4px 0;
-}
-
-.modal-info-text {
-  font-size: 13px;
-  color: #1e3a8a;
-  margin: 0;
-  line-height: 1.5;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 2px solid rgba(124, 58, 237, 0.08);
-  animation: fadeInUp 0.4s ease-out 0.5s;
-  animation-fill-mode: both;
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.02) 0%, rgba(124, 58, 237, 0.05) 100%);
-  margin-left: -20px;
-  margin-right: -20px;
-  margin-bottom: -20px;
-  padding: 16px 20px 20px 20px;
-  border-radius: 0 0 16px 16px;
-}
-
-.btn {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  position: relative;
-  overflow: hidden;
-  text-transform: none;
-  letter-spacing: 0.1px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: 2px solid transparent;
-}
-
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(255, 255, 255, 0.3) 50%, 
-    transparent 100%
-  );
-  transition: left 0.5s ease;
-}
-
-.btn:hover::before {
-  left: 100%;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
-  color: white;
-}
-
-.btn-primary:hover {
-  box-shadow: 
-    0 8px 24px rgba(124, 58, 237, 0.35),
-    0 0 20px rgba(168, 85, 247, 0.3);
-  /* Removed transform to prevent text blur */
-}
-
-.btn-primary:active {
-  opacity: 0.9;
-  /* Removed transform to prevent text blur */
-}
-
-.btn-secondary {
-  background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
-  color: white;
-}
-
-.btn-secondary:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 
-    0 8px 24px rgba(100, 116, 139, 0.35),
-    0 0 20px rgba(148, 163, 184, 0.3);
-}
-
-.btn-secondary:active {
-  transform: translateY(0) scale(0.98);
-}
-
-.btn-success {
-  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-  color: white;
-}
-
-.btn-success:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 
-    0 8px 24px rgba(16, 185, 129, 0.35),
-    0 0 20px rgba(52, 211, 153, 0.3);
-}
-
-.btn-success:active {
-  transform: translateY(0) scale(0.98);
-}
-
-.btn-warning {
-  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-  color: white;
-}
-
-.btn-warning:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 
-    0 8px 24px rgba(245, 158, 11, 0.35),
-    0 0 20px rgba(251, 191, 36, 0.3);
-}
-
-.btn-warning:active {
-  transform: translateY(0) scale(0.98);
-}
-
-.btn-danger {
-  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
-  color: white;
-}
-
-.btn-danger:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 
-    0 8px 24px rgba(239, 68, 68, 0.35),
-    0 0 20px rgba(248, 113, 113, 0.3);
-}
-
-.btn-danger:active {
-  transform: translateY(0) scale(0.98);
-}
-
-/* Compact Modal Content */
-.modal-content-compact {
-  max-width: 440px;
-  padding: 20px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border: 2px solid rgba(124, 58, 237, 0.12);
-  box-shadow: 
-    0 20px 50px rgba(0, 0, 0, 0.15),
-    0 8px 32px rgba(124, 58, 237, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
-.modal-content-compact .modal-header {
-  margin-bottom: 18px;
-  padding-bottom: 14px;
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.02) 0%, rgba(124, 58, 237, 0.05) 100%);
-  margin: -20px -20px 18px -20px;
-  padding: 16px 20px 14px 20px;
-  border-radius: 16px 16px 0 0;
-  border-bottom: 2px solid rgba(124, 58, 237, 0.08);
-}
-
-.modal-content-compact .modal-title {
-  font-size: 17px;
-  font-weight: 700;
-}
-
-.modal-content-compact .form-group {
-  margin-bottom: 16px;
-}
-
-.modal-content-compact .form-input,
-.modal-content-compact .form-select,
-.modal-content-compact .form-textarea {
-  padding: 12px 16px;
-  font-size: 14px;
-  border-radius: 12px;
-  border: 2px solid rgba(124, 58, 237, 0.1);
-}
-
-.modal-content-compact .modal-actions {
-  margin-top: 18px;
-  padding-top: 16px;
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.02) 0%, rgba(124, 58, 237, 0.05) 100%);
-  margin-left: -20px;
-  margin-right: -20px;
-  margin-bottom: -20px;
-  padding: 16px 20px 20px 20px;
-  border-radius: 0 0 16px 16px;
-  border-top: 2px solid rgba(124, 58, 237, 0.08);
-}
-
-.modal-content-compact .btn {
-  padding: 12px 18px;
-  font-size: 14px;
-  border-radius: 12px;
-}
-
-/* Enhanced form help text */
-.form-help {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: #374151 !important;
-  margin-top: 6px;
-  padding: 6px 10px;
-  background: rgba(124, 58, 237, 0.05);
-  border-radius: 8px;
-  border-left: 3px solid #7c3aed;
-  font-weight: 500;
-}
-
-.form-help i {
-  color: #7c3aed !important;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-/* Required field indicator */
-.required-field {
-  color: #ef4444;
-  font-weight: 700;
-  margin-left: 4px;
-}
-
-/* Customer summary card */
-.customer-summary {
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  padding: 16px;
-  border-radius: 12px;
-  border: 2px solid rgba(59, 130, 246, 0.15);
-  margin-bottom: 16px;
-  border-left: 4px solid #3b82f6;
-}
-
-.customer-summary h4 {
-  color: #1e3a8a;
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.customer-summary h4::before {
-  content: '👤';
-  font-size: 18px;
-}
-
-.customer-summary p {
-  color: #1e40af;
-  font-size: 13px;
-  margin: 4px 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.customer-summary p:nth-child(2)::before {
-  content: '📞';
-}
-
-.customer-summary p:nth-child(3)::before {
-  content: '📍';
-}
-
-/* Commission Status Buttons */
-.commission-status-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin: 24px 0;
-}
-
-.commission-btn {
-  padding: 20px 24px;
-  border: 3px solid transparent;
-  border-radius: 16px;
-  font-size: 16px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.commission-btn-paid {
-  background: linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
-  color: white;
-  box-shadow: 
-    0 8px 20px rgba(16, 185, 129, 0.3),
-    0 0 40px rgba(16, 185, 129, 0.15);
-}
-
-.commission-btn-paid:hover {
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: 
-    0 16px 32px rgba(16, 185, 129, 0.4),
-    0 0 60px rgba(16, 185, 129, 0.25);
-  border-color: #34d399;
-}
-
-.commission-btn-paid::before {
-  content: '✓';
-  position: absolute;
-  left: 20px;
-  font-size: 28px;
-  font-weight: 900;
-}
-
-.commission-btn-unpaid {
-  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #fcd34d 100%);
-  color: white;
-  box-shadow: 
-    0 8px 20px rgba(245, 158, 11, 0.3),
-    0 0 40px rgba(245, 158, 11, 0.15);
-}
-
-.commission-btn-unpaid:hover {
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: 
-    0 16px 32px rgba(245, 158, 11, 0.4),
-    0 0 60px rgba(245, 158, 11, 0.25);
-  border-color: #fbbf24;
-}
-
-.commission-btn-unpaid::before {
-  content: '⏳';
-  position: absolute;
-  left: 20px;
-  font-size: 28px;
-}
-
-.commission-btn:active {
-  transform: translateY(0) scale(0.98);
-}
-
-/* =============================================================================
    RESPONSIVE DESIGN - MOBILE FIRST
    ============================================================================= */
-
-/* Additional animations - fadeInUp already defined above, removed duplicate */
 
 @keyframes slideInRight {
   from {
@@ -3833,6 +3926,7 @@
   }
   
   .page-header {
+    display: block !important; /* SHOW di mobile */
     padding: 16px;
     margin-bottom: 20px;
   }
@@ -3982,11 +4076,6 @@
     font-size: 12px;
   }
   
-  .modal-content {
-    margin: 20px;
-    max-width: none;
-    width: auto;
-  }
 }
 
 /* Small Mobile (≤480px) */
@@ -4188,43 +4277,9 @@
   100% { background-position: -200% 0; }
 }
 
-/* Print styles */
-@media print {
-  .header-actions,
-  .table-controls,
-  .action-buttons,
-  .mobile-card-actions {
-    display: none !important;
-  }
-  
-  .page-header {
-    background: #7c3aed !important;
-    color: white !important;
-  }
-  
-  .pemasangan-table {
-    font-size: 12px;
-  }
-}
-
-.modal-content {
-  background: linear-gradient(135deg, #ffffff 0%, #fefefe 50%, #ffffff 100%);
-  border-radius: 24px;
-  border-top: 5px solid;
-  border-image: linear-gradient(90deg, #7c3aed, #a855f7, #c084fc, #e879f9) 1;
-  padding: 32px;
-  max-width: 580px;
-  width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 
-    0 32px 64px rgba(0, 0, 0, 0.25),
-    0 16px 32px rgba(124, 58, 237, 0.15),
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-  position: relative;
-  animation: modalSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(2px);
-}
+/* This was causing visual conflicts when interacting with forms */
+/*
+*/
 
 .komisi-dialog {
   background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 50%, #ffffff 100%);
@@ -4240,7 +4295,7 @@
     0 8px 32px rgba(16, 185, 129, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
   position: relative;
-  animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   backdrop-filter: blur(10px);
 }
 
@@ -4269,7 +4324,7 @@
     0 8px 32px rgba(239, 68, 68, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
   position: relative;
-  animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   backdrop-filter: blur(10px);
 }
 
@@ -4298,7 +4353,7 @@
     0 8px 32px rgba(59, 130, 246, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
   position: relative;
-  animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   backdrop-filter: blur(10px);
 }
 
@@ -4483,136 +4538,14 @@
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
 }
 
-.detail-dialog-header .modal-close {
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-  cursor: pointer;
-  color: #ffffff !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  backdrop-filter: blur(10px);
-  position: relative;
-  z-index: 1;
-}
 
-.detail-dialog-header .modal-close:hover {
-  background: rgba(239, 68, 68, 0.9);
-  border-color: rgba(255, 255, 255, 0.4);
-  color: #ffffff !important;
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-}
 
-.detail-dialog-header .modal-close i {
-  color: #ffffff !important;
-}
 
 .detail-dialog-body {
   padding: 0;
 }
 
-/* modalSlideUp already defined above, removed duplicate */
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-lg);
-  padding-bottom: var(--space-md);
-  border-bottom: 2px solid var(--gray-100);
-  position: relative;
-}
-
-.modal-header::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 60px;
-  height: 2px;
-  background: var(--gradient-purple);
-}
-
-.modal-header h3 {
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--gray-900);
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.modal-header h3 i {
-  font-size: 28px;
-  color: #7c3aed;
-}
-
-.modal-close {
-  background: var(--gray-100);
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  color: var(--gray-600);
-  transition: all var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-}
-
-.modal-close:hover {
-  background: var(--danger);
-  color: var(--white);
-  transform: rotate(90deg) scale(1.1);
-}
-
-.modal-body {
-  margin-bottom: var(--space-lg);
-}
-
-.form-help {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: #4b5563 !important;
-  margin-top: 6px;
-  font-style: italic;
-  font-weight: 500;
-}
-
-.form-help i {
-  font-size: 14px;
-  color: #7c3aed !important;
-  font-weight: 600;
-}
-
-.required-field {
-  color: var(--danger);
-  margin-left: 4px;
-}
-
-.modal-footer,
-.modal-actions {
-  display: flex;
-  gap: var(--space);
-  justify-content: flex-end;
-  padding-top: var(--space-lg);
-  border-top: 2px solid var(--gray-100);
-}
-
-
-
-/* Customer Summary in Modals */
 .customer-summary,
 .customer-info-card {
   background: linear-gradient(135deg, var(--gray-50), var(--gray-100));
@@ -6195,9 +6128,6 @@
   .action-buttons-compact,
   .mobile-card-actions,
   .notification,
-  .modal-overlay {
-    display: none !important;
-  }
   
   .page-header {
     background: var(--primary-purple) !important;
@@ -6217,88 +6147,12 @@
 }
 
 /* =============================================================================
-   FINAL MODAL ENHANCEMENTS & POLISH
    ============================================================================= */
 
-/* Enhanced backdrop blur for modern browsers */
-.modal-overlay {
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-}
 
-/* Additional modal content variants for future extensibility */
-.modal-content-extra-compact {
-  max-width: 360px;
-  border-radius: 20px;
-  padding: 20px;
-  animation: modalSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-/* Enhanced modal header gradient variants */
-.modal-header-success {
-  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-}
-
-.modal-header-warning {
-  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-}
-
-.modal-header-info {
-  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-}
-
-/* Premium modal button variants */
-.btn-modal-success {
-  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-  border: none;
-  color: white;
-  box-shadow: 
-    0 4px 12px rgba(16, 185, 129, 0.3),
-    0 0 20px rgba(16, 185, 129, 0.15);
-}
-
-.btn-modal-success:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 
-    0 16px 32px rgba(16, 185, 129, 0.4),
-    0 0 60px rgba(16, 185, 129, 0.25);
-}
-
-.btn-modal-warning {
-  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-  border: none;
-  color: white;
-  box-shadow: 
-    0 4px 12px rgba(245, 158, 11, 0.3),
-    0 0 20px rgba(245, 158, 11, 0.15);
-}
-
-.btn-modal-warning:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 
-    0 16px 32px rgba(245, 158, 11, 0.4),
-    0 0 60px rgba(245, 158, 11, 0.25);
-}
-
-/* Enhanced accessibility for modal focus management */
-.modal-content:focus-within {
-  outline: 3px solid rgba(139, 92, 246, 0.5);
-  outline-offset: 2px;
-}
-
-/* Dark mode support (if needed in future) */
-@media (prefers-color-scheme: dark) {
-  .modal-content {
-    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-    border: 1px solid #4b5563;
-    color: #f9fafb;
-  }
+/* Dark mode disabled - keeping light theme always */
+/* @media (prefers-color-scheme: dark) {
   
-  .modal-header {
-    background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
-    border-bottom: 1px solid #4b5563;
-    color: #f9fafb;
-  }
   
   .form-input {
     background: #374151;
@@ -6310,13 +6164,10 @@
     border-color: #8b5cf6;
     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
   }
-}
+} */
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
-  .modal-content {
-    border: 3px solid #000;
-  }
   
   .btn-primary {
     background: #000;
@@ -6333,9 +6184,6 @@
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .modal-content,
-  .modal-overlay,
-  .form-input,
   .btn-primary,
   .btn-secondary {
     animation: none !important;
@@ -6344,9 +6192,6 @@
 }
 
 /* Final performance optimizations */
-.modal-content,
-.modal-header,
-.form-input,
 .btn-primary,
 .btn-secondary {
   will-change: transform, opacity;
@@ -6402,7 +6247,6 @@
    END OF PREMIUM CSS
    ============================================================================= */
 
-
 /* =============================================================================
    📱 MOBILE RESPONSIVE OPTIMIZATION (≤768px)
    Optimized untuk tampilan mobile tanpa mengubah desktop
@@ -6432,70 +6276,97 @@
   }
   
   /* ========================================
-     HEADER SECTION - Mobile Optimization
+     HEADER SECTION - Mobile (EXACT FROM MANAJEMEN AKUN)
+     TAMPILKAN di Mobile (Override display: none dari desktop)
      ======================================== */
   
   .page-header {
-    padding: 20px 16px;
-    border-radius: 20px;
-    margin-bottom: 16px;
+    display: block !important; /* SHOW di Mobile */
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.15);
   }
   
   .header-content {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
   }
   
   .header-info {
-    width: 100%;
-    gap: 12px;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
   }
   
   .header-icon {
-    width: 56px;
-    height: 56px;
-    font-size: 28px;
-    border-radius: 16px;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    border-radius: 8px;
     flex-shrink: 0;
   }
   
   .header-text {
     flex: 1;
+    min-width: 0;
   }
   
   .header-text h1 {
-    font-size: 22px;
-    font-weight: 700;
-    margin: 0 0 4px 0;
-    line-height: 1.2;
+    font-size: 14px;
+    margin-bottom: 1px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .header-text p {
-    font-size: 13px;
-    opacity: 0.95;
+    font-size: 10px;
+    opacity: 0.85;
     margin: 0;
-    line-height: 1.4;
+    display: none; /* Hide subtitle for ultra-compact header */
+  }
+  
+  /* Period badge inside header-text - make it inline and compact */
+  .header-text .period-badge {
+    margin-top: 3px;
   }
   
   .header-actions {
-    width: 100%;
-    justify-content: space-between;
-    gap: 10px;
+    display: none; /* Hide actions in mobile header */
   }
   
   .period-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  
+  .period-badge i {
+    font-size: 10px;
+  }
+  
+  .btn-add {
     flex: 1;
-    text-align: center;
-    padding: 10px 14px;
-    border-radius: 12px;
+    justify-content: center;
+    padding: 8px 14px;
+    border-radius: 10px;
     font-size: 13px;
     font-weight: 600;
     background: rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 6px;
   }
   
@@ -6661,7 +6532,7 @@
   
   .filter-item {
     flex-shrink: 0;
-    min-width: 105px;
+    min-width: 110px;
     gap: 6px;
     flex-direction: column;
     align-items: stretch;
@@ -6670,27 +6541,19 @@
   .filter-select {
     padding: 10px 32px 10px 10px;
     font-size: 13px;
-    min-width: 105px;
+    min-width: 110px;
     border-radius: 10px;
     background-position: right 8px center;
     background-size: 14px;
     order: 2;
+    font-weight: 600;
   }
   
-  .filter-label {
-    font-size: 11px !important;
-    letter-spacing: 0.8px !important;
-    color: #1f2937 !important;
-    font-weight: 800 !important;
-    opacity: 1 !important;
-    margin: 0 0 4px 0;
-    padding: 4px 8px;
-    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-    border-radius: 6px;
-    text-align: center;
-    order: 1;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
-    border: 1px solid #d1d5db;
+  /* Filter label - HIDE in mobile for cleaner UI */
+  .filter-label,
+  .page-daftar-pemasangan .filter-label,
+  .daftar-pemasangan .filter-label {
+    display: none !important;
   }
   
   /* Status buttons - horizontal layout, prevent stacking */
@@ -7081,12 +6944,8 @@
   }
   
   /* ========================================
-     MODAL DETAIL - Mobile Optimization
      ======================================== */
   
-  .modal-overlay {
-    padding: 16px;
-  }
   
   .detail-dialog-compact {
     max-width: 100%;
@@ -7116,11 +6975,6 @@
     font-size: 18px;
   }
   
-  .detail-dialog-header .modal-close {
-    width: 32px;
-    height: 32px;
-    font-size: 16px;
-  }
   
   .detail-customer-header {
     padding: 14px;
@@ -7249,5 +7103,4 @@
     font-size: 16px;
   }
 }
-
 

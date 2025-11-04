@@ -2,12 +2,19 @@ import React, { useState, useEffect } from 'react';
 import './ManajemenAkun.css';
 
 // Helper function untuk mendukung akses dari network
+// Menggunakan deteksi dinamis berdasarkan hostname dan port
 const getApiUrl = () => {
-  const host = window.location.hostname;
-  if (host === 'localhost' || host === '127.0.0.1') {
-    return 'http://localhost:3000';
+  const apiPort = import.meta.env.VITE_API_PORT || '3000';
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  
+  if (baseUrl) {
+    return baseUrl;
   }
-  return 'http://172.16.31.11:3000';
+  
+  // Auto-detect dari browser location
+  const protocol = window.location.protocol;
+  const hostname = window.location.hostname;
+  return `${protocol}//${hostname}:${apiPort}`;
 };
 
 const ManajemenAkun = () => {
@@ -479,6 +486,62 @@ const ManajemenAkun = () => {
         }
     };
 
+    const handleApproveUser = async (userId) => {
+        if (!userId) return;
+
+        setIsLoading(true);
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${getApiUrl()}/api/users/${userId}/approve`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                loadUsers();
+                showNotification('User account accepted successfully', 'success');
+            } else {
+                const error = await response.json();
+                showNotification(error.message || 'Failed to accept user account', 'error');
+            }
+        } catch (error) {
+            showNotification('Error occurred while accepting user account', 'error');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleDeclineUser = async (userId) => {
+        if (!userId) return;
+
+        setIsLoading(true);
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${getApiUrl()}/api/users/${userId}/decline`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                loadUsers();
+                showNotification('User account discarded', 'success');
+            } else {
+                const error = await response.json();
+                showNotification(error.message || 'Failed to discard user account', 'error');
+            }
+        } catch (error) {
+            showNotification('Error occurred while discarding user account', 'error');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleResetPassword = async (e) => {
         e.preventDefault();
         
@@ -860,6 +923,7 @@ const ManajemenAkun = () => {
                                         <th>Nama</th>
                                         <th>Email</th>
                                         <th>Role</th>
+                                        <th>Status</th>
                                         <th>Telepon</th>
                                         <th>Alamat</th>
                                         <th>Aksi</th>
@@ -875,10 +939,33 @@ const ManajemenAkun = () => {
                                                     {user.role}
                                                 </span>
                                             </td>
+                                            <td>
+                                                <span className={`badge badge-status badge-${user.status || 'approved'}`}>
+                                                    {user.status === 'pending' ? 'Pending' : user.status === 'declined' ? 'Discarded' : 'Accepted'}
+                                                </span>
+                                            </td>
                                             <td>{user.phone || '-'}</td>
                                             <td>{user.address || '-'}</td>
                                             <td>
                                                 <div className="action-buttons">
+                                                    {user.status === 'pending' && (
+                                                        <>
+                                                            <button 
+                                                                className="action-btn approve"
+                                                                onClick={() => handleApproveUser(user.id)}
+                                                                title="Accept"
+                                                            >
+                                                                <i className="bi bi-check-circle"></i>
+                                                            </button>
+                                                            <button 
+                                                                className="action-btn decline"
+                                                                onClick={() => handleDeclineUser(user.id)}
+                                                                title="Discard"
+                                                            >
+                                                                <i className="bi bi-x-circle"></i>
+                                                            </button>
+                                                        </>
+                                                    )}
                                                     <button 
                                                         className="action-btn edit"
                                                         onClick={() => openEditUser(user)}
@@ -932,6 +1019,14 @@ const ManajemenAkun = () => {
                                                 </div>
                                             </div>
                                             <div className="card-field-mobile">
+                                                <div className="card-field-label-mobile">Status</div>
+                                                <div className="card-field-value-mobile">
+                                                    <span className={`badge badge-status badge-${user.status || 'approved'}`}>
+                                                        {user.status === 'pending' ? 'Pending' : user.status === 'declined' ? 'Discarded' : 'Accepted'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="card-field-mobile">
                                                 <div className="card-field-label-mobile">Telepon</div>
                                                 <div className="card-field-value-mobile">{user && user.phone ? user.phone : '-'}</div>
                                             </div>
@@ -942,6 +1037,24 @@ const ManajemenAkun = () => {
                                         </div>
                                         
                                         <div className="card-footer-mobile">
+                                            {user.status === 'pending' && (
+                                                <>
+                                                    <button 
+                                                        className="card-action-btn-mobile approve"
+                                                        onClick={() => handleApproveUser(user.id)}
+                                                    >
+                                                        <i className="bi bi-check-circle"></i>
+                                                        Accept
+                                                    </button>
+                                                    <button 
+                                                        className="card-action-btn-mobile decline"
+                                                        onClick={() => handleDeclineUser(user.id)}
+                                                    >
+                                                        <i className="bi bi-x-circle"></i>
+                                                        Discard
+                                                    </button>
+                                                </>
+                                            )}
                                             <button 
                                                 className="card-action-btn-mobile edit"
                                                 onClick={() => user && openEditUser(user)}

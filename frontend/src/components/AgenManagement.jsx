@@ -2,12 +2,19 @@ import React, { useState, useEffect } from 'react';
 import './AgenManagement.css';
 
 // Helper function untuk mendukung akses dari network
+// Menggunakan deteksi dinamis berdasarkan hostname dan port
 const getApiUrl = () => {
-  const host = window.location.hostname;
-  if (host === 'localhost' || host === '127.0.0.1') {
-    return 'http://localhost:3000/api';
+  const apiPort = import.meta.env.VITE_API_PORT || '3000';
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  
+  if (baseUrl) {
+    return `${baseUrl}/api`;
   }
-  return 'http://172.16.31.11:3000/api';
+  
+  // Auto-detect dari browser location
+  const protocol = window.location.protocol;
+  const hostname = window.location.hostname;
+  return `${protocol}//${hostname}:${apiPort}/api`;
 };
 
 function AgenManagement() {

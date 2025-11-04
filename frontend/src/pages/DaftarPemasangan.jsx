@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import ReactDOM from 'react-dom';
 import './DaftarPemasangan.css';
 
 // ✅ Clean logging utility dengan environment control
@@ -20,20 +21,33 @@ const log = {
 // Helper function untuk akses database auth_db melalui API
 // Database: auth_db
 // Tables: pemasangan, villages, agents
+// Menggunakan deteksi dinamis berdasarkan hostname dan port
 const getApiUrl = () => {
-  const host = window.location.hostname;
-  if (host === 'localhost' || host === '127.0.0.1') {
-    return 'http://localhost:3000/api'; // API endpoint ke database auth_db
+  const apiPort = import.meta.env.VITE_API_PORT || '3000';
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  
+  if (baseUrl) {
+    return `${baseUrl}/api`;
   }
-  return 'http://172.16.31.11:3000/api'; // API endpoint ke database auth_db
+  
+  // Auto-detect dari browser location
+  const protocol = window.location.protocol;
+  const hostname = window.location.hostname;
+  return `${protocol}//${hostname}:${apiPort}/api`;
 };
 
 const getBaseApiUrl = () => {
-  const host = window.location.hostname;
-  if (host === 'localhost' || host === '127.0.0.1') {
-    return 'http://localhost:3000'; // Base URL untuk akses database auth_db
+  const apiPort = import.meta.env.VITE_API_PORT || '3000';
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  
+  if (baseUrl) {
+    return baseUrl;
   }
-  return 'http://172.16.31.11:3000'; // Base URL untuk akses database auth_db
+  
+  // Auto-detect dari browser location
+  const protocol = window.location.protocol;
+  const hostname = window.location.hostname;
+  return `${protocol}//${hostname}:${apiPort}`;
 };
 
 // Helper function untuk validasi dan format token
@@ -70,6 +84,15 @@ const handleAuthError = (endpoint, error) => {
   // You could add notification or redirect to login here if needed
   // For now, we'll just log and continue with fallback data
 };
+
+// Modal Portal Component - Render modal outside .daftar-pemasangan container
+const ModalPortal = ({ children }) => {
+  return ReactDOM.createPortal(
+    children,
+    document.body
+  );
+};
+
 function DaftarPemasangan() {
   // Get current date and time in format for HTML inputs - Declare early
   const getCurrentDate = () => {
@@ -1401,540 +1424,546 @@ function DaftarPemasangan() {
 
       {/* Add Customer Modal */}
       {showAddModal && (
-        <div className="modal-overlay" onClick={() => setShowAddModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3><i className="bi bi-person-plus"></i> Tambah Pelanggan Baru</h3>
-              <button className="modal-close" onClick={() => setShowAddModal(false)}>
-                <i className="bi bi-x-lg"></i>
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="form-group">
-                <label><i className="bi bi-person"></i>Nama Pelanggan</label>
-                <input
-                  type="text"
-                  value={newPelanggan.nama}
-                  onChange={(e) => setNewPelanggan({...newPelanggan, nama: e.target.value})}
-                  placeholder="Masukkan nama lengkap"
-                />
+        <ModalPortal>
+          <div className="modal-overlay" onClick={() => setShowAddModal(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3><i className="bi bi-person-plus"></i> Tambah Pelanggan Baru</h3>
+                <button className="modal-close" onClick={() => setShowAddModal(false)}>
+                  <i className="bi bi-x-lg"></i>
+                </button>
               </div>
-              <div className="form-group">
-                <label><i className="bi bi-telephone"></i>Nomor Telepon</label>
-                <input
-                  type="tel"
-                  value={newPelanggan.telepon}
-                  onChange={(e) => setNewPelanggan({...newPelanggan, telepon: e.target.value})}
-                  placeholder="08xxxxxxxxxx"
-                />
-              </div>
-              <div className="form-group">
-                <label><i className="bi bi-geo-alt"></i>Alamat Lengkap</label>
-                <textarea
-                  value={newPelanggan.alamat}
-                  onChange={(e) => setNewPelanggan({...newPelanggan, alamat: e.target.value})}
-                  placeholder="Masukkan alamat lengkap"
-                  rows="3"
-                />
-              </div>
-              <div className="form-group">
-                <label><i className="bi bi-geo"></i>Nama Desa</label>
-                <select
-                  value={newPelanggan.desa}
-                  onChange={(e) => setNewPelanggan({...newPelanggan, desa: e.target.value})}
-                  className="desa-select"
-                  disabled={loadingDesa}
-                >
-                  <option value="">
-                    {loadingDesa ? "Memuat data desa..." : "-- Pilih Desa --"}
-                  </option>
-                  {daftarDesa.map((desa, index) => (
-                    <option key={`add-desa-${index}`} value={desa}>
-                      {desa}
+              <div className="modal-body">
+                <div className="form-group">
+                  <label><i className="bi bi-person"></i>Nama Pelanggan</label>
+                  <input
+                    type="text"
+                    value={newPelanggan.nama}
+                    onChange={(e) => setNewPelanggan({...newPelanggan, nama: e.target.value})}
+                    placeholder="Masukkan nama lengkap"
+                  />
+                </div>
+                <div className="form-group">
+                  <label><i className="bi bi-telephone"></i>Nomor Telepon</label>
+                  <input
+                    type="tel"
+                    value={newPelanggan.telepon}
+                    onChange={(e) => setNewPelanggan({...newPelanggan, telepon: e.target.value})}
+                    placeholder="08xxxxxxxxxx"
+                  />
+                </div>
+                <div className="form-group">
+                  <label><i className="bi bi-geo-alt"></i>Alamat Lengkap</label>
+                  <textarea
+                    value={newPelanggan.alamat}
+                    onChange={(e) => setNewPelanggan({...newPelanggan, alamat: e.target.value})}
+                    placeholder="Masukkan alamat lengkap"
+                    rows="3"
+                  />
+                </div>
+                <div className="form-group">
+                  <label><i className="bi bi-geo"></i>Nama Desa</label>
+                  <select
+                    value={newPelanggan.desa}
+                    onChange={(e) => setNewPelanggan({...newPelanggan, desa: e.target.value})}
+                    className="desa-select"
+                    disabled={loadingDesa}
+                  >
+                    <option value="">
+                      {loadingDesa ? "Memuat data desa..." : "-- Pilih Desa --"}
                     </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group">
-                <label><i className="bi bi-person-badge"></i>Nama Agen</label>
-                <select
-                  value={newPelanggan.agen}
-                  onChange={(e) => setNewPelanggan({...newPelanggan, agen: e.target.value})}
-                  className="agen-select"
-                  disabled={loadingAgen}
-                >
-                  <option value="">
-                    {loadingAgen ? "Memuat data agen..." : "-- Pilih Agen --"}
-                  </option>
-                  {daftarAgen.map((agen, index) => (
-                    <option key={`add-agen-${index}`} value={agen}>
-                      {agen}
+                    {daftarDesa.map((desa, index) => (
+                      <option key={`add-desa-${index}`} value={desa}>
+                        {desa}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label><i className="bi bi-person-badge"></i>Nama Agen</label>
+                  <select
+                    value={newPelanggan.agen}
+                    onChange={(e) => setNewPelanggan({...newPelanggan, agen: e.target.value})}
+                    className="agen-select"
+                    disabled={loadingAgen}
+                  >
+                    <option value="">
+                      {loadingAgen ? "Memuat data agen..." : "-- Pilih Agen --"}
                     </option>
-                  ))}
-                </select>
+                    {daftarAgen.map((agen, index) => (
+                      <option key={`add-agen-${index}`} value={agen}>
+                        {agen}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label><i className="bi bi-calendar-plus"></i>Tanggal Daftar</label>
+                  <input
+                    type="date"
+                    value={newPelanggan.tanggal_daftar}
+                    onChange={(e) => setNewPelanggan({...newPelanggan, tanggal_daftar: e.target.value})}
+                  />
+                  <small className="form-help">
+                    <i className="bi bi-info-circle"></i>
+                    Otomatis terisi tanggal hari ini. Ubah jika pendaftaran di hari lain.
+                  </small>
+                </div>
               </div>
-              <div className="form-group">
-                <label><i className="bi bi-calendar-plus"></i>Tanggal Daftar</label>
-                <input
-                  type="date"
-                  value={newPelanggan.tanggal_daftar}
-                  onChange={(e) => setNewPelanggan({...newPelanggan, tanggal_daftar: e.target.value})}
-                />
-                <small className="form-help">
-                  <i className="bi bi-info-circle"></i>
-                  Otomatis terisi tanggal hari ini. Ubah jika pendaftaran di hari lain.
-                </small>
+              <div className="modal-footer">
+                <button className="btn btn-secondary" onClick={() => setShowAddModal(false)}>
+                  Batal
+                </button>
+                <button className="btn btn-primary" onClick={handleAddPelanggan}>
+                  <i className="bi bi-plus-circle"></i>
+                  Tambah Pelanggan
+                </button>
               </div>
-            </div>
-            <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={() => setShowAddModal(false)}>
-                Batal
-              </button>
-              <button className="btn btn-primary" onClick={handleAddPelanggan}>
-                <i className="bi bi-plus-circle"></i>
-                Tambah Pelanggan
-              </button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Edit Customer Modal */}
       {showEditModal && (
-        <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
-          <div className="modal-content modal-content-compact" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3><i className="bi bi-pencil"></i> Edit Pelanggan</h3>
-              <button className="modal-close" onClick={() => setShowEditModal(false)}>
-                <i className="bi bi-x-lg"></i>
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="form-group">
-                <label><i className="bi bi-person"></i>Nama Pelanggan</label>
-                <input
-                  type="text"
-                  value={editPelanggan.nama}
-                  onChange={(e) => setEditPelanggan({...editPelanggan, nama: e.target.value})}
-                  placeholder="Masukkan nama lengkap"
-                />
+        <ModalPortal>
+          <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
+            <div className="modal-content modal-content-compact" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3><i className="bi bi-pencil"></i> Edit Pelanggan</h3>
+                <button className="modal-close" onClick={() => setShowEditModal(false)}>
+                  <i className="bi bi-x-lg"></i>
+                </button>
               </div>
-              <div className="form-group">
-                <label><i className="bi bi-telephone"></i>Nomor Telepon</label>
-                <input
-                  type="tel"
-                  value={editPelanggan.telepon}
-                  onChange={(e) => setEditPelanggan({...editPelanggan, telepon: e.target.value})}
-                  placeholder="08xxxxxxxxxx"
-                />
-              </div>
-              <div className="form-group">
-                <label><i className="bi bi-geo-alt"></i>Alamat Lengkap</label>
-                <textarea
-                  value={editPelanggan.alamat}
-                  onChange={(e) => setEditPelanggan({...editPelanggan, alamat: e.target.value})}
-                  placeholder="Masukkan alamat lengkap"
-                  rows="3"
-                />
-              </div>
-              <div className="form-group">
-                <label><i className="bi bi-geo"></i>Nama Desa</label>
-                <select
-                  value={editPelanggan.desa}
-                  onChange={(e) => setEditPelanggan({...editPelanggan, desa: e.target.value})}
-                  className="desa-select"
-                  disabled={loadingDesa}
-                >
-                  <option value="">
-                    {loadingDesa ? "Memuat data desa..." : "-- Pilih Desa --"}
-                  </option>
-                  {daftarDesa.map((desa, index) => (
-                    <option key={`edit-desa-${index}`} value={desa}>
-                      {desa}
+              <div className="modal-body">
+                <div className="form-group">
+                  <label><i className="bi bi-person"></i>Nama Pelanggan</label>
+                  <input
+                    type="text"
+                    value={editPelanggan.nama}
+                    onChange={(e) => setEditPelanggan({...editPelanggan, nama: e.target.value})}
+                    placeholder="Masukkan nama lengkap"
+                  />
+                </div>
+                <div className="form-group">
+                  <label><i className="bi bi-telephone"></i>Nomor Telepon</label>
+                  <input
+                    type="tel"
+                    value={editPelanggan.telepon}
+                    onChange={(e) => setEditPelanggan({...editPelanggan, telepon: e.target.value})}
+                    placeholder="08xxxxxxxxxx"
+                  />
+                </div>
+                <div className="form-group">
+                  <label><i className="bi bi-geo-alt"></i>Alamat Lengkap</label>
+                  <textarea
+                    value={editPelanggan.alamat}
+                    onChange={(e) => setEditPelanggan({...editPelanggan, alamat: e.target.value})}
+                    placeholder="Masukkan alamat lengkap"
+                    rows="3"
+                  />
+                </div>
+                <div className="form-group">
+                  <label><i className="bi bi-geo"></i>Nama Desa</label>
+                  <select
+                    value={editPelanggan.desa}
+                    onChange={(e) => setEditPelanggan({...editPelanggan, desa: e.target.value})}
+                    className="desa-select"
+                    disabled={loadingDesa}
+                  >
+                    <option value="">
+                      {loadingDesa ? "Memuat data desa..." : "-- Pilih Desa --"}
                     </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group">
-                <label><i className="bi bi-person-badge"></i>Nama Agen</label>
-                <select
-                  value={editPelanggan.agen}
-                  onChange={(e) => setEditPelanggan({...editPelanggan, agen: e.target.value})}
-                  className="agen-select"
-                  disabled={loadingAgen}
-                >
-                  <option value="">
-                    {loadingAgen ? "Memuat data agen..." : "-- Pilih Agen --"}
-                  </option>
-                  {daftarAgen.map((agen, index) => (
-                    <option key={`edit-agen-${index}`} value={agen}>
-                      {agen}
+                    {daftarDesa.map((desa, index) => (
+                      <option key={`edit-desa-${index}`} value={desa}>
+                        {desa}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label><i className="bi bi-person-badge"></i>Nama Agen</label>
+                  <select
+                    value={editPelanggan.agen}
+                    onChange={(e) => setEditPelanggan({...editPelanggan, agen: e.target.value})}
+                    className="agen-select"
+                    disabled={loadingAgen}
+                  >
+                    <option value="">
+                      {loadingAgen ? "Memuat data agen..." : "-- Pilih Agen --"}
                     </option>
-                  ))}
-                </select>
+                    {daftarAgen.map((agen, index) => (
+                      <option key={`edit-agen-${index}`} value={agen}>
+                        {agen}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label><i className="bi bi-calendar-plus"></i>Tanggal Daftar</label>
+                  <input
+                    type="date"
+                    value={editPelanggan.tanggal_daftar}
+                    onChange={(e) => setEditPelanggan({...editPelanggan, tanggal_daftar: e.target.value})}
+                  />
+                  <small className="form-help">
+                    <i className="bi bi-info-circle"></i>
+                    Ubah tanggal sesuai dengan tanggal pendaftaran yang sebenarnya.
+                  </small>
+                </div>
               </div>
-              <div className="form-group">
-                <label><i className="bi bi-calendar-plus"></i>Tanggal Daftar</label>
-                <input
-                  type="date"
-                  value={editPelanggan.tanggal_daftar}
-                  onChange={(e) => setEditPelanggan({...editPelanggan, tanggal_daftar: e.target.value})}
-                />
-                <small className="form-help">
-                  <i className="bi bi-info-circle"></i>
-                  Ubah tanggal sesuai dengan tanggal pendaftaran yang sebenarnya.
-                </small>
+              <div className="modal-footer">
+                <button className="btn btn-secondary" onClick={() => setShowEditModal(false)}>
+                  Batal
+                </button>
+                <button className="btn btn-primary" onClick={handleEditPelanggan}>
+                  <i className="bi bi-check-circle"></i>
+                  Simpan Perubahan
+                </button>
               </div>
-            </div>
-            <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={() => setShowEditModal(false)}>
-                Batal
-              </button>
-              <button className="btn btn-primary" onClick={handleEditPelanggan}>
-                <i className="bi bi-check-circle"></i>
-                Simpan Perubahan
-              </button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Confirmation Modal */}
       {showConfirmModal && selectedPelanggan && (
-        <div className="modal-overlay" onClick={() => setShowConfirmModal(false)}>
-          <div className="modal-content modal-content-compact" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3><i className="bi bi-check-circle"></i> Konfirmasi Pemasangan</h3>
-              <button className="modal-close" onClick={() => setShowConfirmModal(false)}>
-                <i className="bi bi-x-lg"></i>
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="customer-summary">
-                <h4>Pelanggan: {selectedPelanggan.nama}</h4>
-                <p>Telepon: {selectedPelanggan.telepon}</p>
-                <p>Alamat: {selectedPelanggan.alamat}</p>
+        <ModalPortal>
+          <div className="modal-overlay" onClick={() => setShowConfirmModal(false)}>
+            <div className="modal-content modal-content-compact" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3><i className="bi bi-check-circle"></i> Konfirmasi Pemasangan</h3>
+                <button className="modal-close" onClick={() => setShowConfirmModal(false)}>
+                  <i className="bi bi-x-lg"></i>
+                </button>
               </div>
-              <div className="form-group">
-                <label><i className="bi bi-calendar-check"></i>Tanggal Pemasangan</label>
-                <input
-                  type="date"
-                  value={konfirmasiData.tanggal_pasang}
-                  onChange={(e) => setKonfirmasiData({...konfirmasiData, tanggal_pasang: e.target.value})}
-                />
-                <small className="form-help">
-                  <i className="bi bi-info-circle"></i>
-                  Otomatis terisi tanggal hari ini. Ubah jika pemasangan di hari lain.
-                </small>
+              <div className="modal-body">
+                <div className="customer-summary">
+                  <h4>Pelanggan: {selectedPelanggan.nama}</h4>
+                  <p>Telepon: {selectedPelanggan.telepon}</p>
+                  <p>Alamat: {selectedPelanggan.alamat}</p>
+                </div>
+                <div className="form-group">
+                  <label><i className="bi bi-calendar-check"></i>Tanggal Pemasangan</label>
+                  <input
+                    type="date"
+                    value={konfirmasiData.tanggal_pasang}
+                    onChange={(e) => setKonfirmasiData({...konfirmasiData, tanggal_pasang: e.target.value})}
+                  />
+                  <small className="form-help">
+                    <i className="bi bi-info-circle"></i>
+                    Otomatis terisi tanggal hari ini. Ubah jika pemasangan di hari lain.
+                  </small>
+                </div>
+                <div className="form-group">
+                  <label><i className="bi bi-clock"></i>Jam Pemasangan</label>
+                  <input
+                    type="time"
+                    value={konfirmasiData.jam_pasang}
+                    onChange={(e) => setKonfirmasiData({...konfirmasiData, jam_pasang: e.target.value})}
+                  />
+                  <small className="form-help">
+                    <i className="bi bi-clock"></i>
+                    Otomatis terisi jam sekarang. Sesuaikan dengan jadwal pemasangan.
+                  </small>
+                </div>
+                <div className="form-group">
+                  <label><i className="bi bi-person-gear"></i>Nama Teknisi <span className="required-field">*</span></label>
+                  <input
+                    type="text"
+                    value={konfirmasiData.teknisi}
+                    onChange={(e) => setKonfirmasiData({...konfirmasiData, teknisi: e.target.value})}
+                    placeholder="Nama teknisi yang memasang"
+                    autoFocus
+                  />
+                  <small className="form-help">
+                    <i className="bi bi-person-gear"></i>
+                    Wajib diisi - nama teknisi yang melakukan pemasangan
+                  </small>
+                </div>
+                <div className="form-group">
+                  <label><i className="bi bi-journal-text"></i>Catatan Pemasangan</label>
+                  <textarea
+                    value={konfirmasiData.catatan}
+                    onChange={(e) => setKonfirmasiData({...konfirmasiData, catatan: e.target.value})}
+                    placeholder="Catatan tambahan (opsional)"
+                    rows="3"
+                  />
+                </div>
               </div>
-              <div className="form-group">
-                <label><i className="bi bi-clock"></i>Jam Pemasangan</label>
-                <input
-                  type="time"
-                  value={konfirmasiData.jam_pasang}
-                  onChange={(e) => setKonfirmasiData({...konfirmasiData, jam_pasang: e.target.value})}
-                />
-                <small className="form-help">
-                  <i className="bi bi-clock"></i>
-                  Otomatis terisi jam sekarang. Sesuaikan dengan jadwal pemasangan.
-                </small>
+              <div className="modal-footer">
+                <button className="btn btn-secondary" onClick={() => setShowConfirmModal(false)}>
+                  Batal
+                </button>
+                <button className="btn btn-success" onClick={handleKonfirmasiPemasangan}>
+                  <i className="bi bi-check-lg"></i>
+                  Konfirmasi Pemasangan
+                </button>
               </div>
-              <div className="form-group">
-                <label><i className="bi bi-person-gear"></i>Nama Teknisi <span className="required-field">*</span></label>
-                <input
-                  type="text"
-                  value={konfirmasiData.teknisi}
-                  onChange={(e) => setKonfirmasiData({...konfirmasiData, teknisi: e.target.value})}
-                  placeholder="Nama teknisi yang memasang"
-                  autoFocus
-                />
-                <small className="form-help">
-                  <i className="bi bi-person-gear"></i>
-                  Wajib diisi - nama teknisi yang melakukan pemasangan
-                </small>
-              </div>
-              <div className="form-group">
-                <label><i className="bi bi-journal-text"></i>Catatan Pemasangan</label>
-                <textarea
-                  value={konfirmasiData.catatan}
-                  onChange={(e) => setKonfirmasiData({...konfirmasiData, catatan: e.target.value})}
-                  placeholder="Catatan tambahan (opsional)"
-                  rows="3"
-                />
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={() => setShowConfirmModal(false)}>
-                Batal
-              </button>
-              <button className="btn btn-success" onClick={handleKonfirmasiPemasangan}>
-                <i className="bi bi-check-lg"></i>
-                Konfirmasi Pemasangan
-              </button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Komisi Confirmation Dialog */}
       {showKomisiConfirm && selectedKomisiData && (
-        <div className="modal-overlay" onClick={() => setShowKomisiConfirm(false)}>
-          <div className="komisi-dialog" onClick={(e) => e.stopPropagation()}>
-            <div className="komisi-dialog-header">
-              <div className="komisi-dialog-icon">
-                <i className="bi bi-currency-dollar"></i>
-              </div>
-              <h3>Komisi Agen</h3>
-              <button 
-                className="modal-close" 
-                onClick={() => setShowKomisiConfirm(false)}
-              >
-                <i className="bi bi-x-lg"></i>
-              </button>
-            </div>
-            <div className="komisi-dialog-body">
-              <div className="customer-info-card">
-                <div className="customer-avatar-large">
-                  <i className="bi bi-person-circle"></i>
+        <ModalPortal>
+          <div className="modal-overlay" onClick={() => setShowKomisiConfirm(false)}>
+            <div className="modal-content modal-komisi" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header modal-header-komisi">
+                <div className="modal-icon-komisi">
+                  <i className="bi bi-currency-dollar"></i>
                 </div>
-                <div className="customer-details-card">
-                  <h4>{selectedKomisiData.nama}</h4>
-                  <p><i className="bi bi-person-badge"></i> Agen: {selectedKomisiData.agen}</p>
-                  <p><i className="bi bi-calendar-check"></i> Terpasang: {formatDate(selectedKomisiData.tanggal_pasang)}</p>
+                <h3><i className="bi bi-currency-dollar"></i> Komisi Agen</h3>
+                <button 
+                  className="modal-close" 
+                  onClick={() => setShowKomisiConfirm(false)}
+                >
+                  <i className="bi bi-x-lg"></i>
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="customer-info-card">
+                  <div className="customer-avatar-large">
+                    <i className="bi bi-person-circle"></i>
+                  </div>
+                  <div className="customer-details-card">
+                    <h4>{selectedKomisiData.nama}</h4>
+                    <p><i className="bi bi-person-badge"></i> Agen: {selectedKomisiData.agen}</p>
+                    <p><i className="bi bi-calendar-check"></i> Terpasang: {formatDate(selectedKomisiData.tanggal_pasang)}</p>
+                  </div>
+                </div>
+                <div className="komisi-question">
+                  <h4>Komisi agen sudah diberikan?</h4>
+                  <p>Pilih status pembayaran komisi untuk agen <strong>{selectedKomisiData.agen}</strong></p>
                 </div>
               </div>
-              <div className="komisi-question">
-                <h4>Komisi agen sudah diberikan?</h4>
-                <p>Pilih status pembayaran komisi untuk agen <strong>{selectedKomisiData.agen}</strong></p>
+              <div className="modal-footer modal-footer-komisi">
+                <button 
+                  className="btn-komisi btn-success"
+                  onClick={() => handleUpdateKomisi(true)}
+                >
+                  <i className="bi bi-check-circle"></i>
+                  Sudah Dibayar
+                </button>
+                <button 
+                  className="btn-komisi btn-warning"
+                  onClick={() => handleUpdateKomisi(false)}
+                >
+                  <i className="bi bi-clock"></i>
+                  Belum Dibayar
+                </button>
               </div>
-            </div>
-            <div className="komisi-dialog-actions">
-              <button 
-                className="btn-komisi sudah"
-                onClick={() => handleUpdateKomisi(true)}
-              >
-                <i className="bi bi-check-circle"></i>
-                Sudah Dibayar
-              </button>
-              <button 
-                className="btn-komisi belum"
-                onClick={() => handleUpdateKomisi(false)}
-              >
-                <i className="bi bi-clock"></i>
-                Belum Dibayar
-              </button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && selectedDeletePelanggan && (
-        <div className="modal-overlay" onClick={() => setShowDeleteModal(false)}>
-          <div className="delete-dialog" onClick={(e) => e.stopPropagation()}>
-            <div className="delete-dialog-header">
-              <div className="delete-dialog-icon">
-                <i className="bi bi-exclamation-triangle"></i>
+        <ModalPortal>
+          <div className="modal-overlay" onClick={() => setShowDeleteModal(false)}>
+            <div className="modal-content modal-delete" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header modal-header-delete">
+                <h3><i className="bi bi-exclamation-triangle"></i> Hapus Pelanggan</h3>
+                <button 
+                  className="modal-close" 
+                  onClick={() => setShowDeleteModal(false)}
+                >
+                  <i className="bi bi-x-lg"></i>
+                </button>
               </div>
-              <h3>Hapus Pelanggan</h3>
-              <button 
-                className="modal-close" 
-                onClick={() => setShowDeleteModal(false)}
-              >
-                <i className="bi bi-x-lg"></i>
-              </button>
-            </div>
-            <div className="delete-dialog-body">
-              <div className="delete-customer-info">
-                <div className="delete-customer-avatar">
-                  <i className="bi bi-person-circle"></i>
+              <div className="modal-body">
+                <div className="delete-customer-info">
+                  <div className="delete-customer-avatar">
+                    <i className="bi bi-person-circle"></i>
+                  </div>
+                  <div className="delete-customer-details">
+                    <h4>{selectedDeletePelanggan.nama}</h4>
+                    <p><i className="bi bi-telephone"></i> {selectedDeletePelanggan.telepon}</p>
+                    <p><i className="bi bi-geo-alt"></i> {selectedDeletePelanggan.alamat}</p>
+                  </div>
                 </div>
-                <div className="delete-customer-details">
-                  <h4>{selectedDeletePelanggan.nama}</h4>
-                  <p><i className="bi bi-telephone"></i> {selectedDeletePelanggan.telepon}</p>
-                  <p><i className="bi bi-geo-alt"></i> {selectedDeletePelanggan.alamat}</p>
-                </div>
-              </div>
-              <div className="delete-warning">
-                <div className="warning-icon">
-                  <i className="bi bi-shield-exclamation"></i>
-                </div>
-                <div className="warning-text">
-                  <h4>Peringatan!</h4>
-                  <p>Tindakan ini tidak dapat dibatalkan. Semua data pelanggan akan dihapus secara permanen dari sistem.</p>
+                <div className="delete-warning">
+                  <div className="warning-icon">
+                    <i className="bi bi-shield-exclamation"></i>
+                  </div>
+                  <div className="warning-text">
+                    <h4>Peringatan!</h4>
+                    <p>Tindakan ini tidak dapat dibatalkan. Semua data pelanggan akan dihapus secara permanen dari sistem.</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="delete-dialog-actions">
-              <button 
-                className="btn-delete-cancel"
-                onClick={() => setShowDeleteModal(false)}
-              >
-                <i className="bi bi-x-circle"></i>
-                Batal
-              </button>
-              <button 
-                className="btn-delete-confirm"
-                onClick={confirmDeletePelanggan}
-              >
-                <i className="bi bi-trash"></i>
-                Ya, Hapus Pelanggan
-              </button>
+              <div className="modal-footer modal-footer-delete">
+                <button 
+                  className="btn btn-secondary"
+                  onClick={() => setShowDeleteModal(false)}
+                >
+                  <i className="bi bi-x-circle"></i>
+                  Batal
+                </button>
+                <button 
+                  className="btn btn-danger"
+                  onClick={confirmDeletePelanggan}
+                >
+                  <i className="bi bi-trash"></i>
+                  Ya, Hapus Pelanggan
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Detail Pelanggan Modal */}
       {showDetailModal && selectedDetailPelanggan && (
-        <div className="modal-overlay" onClick={() => setShowDetailModal(false)}>
-          <div className="detail-dialog detail-dialog-compact" onClick={(e) => e.stopPropagation()}>
-            <div className="detail-dialog-header">
-              <div className="detail-dialog-icon">
-                <i className="bi bi-info-circle"></i>
+        <ModalPortal>
+          <div className="modal-overlay" onClick={() => setShowDetailModal(false)}>
+            <div className="modal-content modal-detail modal-content-compact" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header modal-header-detail">
+                <h3><i className="bi bi-info-circle"></i> Detail Pelanggan</h3>
+                <button 
+                  className="modal-close" 
+                  onClick={() => setShowDetailModal(false)}
+                >
+                  <i className="bi bi-x-lg"></i>
+                </button>
               </div>
-              <h3>Detail Pelanggan</h3>
-              <button 
-                className="modal-close" 
-                onClick={() => setShowDetailModal(false)}
-              >
-                <i className="bi bi-x-lg"></i>
-              </button>
-            </div>
-            <div className="detail-dialog-body">
-              <div className="detail-customer-header">
-                <div className="detail-customer-avatar">
-                  <i className="bi bi-person-circle"></i>
+              <div className="modal-body">
+                <div className="detail-customer-header">
+                  <div className="detail-customer-avatar">
+                    <i className="bi bi-person-circle"></i>
+                  </div>
+                  <div className="detail-customer-title">
+                    <h2>{selectedDetailPelanggan.nama}</h2>
+                    <span className={`detail-status-badge ${selectedDetailPelanggan.status}`}>
+                      {selectedDetailPelanggan.status === 'menunggu' ? (
+                        <>
+                          <i className="bi bi-clock"></i>
+                          Menunggu Pemasangan
+                        </>
+                      ) : (
+                        <>
+                          <i className="bi bi-check-circle"></i>
+                          Sudah Terpasang
+                        </>
+                      )}
+                    </span>
+                  </div>
                 </div>
-                <div className="detail-customer-title">
-                  <h2>{selectedDetailPelanggan.nama}</h2>
-                  <span className={`detail-status-badge ${selectedDetailPelanggan.status}`}>
-                    {selectedDetailPelanggan.status === 'menunggu' ? (
-                      <>
-                        <i className="bi bi-clock"></i>
-                        Menunggu Pemasangan
-                      </>
-                    ) : (
-                      <>
-                        <i className="bi bi-check-circle"></i>
-                        Sudah Terpasang
-                      </>
-                    )}
-                  </span>
+                
+                <div className="detail-info-grid">
+                  <div className="detail-info-card">
+                    <div className="detail-info-label">
+                      <i className="bi bi-telephone"></i>
+                      Nomor Telepon
+                    </div>
+                    <div className="detail-info-value">{selectedDetailPelanggan.telepon}</div>
+                  </div>
+                  
+                  <div className="detail-info-card">
+                    <div className="detail-info-label">
+                      <i className="bi bi-geo-alt"></i>
+                      Alamat Lengkap
+                    </div>
+                    <div className="detail-info-value">{selectedDetailPelanggan.alamat}</div>
+                  </div>
+                  
+                  <div className="detail-info-card">
+                    <div className="detail-info-label">
+                      <i className="bi bi-geo"></i>
+                      Desa
+                    </div>
+                    <div className="detail-info-value">{selectedDetailPelanggan.desa}</div>
+                  </div>
+                  
+                  <div className="detail-info-card">
+                    <div className="detail-info-label">
+                      <i className="bi bi-person-badge"></i>
+                      Agen
+                    </div>
+                    <div className="detail-info-value">{selectedDetailPelanggan.agen}</div>
+                  </div>
+                  
+                  <div className="detail-info-card">
+                    <div className="detail-info-label">
+                      <i className="bi bi-calendar-plus"></i>
+                      Tanggal Daftar
+                    </div>
+                    <div className="detail-info-value">{formatDate(getTanggalDaftar(selectedDetailPelanggan))}</div>
+                  </div>
+                  
+                  <div className="detail-info-card">
+                    <div className="detail-info-label">
+                      <i className="bi bi-calendar-check"></i>
+                      Tanggal Terpasang
+                    </div>
+                    <div className="detail-info-value">
+                      {selectedDetailPelanggan.tanggal_pasang 
+                        ? formatDate(selectedDetailPelanggan.tanggal_pasang)
+                        : 'Belum Terpasang'
+                      }
+                    </div>
+                  </div>
+                  
+                  <div className="detail-info-card">
+                    <div className="detail-info-label">
+                      <i className="bi bi-wrench"></i>
+                      Teknisi
+                    </div>
+                    <div className="detail-info-value">
+                      {selectedDetailPelanggan.teknisi || 'Belum Ditentukan'}
+                    </div>
+                  </div>
+                  
+                  <div className="detail-info-card">
+                    <div className="detail-info-label">
+                      <i className="bi bi-currency-dollar"></i>
+                      Status Komisi Agen
+                    </div>
+                    <div className="detail-info-value">
+                      {selectedDetailPelanggan.status === 'menunggu' ? (
+                        <span className="detail-komisi-badge pending">
+                          <i className="bi bi-dash-circle"></i>
+                          Menunggu Pemasangan
+                        </span>
+                      ) : selectedDetailPelanggan.komisi_dibayar ? (
+                        <span className="detail-komisi-badge dibayar">
+                          <i className="bi bi-check-circle"></i>
+                          Sudah Dibayar
+                        </span>
+                      ) : (
+                        <span className="detail-komisi-badge belum">
+                          <i className="bi bi-exclamation-circle"></i>
+                          Belum Dibayar
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="detail-catatan-section">
+                  <div className="detail-catatan-header">
+                    <i className="bi bi-journal-text"></i>
+                    Catatan
+                  </div>
+                  <div className="detail-catatan-content">
+                    {selectedDetailPelanggan.catatan || 'Tidak ada catatan'}
+                  </div>
                 </div>
               </div>
-              
-              <div className="detail-info-grid">
-                <div className="detail-info-card">
-                  <div className="detail-info-label">
-                    <i className="bi bi-telephone"></i>
-                    Nomor Telepon
-                  </div>
-                  <div className="detail-info-value">{selectedDetailPelanggan.telepon}</div>
-                </div>
-                
-                <div className="detail-info-card">
-                  <div className="detail-info-label">
-                    <i className="bi bi-geo-alt"></i>
-                    Alamat Lengkap
-                  </div>
-                  <div className="detail-info-value">{selectedDetailPelanggan.alamat}</div>
-                </div>
-                
-                <div className="detail-info-card">
-                  <div className="detail-info-label">
-                    <i className="bi bi-geo"></i>
-                    Desa
-                  </div>
-                  <div className="detail-info-value">{selectedDetailPelanggan.desa}</div>
-                </div>
-                
-                <div className="detail-info-card">
-                  <div className="detail-info-label">
-                    <i className="bi bi-person-badge"></i>
-                    Agen
-                  </div>
-                  <div className="detail-info-value">{selectedDetailPelanggan.agen}</div>
-                </div>
-                
-                <div className="detail-info-card">
-                  <div className="detail-info-label">
-                    <i className="bi bi-calendar-plus"></i>
-                    Tanggal Daftar
-                  </div>
-                  <div className="detail-info-value">{formatDate(getTanggalDaftar(selectedDetailPelanggan))}</div>
-                </div>
-                
-                <div className="detail-info-card">
-                  <div className="detail-info-label">
-                    <i className="bi bi-calendar-check"></i>
-                    Tanggal Terpasang
-                  </div>
-                  <div className="detail-info-value">
-                    {selectedDetailPelanggan.tanggal_pasang 
-                      ? formatDate(selectedDetailPelanggan.tanggal_pasang)
-                      : 'Belum Terpasang'
-                    }
-                  </div>
-                </div>
-                
-                <div className="detail-info-card">
-                  <div className="detail-info-label">
-                    <i className="bi bi-wrench"></i>
-                    Teknisi
-                  </div>
-                  <div className="detail-info-value">
-                    {selectedDetailPelanggan.teknisi || 'Belum Ditentukan'}
-                  </div>
-                </div>
-                
-                <div className="detail-info-card">
-                  <div className="detail-info-label">
-                    <i className="bi bi-currency-dollar"></i>
-                    Status Komisi Agen
-                  </div>
-                  <div className="detail-info-value">
-                    {selectedDetailPelanggan.status === 'menunggu' ? (
-                      <span className="detail-komisi-badge pending">
-                        <i className="bi bi-dash-circle"></i>
-                        Menunggu Pemasangan
-                      </span>
-                    ) : selectedDetailPelanggan.komisi_dibayar ? (
-                      <span className="detail-komisi-badge dibayar">
-                        <i className="bi bi-check-circle"></i>
-                        Sudah Dibayar
-                      </span>
-                    ) : (
-                      <span className="detail-komisi-badge belum">
-                        <i className="bi bi-exclamation-circle"></i>
-                        Belum Dibayar
-                      </span>
-                    )}
-                  </div>
-                </div>
+              <div className="modal-footer">
+                <button 
+                  className="btn btn-secondary"
+                  onClick={() => setShowDetailModal(false)}
+                >
+                  <i className="bi bi-x-circle"></i>
+                  Tutup
+                </button>
               </div>
-              
-              <div className="detail-catatan-section">
-                <div className="detail-catatan-header">
-                  <i className="bi bi-journal-text"></i>
-                  Catatan
-                </div>
-                <div className="detail-catatan-content">
-                  {selectedDetailPelanggan.catatan || 'Tidak ada catatan'}
-                </div>
-              </div>
-            </div>
-            <div className="detail-dialog-footer">
-              <button 
-                className="btn-detail-close"
-                onClick={() => setShowDetailModal(false)}
-              >
-                <i className="bi bi-x-circle"></i>
-                Tutup
-              </button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Custom Notification */}

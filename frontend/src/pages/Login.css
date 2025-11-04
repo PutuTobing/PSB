@@ -9,6 +9,15 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
+/* Reset form input defaults for login page */
+.login-card input[type="email"],
+.login-card input[type="password"],
+.login-card input[type="text"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
 .login-background {
   position: absolute;
   width: 100%;
@@ -150,17 +159,46 @@
 }
 
 .form-input {
+  width: 100%;
   border: 2px solid #e0e0e0;
   border-radius: 10px;
   padding: 12px 15px;
   font-size: 16px;
   transition: all 0.3s ease;
+  background-color: #ffffff;
+  color: #333333;
+}
+
+.form-input::placeholder {
+  color: #999999;
+  opacity: 1;
+}
+
+.form-input:hover {
+  border-color: #c0c0c0;
 }
 
 .form-input:focus {
   border-color: #667eea;
   box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
   outline: none;
+  background-color: #ffffff;
+}
+
+.form-input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Autofill styling fix */
+.form-input:-webkit-autofill,
+.form-input:-webkit-autofill:hover,
+.form-input:-webkit-autofill:focus,
+.form-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #333333 !important;
+  border-color: #667eea !important;
 }
 
 .btn-login {
