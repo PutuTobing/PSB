@@ -35,18 +35,20 @@ A comprehensive full-stack application with React frontend and Node.js backend f
 
 ## 📚 Documentation
 
-**→ [MASTER_DOCUMENTATION.md](./MASTER_DOCUMENTATION.md)** - Complete guide for developers and AI assistants
+### 🚀 Quick Start
+**→ [QUICK-INSTALL.md](./QUICK-INSTALL.md)** - Install in 5 minutes on ANY IP address
 
-This comprehensive documentation includes:
-- 📋 Complete project overview & architecture
-- ⚡ Quick start installation guide
-- 💻 Development patterns & best practices
-- 🌐 Full API reference with examples
-- 🗄️ Database schema & relationships
-- ⚛️ Frontend component documentation
-- 🎨 Styling system & design patterns
-- 🔧 Troubleshooting guide & solutions
-- ✅ Code style & security guidelines
+### 📖 Complete Guides
+- **[INSTALLATION-GUIDE.md](./INSTALLATION-GUIDE.md)** - Detailed installation for any IP (172.16.31.50, etc.)
+- **[MASTER_DOCUMENTATION.md](./MASTER_DOCUMENTATION.md)** - Complete guide for developers
+- **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - Production deployment guide
+- **[DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md)** - Development workflow
+
+### 🎯 Key Features
+- ✨ **Auto IP Detection** - No hardcoded IPs, works anywhere!
+- 🔧 **Auto Installer** - One command setup: `./install.sh`
+- � **Multi-IP Support** - Install on 172.16.31.50, 192.168.1.100, or any IP
+- 🐳 **Docker Ready** - MySQL & phpMyAdmin included
 
 ## 🛠️ Tech Stack
 
