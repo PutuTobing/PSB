@@ -871,55 +871,77 @@ function Dashboard() {
         <div className="performance-card agents-performance">
           <div className="performance-header">
             <div className="performance-title">
-              <i className="bi bi-person-badge"></i>
-              <h3>Performa Agent</h3>
+              <i className="bi bi-trophy-fill"></i>
+              <h3>Dashboard Performa Agen</h3>
             </div>
             <div className="performance-subtitle">
-              Pelanggan yang didapat per agent
+              Peringkat dan Statistik Pelanggan per Agen (Real-time)
             </div>
           </div>
           <div className="performance-content">
             <div className="agents-grid">
-              {agentStats.map((agent, index) => (
-                <div key={agent.name} className="agent-card">
-                  <div className="agent-rank">#{index + 1}</div>
-                  <div className="agent-info">
-                    <div className="agent-avatar">
-                      <i className="bi bi-person-circle"></i>
-                    </div>
-                    <div className="agent-details">
-                      <h4 className="agent-name">{agent.name}</h4>
-                      {agent.phone && (
-                        <div className="agent-contact">
-                          <i className="bi bi-telephone"></i>
-                          {agent.phone}
+              {agentStats.map((agent, index) => {
+                const terpasangPercent = agent.total > 0 ? Math.round((agent.terpasang / agent.total) * 100) : 0;
+                const menungguPercent = agent.total > 0 ? Math.round((agent.menunggu / agent.total) * 100) : 0;
+                
+                return (
+                  <div key={agent.name} className="agent-card">
+                    <div className="agent-header">
+                      <div className="agent-rank-badge">
+                        {index === 0 ? '🏆' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
+                      </div>
+                      <div className="agent-info">
+                        <h4 className="agent-name">{agent.name}</h4>
+                        <div className="agent-clients">
+                          <span className="clients-label">Total Klien:</span>
+                          <div className="clients-icons">
+                            {Array.from({ length: Math.min(agent.terpasang, 5) }).map((_, i) => (
+                              <span key={`t-${i}`} className="client-icon terpasang">😊</span>
+                            ))}
+                            {Array.from({ length: Math.min(agent.menunggu, 5) }).map((_, i) => (
+                              <span key={`m-${i}`} className="client-icon menunggu">😊</span>
+                            ))}
+                            {agent.total > 5 && <span className="client-more">+{agent.total - 5}</span>}
+                          </div>
                         </div>
-                      )}
+                      </div>
+                      <div className="agent-total-badge">
+                        <div className="total-number">{agent.total}</div>
+                        <div className="total-label">PELANGGAN TOTAL</div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="agent-stats">
-                    <div className="agent-total">{agent.total}</div>
-                    <div className="agent-breakdown">
-                      <span className="stat-item terpasang">
-                        <i className="bi bi-check-circle"></i>
-                        {agent.terpasang}
-                      </span>
-                      <span className="stat-item menunggu">
-                        <i className="bi bi-clock"></i>
-                        {agent.menunggu}
-                      </span>
+                    
+                    <div className="agent-stats-row">
+                      <div className="stat-group">
+                        <i className="bi bi-check-circle-fill stat-icon terpasang"></i>
+                        <span className="stat-label">Terpasang:</span>
+                        <span className="stat-value">{agent.terpasang}</span>
+                      </div>
+                      <div className="stat-group">
+                        <i className="bi bi-clock-fill stat-icon menunggu"></i>
+                        <span className="stat-label">Menunggu:</span>
+                        <span className="stat-value">{agent.menunggu}</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="agent-progress">
-                    <div className="progress-bar">
+                    
+                    <div className="agent-progress-bar">
                       <div 
-                        className="progress-fill"
-                        style={{width: `${Math.max(10, (agent.total / Math.max(1, Math.max(...agentStats.map(a => a.total)))) * 100)}%`}}
+                        className="progress-segment terpasang"
+                        style={{ width: `${terpasangPercent}%` }}
+                      ></div>
+                      <div 
+                        className="progress-segment menunggu"
+                        style={{ width: `${menungguPercent}%` }}
                       ></div>
                     </div>
+                    
+                    <div className="agent-progress-labels">
+                      <span className="progress-label left">{terpasangPercent}% Selesai</span>
+                      <span className="progress-label right">{menungguPercent}% Proses</span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
