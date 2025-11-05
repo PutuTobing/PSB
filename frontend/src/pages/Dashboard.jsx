@@ -67,6 +67,14 @@ function Dashboard() {
   const [villagesData, setVillagesData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  // Filter states untuk Agent Performance
+  const [agentFilterMonth, setAgentFilterMonth] = useState('all');
+  const [agentFilterYear, setAgentFilterYear] = useState(new Date().getFullYear());
+  
+  // Filter states untuk Village Performance
+  const [villageFilterMonth, setVillageFilterMonth] = useState('all');
+  const [villageFilterYear, setVillageFilterYear] = useState(new Date().getFullYear());
 
   // Fetch data dari database
   useEffect(() => {
@@ -220,6 +228,42 @@ function Dashboard() {
     const diff = date.getDate() - start.getDate();
     return Math.ceil((diff + start.getDay() + 1) / 7);
   };
+  
+  // Generate year options (3 years: last, current, next)
+  const getYearOptions = () => {
+    const currentYear = new Date().getFullYear();
+    return [currentYear - 1, currentYear, currentYear + 1];
+  };
+  
+  // Month names in Indonesian
+  const monthNames = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+  ];
+  
+  // Filter data based on month and year
+  const filterDataByMonthYear = (data, month, year) => {
+    if (month === 'all') {
+      // Filter by year only
+      return data.filter(item => {
+        const tanggal = getTanggalDaftar(item);
+        if (!tanggal) return false;
+        const date = new Date(tanggal);
+        if (isNaN(date.getTime())) return false;
+        return date.getFullYear() === parseInt(year);
+      });
+    } else {
+      // Filter by both month and year
+      return data.filter(item => {
+        const tanggal = getTanggalDaftar(item);
+        if (!tanggal) return false;
+        const date = new Date(tanggal);
+        if (isNaN(date.getTime())) return false;
+        return date.getMonth() === parseInt(month) && 
+               date.getFullYear() === parseInt(year);
+      });
+    }
+  };
 
   // Statistik utama
   const mainStats = useMemo(() => {
@@ -318,9 +362,12 @@ function Dashboard() {
     };
   }, [pemasanganData]);
 
-  // Statistik per agent
+  // Statistik per agent dengan filter
   const agentStats = useMemo(() => {
     const stats = {};
+    
+    // Filter data pemasangan berdasarkan bulan dan tahun yang dipilih
+    const filteredData = filterDataByMonthYear(pemasanganData, agentFilterMonth, agentFilterYear);
     
     // Initialize semua agent dengan 0
     agentsData.forEach(agent => {
@@ -335,8 +382,8 @@ function Dashboard() {
       };
     });
 
-    // Hitung pelanggan per agent dari semua data pelanggan
-    pemasanganData.forEach(p => {
+    // Hitung pelanggan per agent dari data yang sudah difilter
+    filteredData.forEach(p => {
       const agentName = p.agen || p.agent || p.nama_agen || 'Unknown';
       
       // Jika agent tidak ada di stats, tambahkan
@@ -359,17 +406,14 @@ function Dashboard() {
     // Tampilkan SEMUA agen, urutkan berdasarkan total (tertinggi ke terendah)
     return Object.values(stats)
       .sort((a, b) => b.total - a.total);
-  }, [pemasanganData, agentsData]);
+  }, [pemasanganData, agentsData, agentFilterMonth, agentFilterYear]);
 
-  // Statistik per desa
+  // Statistik per desa dengan filter
   const villageStats = useMemo(() => {
-    const currentDate = getCurrentDate();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
-    const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
-    const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
-
     const stats = {};
+    
+    // Filter data pemasangan berdasarkan bulan dan tahun yang dipilih
+    const filteredData = filterDataByMonthYear(pemasanganData, villageFilterMonth, villageFilterYear);
 
     // Initialize semua desa dari database
     villagesData.forEach(village => {
@@ -378,17 +422,15 @@ function Dashboard() {
         name: villageName,
         kecamatan: village.kecamatan || village.district || '',
         kabupaten: village.kabupaten || village.regency || '',
-        currentMonth: 0,
-        lastMonth: 0,
         total: 0,
-        growth: 0
+        menunggu: 0,
+        terpasang: 0
       };
     });
 
-    // Hitung pelanggan per desa dari semua data pelanggan
-    pemasanganData.forEach(p => {
+    // Hitung pelanggan per desa dari data yang sudah difilter
+    filteredData.forEach(p => {
       const villageName = p.desa || p.village || p.nama_desa || 'Unknown';
-      const tanggalDaftar = getTanggalDaftar(p);
       
       // Jika desa tidak ada di stats, tambahkan
       if (!stats[villageName]) {
@@ -396,46 +438,21 @@ function Dashboard() {
           name: villageName,
           kecamatan: '',
           kabupaten: '',
-          currentMonth: 0,
-          lastMonth: 0,
           total: 0,
-          growth: 0
+          menunggu: 0,
+          terpasang: 0
         };
       }
       
       stats[villageName].total++;
-      
-      // Validasi tanggal
-      if (tanggalDaftar) {
-        const date = new Date(tanggalDaftar);
-        if (!isNaN(date.getTime())) {
-          if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
-            stats[villageName].currentMonth++;
-          }
-          
-          if (date.getMonth() === lastMonth && date.getFullYear() === lastMonthYear) {
-            stats[villageName].lastMonth++;
-          }
-        }
-      }
+      if (p.status === 'menunggu') stats[villageName].menunggu++;
+      if (p.status === 'terpasang') stats[villageName].terpasang++;
     });
 
-    // Hitung growth rate
-    Object.keys(stats).forEach(villageName => {
-      const village = stats[villageName];
-      if (village.lastMonth > 0) {
-        village.growth = ((village.currentMonth - village.lastMonth) / village.lastMonth) * 100;
-      } else if (village.currentMonth > 0) {
-        village.growth = 100; // 100% growth jika bulan lalu 0
-      } else {
-        village.growth = 0;
-      }
-    });
-
+    // Tampilkan SEMUA desa, urutkan berdasarkan total (tertinggi ke terendah)
     return Object.values(stats)
-      .filter(v => v.total > 0) // Hanya tampilkan desa yang memiliki pelanggan
       .sort((a, b) => b.total - a.total);
-  }, [pemasanganData, villagesData]);
+  }, [pemasanganData, villagesData, villageFilterMonth, villageFilterYear]);
 
   if (loading) {
     return (
@@ -731,41 +748,6 @@ function Dashboard() {
           </div>
         </div>
 
-        {/* Progress Cards - Top Agents */}
-        <div className="chart-card progress-card">
-          <div className="chart-header">
-            <h3>Top Agent</h3>
-            <div className="chart-subtitle">Performa terbaik bulan ini</div>
-          </div>
-          <div className="chart-content">
-            <div className="progress-list">
-              {agentStats.slice(0, 5).map((agent, index) => (
-                <div key={agent.name} className="progress-item">
-                  <div className="progress-info">
-                    <div className="progress-rank">#{index + 1}</div>
-                    <div className="progress-details">
-                      <div className="progress-name">{agent.name}</div>
-                      <div className="progress-meta">{agent.total} pelanggan</div>
-                    </div>
-                  </div>
-                  <div className="progress-visual">
-                    <div className="progress-bar-container">
-                      <div 
-                        className="progress-bar-fill"
-                        style={{
-                          width: `${Math.max(10, (agent.total / Math.max(1, Math.max(...agentStats.map(a => a.total)))) * 100)}%`,
-                          animationDelay: `${index * 0.1}s`
-                        }}
-                      ></div>
-                    </div>
-                    <div className="progress-value">{agent.total}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* Gauge Chart - Monthly Target */}
         <div className="chart-card gauge-chart-card">
           <div className="chart-header">
@@ -822,47 +804,6 @@ function Dashboard() {
             </div>
           </div>
         </div>
-
-        {/* Heat Map - Village Performance */}
-        <div className="chart-card heatmap-card">
-          <div className="chart-header">
-            <h3>Performa Desa</h3>
-            <div className="chart-subtitle">Distribusi pemasangan per desa</div>
-          </div>
-          <div className="chart-content">
-            <div className="heatmap-container">
-              <div className="heatmap-grid">
-                {villageStats.slice(0, 8).map((village, index) => {
-                  const intensity = village.total / Math.max(1, Math.max(...villageStats.map(v => v.total)));
-                  return (
-                    <div 
-                      key={village.name} 
-                      className="heatmap-cell"
-                      style={{
-                        backgroundColor: `rgba(124, 58, 237, ${Math.max(0.1, intensity)})`,
-                        animationDelay: `${index * 0.05}s`
-                      }}
-                    >
-                      <div className="heatmap-value">{village.total}</div>
-                      <div className="heatmap-label">{village.name}</div>
-                      <div className={`heatmap-growth ${village.growth > 0 ? 'positive' : village.growth < 0 ? 'negative' : 'neutral'}`}>
-                        <i className={`bi ${village.growth > 0 ? 'bi-arrow-up' : village.growth < 0 ? 'bi-arrow-down' : 'bi-dash'}`}></i>
-                        {Math.abs(village.growth).toFixed(0)}%
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="heatmap-legend">
-                <span>Rendah</span>
-                <div className="heatmap-scale">
-                  <div className="scale-gradient"></div>
-                </div>
-                <span>Tinggi</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Agent & Village Stats */}
@@ -870,12 +811,38 @@ function Dashboard() {
         {/* Agent Performance */}
         <div className="performance-card agents-performance">
           <div className="performance-header">
-            <div className="performance-title">
-              <i className="bi bi-trophy-fill"></i>
-              <h3>Dashboard Performa Agen</h3>
+            <div className="performance-title-row">
+              <div className="performance-title">
+                <i className="bi bi-trophy-fill"></i>
+                <h3>Dashboard Performa Agen</h3>
+              </div>
+              <div className="performance-filters">
+                <select 
+                  className="filter-select"
+                  value={agentFilterMonth}
+                  onChange={(e) => setAgentFilterMonth(e.target.value)}
+                >
+                  <option value="all">Semua Bulan</option>
+                  {monthNames.map((month, index) => (
+                    <option key={index} value={index}>{month}</option>
+                  ))}
+                </select>
+                <select 
+                  className="filter-select"
+                  value={agentFilterYear}
+                  onChange={(e) => setAgentFilterYear(parseInt(e.target.value))}
+                >
+                  {getYearOptions().map(year => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="performance-subtitle">
-              Peringkat dan Statistik Pelanggan per Agen (Real-time)
+              {agentFilterMonth === 'all' 
+                ? `Peringkat dan Statistik Pelanggan per Agen - Tahun ${agentFilterYear}`
+                : `Peringkat dan Statistik Pelanggan per Agen - ${monthNames[parseInt(agentFilterMonth)]} ${agentFilterYear}`
+              }
             </div>
           </div>
           <div className="performance-content">
@@ -947,54 +914,102 @@ function Dashboard() {
         {/* Village Performance */}
         <div className="performance-card villages-performance">
           <div className="performance-header">
-            <div className="performance-title">
-              <i className="bi bi-geo-alt"></i>
-              <h3>Statistik Desa</h3>
+            <div className="performance-title-row">
+              <div className="performance-title">
+                <i className="bi bi-geo-alt-fill"></i>
+                <h3>Statistik Desa</h3>
+              </div>
+              <div className="performance-filters">
+                <select 
+                  className="filter-select"
+                  value={villageFilterMonth}
+                  onChange={(e) => setVillageFilterMonth(e.target.value)}
+                >
+                  <option value="all">Semua Bulan</option>
+                  {monthNames.map((month, index) => (
+                    <option key={index} value={index}>{month}</option>
+                  ))}
+                </select>
+                <select 
+                  className="filter-select"
+                  value={villageFilterYear}
+                  onChange={(e) => setVillageFilterYear(parseInt(e.target.value))}
+                >
+                  {getYearOptions().map(year => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="performance-subtitle">
-              Pemasangan per desa dan pertumbuhannya
+              {villageFilterMonth === 'all' 
+                ? `Pemasangan per Desa - Tahun ${villageFilterYear}`
+                : `Pemasangan per Desa - ${monthNames[parseInt(villageFilterMonth)]} ${villageFilterYear}`
+              }
             </div>
           </div>
           <div className="performance-content">
             <div className="villages-grid">
-              {villageStats.map((village, index) => (
-                <div key={village.name} className="village-card">
-                  <div className="village-rank">#{index + 1}</div>
-                  <div className="village-info">
-                    <div className="village-icon">
-                      <i className="bi bi-houses"></i>
-                    </div>
-                    <div className="village-details">
-                      <h4 className="village-name">{village.name}</h4>
-                      <div className="village-location">
-                        <i className="bi bi-geo"></i>
-                        {village.kecamatan}
+              {villageStats.map((village, index) => {
+                const terpasangPercent = village.total > 0 ? Math.round((village.terpasang / village.total) * 100) : 0;
+                const menungguPercent = village.total > 0 ? Math.round((village.menunggu / village.total) * 100) : 0;
+                
+                return (
+                  <div key={village.name} className="village-card">
+                    <div className="village-header-compact">
+                      <div className="village-rank-badge">
+                        {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
+                      </div>
+                      <div className="village-info-compact">
+                        <h4 className="village-name">{village.name}</h4>
+                        <div className="village-top-badge">
+                          Top {index + 1}
+                        </div>
+                      </div>
+                      <div className="village-total-badge">
+                        <div className="total-number">{village.total}</div>
+                        <div className="total-label">PELANGGAN TOTAL</div>
                       </div>
                     </div>
-                  </div>
-                  <div className="village-stats">
-                    <div className="village-total">{village.total}</div>
-                    <div className="village-monthly">
-                      <div className="monthly-stats">
-                        <span className="current-month">{village.currentMonth} bulan ini</span>
-                        <span className="last-month">{village.lastMonth} bulan lalu</span>
+                    
+                    <div className="village-stats-row">
+                      <div className="stat-group">
+                        <i className="bi bi-check-circle-fill stat-icon terpasang"></i>
+                        <span className="stat-label">Terpasang:</span>
+                        <span className="stat-value">{village.terpasang}</span>
                       </div>
-                      <div className={`growth-badge ${village.growth > 0 ? 'positive' : village.growth < 0 ? 'negative' : 'neutral'}`}>
-                        <i className={`bi ${village.growth > 0 ? 'bi-arrow-up' : village.growth < 0 ? 'bi-arrow-down' : 'bi-dash'}`}></i>
-                        {Math.abs(village.growth).toFixed(1)}%
+                      <div className="stat-group">
+                        <i className="bi bi-clock-fill stat-icon menunggu"></i>
+                        <span className="stat-label">Menunggu:</span>
+                        <span className="stat-value">{village.menunggu}</span>
                       </div>
                     </div>
-                  </div>
-                  <div className="village-progress">
-                    <div className="progress-bar">
+                    
+                    <div className="village-progress-bar">
                       <div 
-                        className="progress-fill"
-                        style={{width: `${Math.max(10, (village.total / Math.max(1, Math.max(...villageStats.map(v => v.total)))) * 100)}%`}}
+                        className="progress-segment terpasang"
+                        style={{ width: `${terpasangPercent}%` }}
+                      ></div>
+                      <div 
+                        className="progress-segment menunggu"
+                        style={{ width: `${menungguPercent}%` }}
                       ></div>
                     </div>
+                    
+                    <div className="village-progress-labels">
+                      <span className="progress-label left">{terpasangPercent}% Selesai</span>
+                      <span className="progress-label right">{menungguPercent}% Proses</span>
+                    </div>
                   </div>
+                );
+              })}
+              
+              {villageStats.length === 0 && (
+                <div className="empty-state">
+                  <i className="bi bi-inbox"></i>
+                  <p>Belum ada data desa</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
