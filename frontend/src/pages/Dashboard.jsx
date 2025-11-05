@@ -356,8 +356,8 @@ function Dashboard() {
       if (p.status === 'terpasang') stats[agentName].terpasang++;
     });
 
+    // Tampilkan SEMUA agen, urutkan berdasarkan total (tertinggi ke terendah)
     return Object.values(stats)
-      .filter(agent => agent.total > 0) // Hanya tampilkan agent yang memiliki pelanggan
       .sort((a, b) => b.total - a.total);
   }, [pemasanganData, agentsData]);
 
@@ -886,23 +886,14 @@ function Dashboard() {
                 
                 return (
                   <div key={agent.name} className="agent-card">
-                    <div className="agent-header">
+                    <div className="agent-header-compact">
                       <div className="agent-rank-badge">
                         {index === 0 ? '🏆' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
                       </div>
-                      <div className="agent-info">
+                      <div className="agent-info-compact">
                         <h4 className="agent-name">{agent.name}</h4>
-                        <div className="agent-clients">
-                          <span className="clients-label">Total Klien:</span>
-                          <div className="clients-icons">
-                            {Array.from({ length: Math.min(agent.terpasang, 5) }).map((_, i) => (
-                              <span key={`t-${i}`} className="client-icon terpasang">😊</span>
-                            ))}
-                            {Array.from({ length: Math.min(agent.menunggu, 5) }).map((_, i) => (
-                              <span key={`m-${i}`} className="client-icon menunggu">😊</span>
-                            ))}
-                            {agent.total > 5 && <span className="client-more">+{agent.total - 5}</span>}
-                          </div>
+                        <div className="agent-top-badge">
+                          Top {index + 1}
                         </div>
                       </div>
                       <div className="agent-total-badge">
@@ -942,6 +933,13 @@ function Dashboard() {
                   </div>
                 );
               })}
+              
+              {agentStats.length === 0 && (
+                <div className="empty-state">
+                  <i className="bi bi-inbox"></i>
+                  <p>Belum ada data agen</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
