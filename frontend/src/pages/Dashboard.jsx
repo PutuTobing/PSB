@@ -942,8 +942,13 @@ function Dashboard() {
         {/* Gauge Chart - Monthly Target */}
         <div className="chart-card gauge-chart-card">
           <div className="chart-header">
-            <h3>Target Bulanan</h3>
-            <div className="chart-subtitle">Progress target pemasangan</div>
+            <div className="chart-icon">
+              <i className="bi bi-speedometer2"></i>
+            </div>
+            <div className="chart-title-group">
+              <h3>Target Bulanan</h3>
+              <div className="chart-subtitle">Progress target pemasangan bulan ini</div>
+            </div>
           </div>
           <div className="chart-content">
             <div className="gauge-container">
@@ -951,22 +956,22 @@ function Dashboard() {
                 <svg viewBox="0 0 200 120" className="gauge-svg">
                   <defs>
                     <linearGradient id="gauge-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#ef4444" />
-                      <stop offset="50%" stopColor="#f59e0b" />
-                      <stop offset="100%" stopColor="#10b981" />
+                      <stop offset="0%" stopColor="#7c3aed" />
+                      <stop offset="50%" stopColor="#a855f7" />
+                      <stop offset="100%" stopColor="#c084fc" />
                     </linearGradient>
                   </defs>
                   {/* Background arc */}
                   <path
                     d="M 20 100 A 80 80 0 0 1 180 100"
                     fill="none"
-                    stroke="#e5e7eb"
+                    stroke="#f3f4f6"
                     strokeWidth="12"
                     strokeLinecap="round"
                   />
                   {/* Progress arc */}
                   <path
-                    d="M 20 100 A 80 80 0 0 1 140 40"
+                    d="M 20 100 A 80 80 0 0 1 ${20 + (160 * Math.min(mainStats.total / 100, 1))} ${100 - (80 * Math.sin(Math.PI * Math.min(mainStats.total / 100, 1)))}"
                     fill="none"
                     stroke="url(#gauge-gradient)"
                     strokeWidth="12"
@@ -983,13 +988,23 @@ function Dashboard() {
                 </svg>
               </div>
               <div className="gauge-stats">
-                <div className="gauge-stat">
-                  <span className="gauge-stat-value">{mainStats.total}</span>
-                  <span className="gauge-stat-label">Tercapai</span>
+                <div className="gauge-stat-item">
+                  <div className="stat-icon-wrapper tercapai">
+                    <i className="bi bi-check-circle-fill"></i>
+                  </div>
+                  <div className="stat-details">
+                    <div className="stat-number">{mainStats.total}</div>
+                    <div className="stat-text">Tercapai</div>
+                  </div>
                 </div>
-                <div className="gauge-stat">
-                  <span className="gauge-stat-value">100</span>
-                  <span className="gauge-stat-label">Target</span>
+                <div className="gauge-stat-item">
+                  <div className="stat-icon-wrapper target">
+                    <i className="bi bi-flag-fill"></i>
+                  </div>
+                  <div className="stat-details">
+                    <div className="stat-number">100</div>
+                    <div className="stat-text">Target</div>
+                  </div>
                 </div>
               </div>
             </div>

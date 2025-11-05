@@ -539,9 +539,11 @@
 
 .donut-chart-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 40px;
+  justify-content: center;
+  gap: 30px;
+  text-align: center;
 }
 
 .donut-chart {
@@ -569,15 +571,17 @@
 
 .donut-stats {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-  flex: 1;
+  flex-direction: row;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
 }
 
 .donut-stat-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .stat-icon-wrapper {
@@ -604,7 +608,8 @@
 .stat-details {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  align-items: center;
+  gap: 4px;
 }
 
 .stat-details .stat-number {
@@ -766,22 +771,62 @@
   text-align: right;
 }
 
-/* Gauge Chart Styles */
+/* Gauge Chart Styles - Redesigned */
 .gauge-chart-card {
   grid-column: span 1;
+}
+
+.gauge-chart-card .chart-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px 25px;
+}
+
+.gauge-chart-card .chart-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.gauge-chart-card .chart-title-group {
+  flex: 1;
+}
+
+.gauge-chart-card .chart-title-group h3 {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.gauge-chart-card .chart-subtitle {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
 }
 
 .gauge-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  justify-content: center;
+  gap: 30px;
+  text-align: center;
 }
 
 .gauge-chart {
   width: 200px;
   height: 120px;
   position: relative;
+  flex-shrink: 0;
 }
 
 .gauge-svg {
@@ -800,37 +845,69 @@
 }
 
 .gauge-percentage {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
   fill: #1f2937;
 }
 
 .gauge-label {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   fill: #6b7280;
 }
 
 .gauge-stats {
   display: flex;
+  flex-direction: row;
+  justify-content: center;
   gap: 40px;
+  width: 100%;
 }
 
-.gauge-stat {
+.gauge-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.gauge-stat-item .stat-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.gauge-stat-item .stat-icon-wrapper.tercapai {
+  background: rgba(124, 58, 237, 0.1);
+  color: #7c3aed;
+}
+
+.gauge-stat-item .stat-icon-wrapper.target {
+  background: rgba(168, 85, 247, 0.1);
+  color: #a855f7;
+}
+
+.gauge-stat-item .stat-details {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
 }
 
-.gauge-stat-value {
-  font-size: 20px;
+.gauge-stat-item .stat-details .stat-number {
+  font-size: 28px;
   font-weight: 700;
   color: #1f2937;
+  line-height: 1;
 }
 
-.gauge-stat-label {
-  font-size: 12px;
+.gauge-stat-item .stat-details .stat-text {
+  font-size: 14px;
   color: #6b7280;
   font-weight: 500;
 }
