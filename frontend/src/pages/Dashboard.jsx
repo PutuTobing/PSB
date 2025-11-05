@@ -68,13 +68,9 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
-  // Filter states untuk Agent Performance
-  const [agentFilterMonth, setAgentFilterMonth] = useState('all');
-  const [agentFilterYear, setAgentFilterYear] = useState(new Date().getFullYear());
-  
-  // Filter states untuk Village Performance
-  const [villageFilterMonth, setVillageFilterMonth] = useState('all');
-  const [villageFilterYear, setVillageFilterYear] = useState(new Date().getFullYear());
+  // Global filter state untuk seluruh dashboard (bulan dan tahun)
+  const [filterMonth, setFilterMonth] = useState('all');
+  const [filterYear, setFilterYear] = useState(new Date().getFullYear());
 
   // Fetch data dari database
   useEffect(() => {
@@ -147,7 +143,7 @@ function Dashboard() {
       const token = getValidToken();
       
       if (!token) {
-        console.warn('No valid authentication token found for agents data');
+        console.info('No authentication token. Agents will be extracted from pemasangan data.');
         setAgentsData([]);
         return;
       }
@@ -163,17 +159,17 @@ function Dashboard() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Agents data fetched from database:', data);
+        console.log('Agents data fetched from API:', data);
         setAgentsData(Array.isArray(data) ? data : []);
       } else if (response.status === 401) {
-        handleAuthError('/agents', 'Unauthorized access to agents data');
+        console.info('Unauthorized access to agents API. Will extract from pemasangan data.');
         setAgentsData([]);
       } else {
-        console.error(`Failed to fetch agents from database: ${response.status} ${response.statusText}`);
+        console.info(`Failed to fetch agents from API (${response.status}). Will extract from pemasangan data.`);
         setAgentsData([]);
       }
     } catch (error) {
-      console.error('Error fetching agents data:', error);
+      console.info('Unable to fetch agents from API. Will extract from pemasangan data.');
       setAgentsData([]);
     }
   };
@@ -183,7 +179,7 @@ function Dashboard() {
       const token = getValidToken();
       
       if (!token) {
-        console.warn('No valid authentication token found for villages data');
+        console.info('No authentication token. Villages will be extracted from pemasangan data.');
         setVillagesData([]);
         return;
       }
@@ -199,17 +195,17 @@ function Dashboard() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Villages data fetched from database:', data);
+        console.log('Villages data fetched from API:', data);
         setVillagesData(Array.isArray(data) ? data : []);
       } else if (response.status === 401) {
-        handleAuthError('/villages', 'Unauthorized access to villages data');
+        console.info('Unauthorized access to villages API. Will extract from pemasangan data.');
         setVillagesData([]);
       } else {
-        console.error(`Failed to fetch villages from database: ${response.status} ${response.statusText}`);
+        console.info(`Failed to fetch villages from API (${response.status}). Will extract from pemasangan data.`);
         setVillagesData([]);
       }
     } catch (error) {
-      console.error('Error fetching villages data:', error);
+      console.info('Unable to fetch villages from API. Will extract from pemasangan data.');
       setVillagesData([]);
     }
   };
@@ -241,6 +237,15 @@ function Dashboard() {
     'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
   ];
   
+  // Helper function untuk mendapatkan tanggal daftar (harus didefinisikan sebelum filterDataByMonthYear)
+  const getTanggalDaftar = (pelanggan) => {
+    return pelanggan.tanggal_daftar || 
+           pelanggan.created_at || 
+           pelanggan.createdAt || 
+           pelanggan.date_created ||
+           pelanggan.registration_date;
+  };
+  
   // Filter data based on month and year
   const filterDataByMonthYear = (data, month, year) => {
     if (month === 'all') {
@@ -265,29 +270,26 @@ function Dashboard() {
     }
   };
 
-  // Statistik utama
+  // Statistik utama dengan filter global
   const mainStats = useMemo(() => {
-    const total = pemasanganData.length;
-    const menunggu = pemasanganData.filter(p => p.status === 'menunggu').length;
-    const terpasang = pemasanganData.filter(p => p.status === 'terpasang').length;
+    // Filter data berdasarkan bulan dan tahun global
+    const filteredData = filterDataByMonthYear(pemasanganData, filterMonth, filterYear);
+    
+    const total = filteredData.length;
+    const menunggu = filteredData.filter(p => p.status === 'menunggu').length;
+    const terpasang = filteredData.filter(p => p.status === 'terpasang').length;
     
     return { total, menunggu, terpasang };
-  }, [pemasanganData]);
+  }, [pemasanganData, filterMonth, filterYear]);
 
-  // Helper function untuk mendapatkan tanggal daftar
-  const getTanggalDaftar = (pelanggan) => {
-    return pelanggan.tanggal_daftar || 
-           pelanggan.created_at || 
-           pelanggan.createdAt || 
-           pelanggan.date_created ||
-           pelanggan.registration_date;
-  };
-
-  // Data mingguan untuk bulan ini
+  // Data mingguan untuk bulan ini dengan filter global
   const weeklyData = useMemo(() => {
     const currentDate = getCurrentDate();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
+    
+    // Jika filter month adalah 'all', gunakan bulan saat ini untuk weekly data
+    // Jika bulan spesifik dipilih, gunakan bulan tersebut
+    const targetMonth = filterMonth === 'all' ? currentDate.getMonth() : parseInt(filterMonth);
+    const targetYear = parseInt(filterYear);
     
     const weeks = [1, 2, 3, 4, 5].map(weekNum => {
       const weekData = pemasanganData.filter(p => {
@@ -297,8 +299,8 @@ function Dashboard() {
         const date = new Date(tanggalDaftar);
         if (isNaN(date.getTime())) return false;
         
-        return date.getMonth() === currentMonth && 
-               date.getFullYear() === currentYear && 
+        return date.getMonth() === targetMonth && 
+               date.getFullYear() === targetYear && 
                getWeekNumber(date) === weekNum;
       });
       
@@ -310,16 +312,34 @@ function Dashboard() {
       };
     });
     
-    return weeks.filter(w => w.total > 0 || w.week <= getWeekNumber(currentDate));
-  }, [pemasanganData]);
+    // Jika filter adalah bulan saat ini, tampilkan hingga minggu saat ini
+    // Jika bulan lain, tampilkan semua minggu yang ada datanya
+    if (filterMonth === 'all' || targetMonth === currentDate.getMonth()) {
+      return weeks.filter(w => w.total > 0 || w.week <= getWeekNumber(currentDate));
+    } else {
+      return weeks.filter(w => w.total > 0);
+    }
+  }, [pemasanganData, filterMonth, filterYear]);
 
-  // Perbandingan bulan ini vs bulan lalu
+  // Perbandingan bulan ini vs bulan lalu dengan filter global
   const monthlyComparison = useMemo(() => {
     const currentDate = getCurrentDate();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
-    const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
-    const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+    
+    // Jika filter adalah 'all', bandingkan bulan ini vs bulan lalu
+    // Jika bulan spesifik, bandingkan bulan tersebut vs bulan sebelumnya
+    let currentMonth, currentYear, lastMonth, lastMonthYear;
+    
+    if (filterMonth === 'all') {
+      currentMonth = currentDate.getMonth();
+      currentYear = parseInt(filterYear);
+      lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+      lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+    } else {
+      currentMonth = parseInt(filterMonth);
+      currentYear = parseInt(filterYear);
+      lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+      lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+    }
 
     const currentMonthData = pemasanganData.filter(p => {
       const tanggalDaftar = getTanggalDaftar(p);
@@ -360,27 +380,122 @@ function Dashboard() {
         terpasang: lastMonthData.filter(p => p.status === 'terpasang').length
       }
     };
-  }, [pemasanganData]);
+  }, [pemasanganData, filterMonth, filterYear]);
 
-  // Statistik per agent dengan filter
+  // Line chart data - dinamis berdasarkan filter
+  const lineChartData = useMemo(() => {
+    const currentYear = parseInt(filterYear);
+    
+    if (filterMonth === 'all') {
+      // Tampilkan statistik tahunan (per bulan)
+      const monthNames = [
+        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+      ];
+      
+      const monthlyData = monthNames.map((monthName, monthIndex) => {
+        const monthData = pemasanganData.filter(p => {
+          const tanggalDaftar = getTanggalDaftar(p);
+          if (!tanggalDaftar) return false;
+          
+          const date = new Date(tanggalDaftar);
+          if (isNaN(date.getTime())) return false;
+          
+          return date.getMonth() === monthIndex && 
+                 date.getFullYear() === currentYear &&
+                 p.status === 'terpasang';
+        });
+        
+        return {
+          label: monthName.substring(0, 3), // Jan, Feb, Mar, etc.
+          value: monthData.length,
+          fullLabel: monthName
+        };
+      });
+      
+      return {
+        type: 'yearly',
+        data: monthlyData,
+        title: 'Statistik Tahunan',
+        subtitle: `Tren bulanan: Bulan 1 - Bulan 12`
+      };
+    } else {
+      // Tampilkan statistik bulanan (per tanggal)
+      const selectedMonth = parseInt(filterMonth);
+      const monthNames = [
+        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+      ];
+      
+      // Hitung jumlah hari di bulan tersebut
+      const daysInMonth = new Date(currentYear, selectedMonth + 1, 0).getDate();
+      
+      const dailyData = [];
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayData = pemasanganData.filter(p => {
+          const tanggalDaftar = getTanggalDaftar(p);
+          if (!tanggalDaftar) return false;
+          
+          const date = new Date(tanggalDaftar);
+          if (isNaN(date.getTime())) return false;
+          
+          return date.getDate() === day &&
+                 date.getMonth() === selectedMonth && 
+                 date.getFullYear() === currentYear &&
+                 p.status === 'terpasang';
+        });
+        
+        dailyData.push({
+          label: day.toString(),
+          value: dayData.length,
+          fullLabel: `Tanggal ${day}`
+        });
+      }
+      
+      return {
+        type: 'monthly',
+        data: dailyData,
+        title: 'Statistik Bulanan',
+        subtitle: `Tren harian: Tanggal 1 - Akhir bulan`
+      };
+    }
+  }, [pemasanganData, filterMonth, filterYear]);
+
+  // Statistik per agent dengan filter global
   const agentStats = useMemo(() => {
     const stats = {};
     
-    // Filter data pemasangan berdasarkan bulan dan tahun yang dipilih
-    const filteredData = filterDataByMonthYear(pemasanganData, agentFilterMonth, agentFilterYear);
+    // Filter data pemasangan berdasarkan bulan dan tahun global
+    const filteredData = filterDataByMonthYear(pemasanganData, filterMonth, filterYear);
     
-    // Initialize semua agent dengan 0
-    agentsData.forEach(agent => {
-      const agentName = agent.name || agent.agent_name || agent.agen || agent.nama_agen || 'Unknown';
-      stats[agentName] = {
-        name: agentName,
-        total: 0,
-        menunggu: 0,
-        terpasang: 0,
-        phone: agent.phone || agent.telepon || '',
-        email: agent.email || ''
-      };
-    });
+    // Jika agentsData kosong, extract unique agents dari pemasanganData
+    if (agentsData.length === 0) {
+      // Extract unique agents dari seluruh pemasangan data (tidak hanya filtered)
+      const uniqueAgents = [...new Set(pemasanganData.map(p => p.agen || p.agent || p.nama_agen || 'Unknown'))];
+      uniqueAgents.forEach(agentName => {
+        stats[agentName] = {
+          name: agentName,
+          total: 0,
+          menunggu: 0,
+          terpasang: 0,
+          phone: '',
+          email: ''
+        };
+      });
+    } else {
+      // Initialize semua agent dari database dengan 0
+      agentsData.forEach(agent => {
+        const agentName = agent.name || agent.agent_name || agent.agen || agent.nama_agen || 'Unknown';
+        stats[agentName] = {
+          name: agentName,
+          total: 0,
+          menunggu: 0,
+          terpasang: 0,
+          phone: agent.phone || agent.telepon || '',
+          email: agent.email || ''
+        };
+      });
+    }
 
     // Hitung pelanggan per agent dari data yang sudah difilter
     filteredData.forEach(p => {
@@ -406,27 +521,43 @@ function Dashboard() {
     // Tampilkan SEMUA agen, urutkan berdasarkan total (tertinggi ke terendah)
     return Object.values(stats)
       .sort((a, b) => b.total - a.total);
-  }, [pemasanganData, agentsData, agentFilterMonth, agentFilterYear]);
+  }, [pemasanganData, agentsData, filterMonth, filterYear]);
 
-  // Statistik per desa dengan filter
+  // Statistik per desa dengan filter global
   const villageStats = useMemo(() => {
     const stats = {};
     
-    // Filter data pemasangan berdasarkan bulan dan tahun yang dipilih
-    const filteredData = filterDataByMonthYear(pemasanganData, villageFilterMonth, villageFilterYear);
+    // Filter data pemasangan berdasarkan bulan dan tahun global
+    const filteredData = filterDataByMonthYear(pemasanganData, filterMonth, filterYear);
 
-    // Initialize semua desa dari database
-    villagesData.forEach(village => {
-      const villageName = village.name || village.village_name || village.desa || village.nama_desa || 'Unknown';
-      stats[villageName] = {
-        name: villageName,
-        kecamatan: village.kecamatan || village.district || '',
-        kabupaten: village.kabupaten || village.regency || '',
-        total: 0,
-        menunggu: 0,
-        terpasang: 0
-      };
-    });
+    // Jika villagesData kosong, extract unique villages dari pemasanganData
+    if (villagesData.length === 0) {
+      // Extract unique villages dari seluruh pemasangan data (tidak hanya filtered)
+      const uniqueVillages = [...new Set(pemasanganData.map(p => p.desa || p.village || p.nama_desa || 'Unknown'))];
+      uniqueVillages.forEach(villageName => {
+        stats[villageName] = {
+          name: villageName,
+          kecamatan: '',
+          kabupaten: '',
+          total: 0,
+          menunggu: 0,
+          terpasang: 0
+        };
+      });
+    } else {
+      // Initialize semua desa dari database
+      villagesData.forEach(village => {
+        const villageName = village.name || village.village_name || village.desa || village.nama_desa || 'Unknown';
+        stats[villageName] = {
+          name: villageName,
+          kecamatan: village.kecamatan || village.district || '',
+          kabupaten: village.kabupaten || village.regency || '',
+          total: 0,
+          menunggu: 0,
+          terpasang: 0
+        };
+      });
+    }
 
     // Hitung pelanggan per desa dari data yang sudah difilter
     filteredData.forEach(p => {
@@ -452,7 +583,7 @@ function Dashboard() {
     // Tampilkan SEMUA desa, urutkan berdasarkan total (tertinggi ke terendah)
     return Object.values(stats)
       .sort((a, b) => b.total - a.total);
-  }, [pemasanganData, villagesData, villageFilterMonth, villageFilterYear]);
+  }, [pemasanganData, villagesData, filterMonth, filterYear]);
 
   if (loading) {
     return (
@@ -493,14 +624,26 @@ function Dashboard() {
               <p>Pantau statistik pemasangan dan performa bisnis secara real-time</p>
             </div>
           </div>
-          <div className="header-date">
-            <i className="bi bi-calendar-event"></i>
-            <span>{new Date().toLocaleDateString('id-ID', { 
-              weekday: 'long', 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            })}</span>
+          <div className="header-filters">
+            <select 
+              className="filter-select"
+              value={filterMonth}
+              onChange={(e) => setFilterMonth(e.target.value)}
+            >
+              <option value="all">Semua Bulan</option>
+              {monthNames.map((month, index) => (
+                <option key={index} value={index}>{month}</option>
+              ))}
+            </select>
+            <select 
+              className="filter-select"
+              value={filterYear}
+              onChange={(e) => setFilterYear(parseInt(e.target.value))}
+            >
+              {getYearOptions().map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
@@ -555,8 +698,13 @@ function Dashboard() {
         {/* Donut Chart - Installation Status */}
         <div className="chart-card donut-chart-card">
           <div className="chart-header">
-            <h3>Status Pemasangan</h3>
-            <div className="chart-subtitle">Distribusi status pelanggan</div>
+            <div className="chart-icon">
+              <i className="bi bi-bar-chart-line-fill"></i>
+            </div>
+            <div className="chart-title-group">
+              <h3>Status Pemasangan</h3>
+              <div className="chart-subtitle">Distribusi status pelanggan pada periode ini</div>
+            </div>
           </div>
           <div className="chart-content">
             <div className="donut-chart-container">
@@ -567,17 +715,17 @@ function Dashboard() {
                     cy="50"
                     r="40"
                     fill="none"
-                    stroke="#e0e7ff"
-                    strokeWidth="8"
+                    stroke="#f3f4f6"
+                    strokeWidth="10"
                   />
                   <circle
                     cx="50"
                     cy="50"
                     r="40"
                     fill="none"
-                    stroke="url(#gradient-terpasang)"
-                    strokeWidth="8"
-                    strokeDasharray={`${(mainStats.terpasang / Math.max(1, mainStats.total)) * 251.2} 251.2`}
+                    stroke="#f59e0b"
+                    strokeWidth="10"
+                    strokeDasharray={`${(mainStats.total > 0 ? mainStats.menunggu / mainStats.total : 0) * 251.2} 251.2`}
                     strokeDashoffset="0"
                     transform="rotate(-90 50 50)"
                     strokeLinecap="round"
@@ -585,46 +733,40 @@ function Dashboard() {
                   <circle
                     cx="50"
                     cy="50"
-                    r="32"
+                    r="40"
                     fill="none"
-                    stroke="url(#gradient-menunggu)"
-                    strokeWidth="6"
-                    strokeDasharray={`${(mainStats.menunggu / Math.max(1, mainStats.total)) * 201.06} 201.06`}
-                    strokeDashoffset="0"
+                    stroke="#10b981"
+                    strokeWidth="10"
+                    strokeDasharray={`${(mainStats.total > 0 ? mainStats.terpasang / mainStats.total : 0) * 251.2} 251.2`}
+                    strokeDashoffset={`-${(mainStats.total > 0 ? mainStats.menunggu / mainStats.total : 0) * 251.2}`}
                     transform="rotate(-90 50 50)"
                     strokeLinecap="round"
                   />
-                  <defs>
-                    <linearGradient id="gradient-terpasang" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#10b981" />
-                      <stop offset="100%" stopColor="#34d399" />
-                    </linearGradient>
-                    <linearGradient id="gradient-menunggu" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#f59e0b" />
-                      <stop offset="100%" stopColor="#fbbf24" />
-                    </linearGradient>
-                  </defs>
-                  <text x="50" y="45" textAnchor="middle" className="donut-percentage">
-                    {Math.round((mainStats.terpasang / Math.max(1, mainStats.total)) * 100)}%
+                  <text x="50" y="48" textAnchor="middle" className="donut-total">
+                    {mainStats.total}
                   </text>
-                  <text x="50" y="55" textAnchor="middle" className="donut-label">
-                    Terpasang
+                  <text x="50" y="58" textAnchor="middle" className="donut-label">
+                    Total
                   </text>
                 </svg>
               </div>
               <div className="donut-stats">
-                <div className="donut-stat">
-                  <div className="stat-dot terpasang"></div>
-                  <div className="stat-info">
-                    <span className="stat-value">{mainStats.terpasang}</span>
-                    <span className="stat-label">Terpasang</span>
+                <div className="donut-stat-item">
+                  <div className="stat-icon-wrapper terpasang">
+                    <i className="bi bi-check-circle-fill"></i>
+                  </div>
+                  <div className="stat-details">
+                    <div className="stat-number">{mainStats.terpasang}</div>
+                    <div className="stat-text">Terpasang</div>
                   </div>
                 </div>
-                <div className="donut-stat">
-                  <div className="stat-dot menunggu"></div>
-                  <div className="stat-info">
-                    <span className="stat-value">{mainStats.menunggu}</span>
-                    <span className="stat-label">Menunggu</span>
+                <div className="donut-stat-item">
+                  <div className="stat-icon-wrapper menunggu">
+                    <i className="bi bi-clock-fill"></i>
+                  </div>
+                  <div className="stat-details">
+                    <div className="stat-number">{mainStats.menunggu}</div>
+                    <div className="stat-text">Menunggu</div>
                   </div>
                 </div>
               </div>
@@ -632,15 +774,15 @@ function Dashboard() {
           </div>
         </div>
 
-        {/* Line Chart - Monthly Trend */}
+        {/* Line Chart - Dynamic Trend */}
         <div className="chart-card line-chart-card">
           <div className="chart-header">
-            <h3>Tren Bulanan</h3>
-            <div className="chart-subtitle">Pemasangan 6 bulan terakhir</div>
+            <h3>{lineChartData.title}</h3>
+            <div className="chart-subtitle">{lineChartData.subtitle}</div>
           </div>
           <div className="chart-content">
             <div className="line-chart-container">
-              <svg viewBox="0 0 400 200" className="line-chart-svg">
+              <svg viewBox="0 0 500 250" className="line-chart-svg" preserveAspectRatio="xMidYMid meet">
                 <defs>
                   <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stopColor="#7c3aed" />
@@ -651,99 +793,148 @@ function Dashboard() {
                     <stop offset="100%" stopColor="rgba(124, 58, 237, 0.05)" />
                   </linearGradient>
                 </defs>
-                {/* Grid lines */}
-                <g className="grid-lines">
-                  {[0, 1, 2, 3, 4].map(i => (
-                    <line key={i} x1="50" y1={40 + i * 30} x2="350" y2={40 + i * 30} stroke="#f1f5f9" strokeWidth="1"/>
-                  ))}
-                </g>
-                {/* Area under curve */}
-                <path
-                  d="M50,160 L100,140 L150,120 L200,100 L250,90 L300,70 L350,60 L350,180 L50,180 Z"
-                  fill="url(#area-gradient)"
-                />
-                {/* Line */}
-                <path
-                  d="M50,160 L100,140 L150,120 L200,100 L250,90 L300,70 L350,60"
-                  fill="none"
-                  stroke="url(#line-gradient)"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                {/* Data points */}
-                {[
-                  {x: 50, y: 160, value: monthlyComparison.last.total || 12},
-                  {x: 100, y: 140, value: 18},
-                  {x: 150, y: 120, value: 24},
-                  {x: 200, y: 100, value: 32},
-                  {x: 250, y: 90, value: 38},
-                  {x: 300, y: 70, value: 45},
-                  {x: 350, y: 60, value: monthlyComparison.current.total || 52}
-                ].map((point, index) => (
-                  <g key={index}>
-                    <circle cx={point.x} cy={point.y} r="4" fill="white" stroke="url(#line-gradient)" strokeWidth="2"/>
-                    <circle cx={point.x} cy={point.y} r="2" fill="url(#line-gradient)"/>
-                  </g>
-                ))}
+                
+                {(() => {
+                  const data = lineChartData.data;
+                  const dataMaxValue = Math.max(...data.map(d => d.value), 0);
+                  
+                  // Tentukan skala maksimum yang lebih baik
+                  // Minimal 10, kemudian round up ke kelipatan 10
+                  const maxValue = Math.max(10, Math.ceil(dataMaxValue / 10) * 10);
+                  
+                  const padding = { left: 50, right: 30, top: 30, bottom: 50 };
+                  const chartWidth = 500 - padding.left - padding.right;
+                  const chartHeight = 250 - padding.top - padding.bottom;
+                  
+                  // Calculate step size for x-axis
+                  const xStep = chartWidth / (data.length - 1 || 1);
+                  
+                  // Calculate positions for each point
+                  const points = data.map((d, i) => ({
+                    x: padding.left + i * xStep,
+                    y: padding.top + chartHeight - (d.value / maxValue) * chartHeight,
+                    value: d.value,
+                    label: d.label
+                  }));
+                  
+                  // Create path for line
+                  const linePath = points.map((p, i) => 
+                    `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`
+                  ).join(' ');
+                  
+                  // Create path for area
+                  const areaPath = `${linePath} L${points[points.length - 1].x},${padding.top + chartHeight} L${points[0].x},${padding.top + chartHeight} Z`;
+                  
+                  // Determine label interval for readability
+                  const labelInterval = lineChartData.type === 'monthly' 
+                    ? Math.ceil(data.length / 10) // Show ~10 labels for daily data
+                    : 1; // Show all labels for monthly data
+                  
+                  // Generate Y-axis labels (0, 10, 20, 30, ..., maxValue)
+                  const yAxisSteps = 5; // Jumlah garis horizontal
+                  const yAxisValues = Array.from({ length: yAxisSteps }, (_, i) => 
+                    Math.round(maxValue - (i * maxValue / (yAxisSteps - 1)))
+                  );
+                  
+                  return (
+                    <>
+                      {/* Grid lines */}
+                      <g className="grid-lines">
+                        {yAxisValues.map((value, i) => {
+                          const y = padding.top + (i * chartHeight / (yAxisSteps - 1));
+                          return (
+                            <g key={i}>
+                              <line 
+                                x1={padding.left} 
+                                y1={y} 
+                                x2={500 - padding.right} 
+                                y2={y} 
+                                stroke="#f1f5f9" 
+                                strokeWidth="1"
+                              />
+                              <text 
+                                x={padding.left - 10} 
+                                y={y + 5} 
+                                textAnchor="end" 
+                                className="axis-label"
+                                fontSize="11"
+                                fill="#64748b"
+                              >
+                                {value}
+                              </text>
+                            </g>
+                          );
+                        })}
+                      </g>
+                      
+                      {/* Area under curve */}
+                      <path
+                        d={areaPath}
+                        fill="url(#area-gradient)"
+                      />
+                      
+                      {/* Line */}
+                      <path
+                        d={linePath}
+                        fill="none"
+                        stroke="url(#line-gradient)"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      
+                      {/* Data points */}
+                      {points.map((point, i) => (
+                        <g key={i}>
+                          <circle
+                            cx={point.x}
+                            cy={point.y}
+                            r="5"
+                            fill="white"
+                            stroke="#7c3aed"
+                            strokeWidth="2"
+                          />
+                          {point.value > 0 && (
+                            <text
+                              x={point.x}
+                              y={point.y - 12}
+                              textAnchor="middle"
+                              className="data-label"
+                              fontSize="11"
+                              fill="#7c3aed"
+                              fontWeight="600"
+                            >
+                              {point.value}
+                            </text>
+                          )}
+                        </g>
+                      ))}
+                      
+                      {/* X-axis labels */}
+                      <g className="x-axis-labels">
+                        {points.map((point, i) => {
+                          if (i % labelInterval === 0 || i === points.length - 1) {
+                            return (
+                              <text
+                                key={i}
+                                x={point.x}
+                                y={padding.top + chartHeight + 20}
+                                textAnchor="middle"
+                                className="axis-label"
+                                fontSize="11"
+                                fill="#64748b"
+                              >
+                                {point.label}
+                              </text>
+                            );
+                          }
+                          return null;
+                        })}
+                      </g>
+                    </>
+                  );
+                })()}
               </svg>
-              <div className="chart-legend">
-                <div className="legend-item">
-                  <div className="legend-dot"></div>
-                  <span>Pemasangan Bulanan</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bar Chart - Weekly Performance */}
-        <div className="chart-card bar-chart-card">
-          <div className="chart-header">
-            <h3>Performa Mingguan</h3>
-            <div className="chart-subtitle">Minggu ini vs minggu lalu</div>
-          </div>
-          <div className="chart-content">
-            <div className="bar-chart-container">
-              <div className="bars-grid">
-                {weeklyData.map((week, index) => (
-                  <div key={week.week} className="bar-group">
-                    <div className="bar-container-vertical">
-                      <div 
-                        className="bar-vertical terpasang" 
-                        style={{
-                          height: `${Math.max(10, (week.terpasang / Math.max(1, Math.max(...weeklyData.map(w => w.total)))) * 100)}%`,
-                          animationDelay: `${index * 0.1}s`
-                        }}
-                        data-value={week.terpasang}
-                      >
-                        <div className="bar-value">{week.terpasang}</div>
-                      </div>
-                      <div 
-                        className="bar-vertical menunggu" 
-                        style={{
-                          height: `${Math.max(10, (week.menunggu / Math.max(1, Math.max(...weeklyData.map(w => w.total)))) * 100)}%`,
-                          animationDelay: `${index * 0.1 + 0.05}s`
-                        }}
-                        data-value={week.menunggu}
-                      >
-                        <div className="bar-value">{week.menunggu}</div>
-                      </div>
-                    </div>
-                    <div className="bar-label">W{week.week}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="chart-legend">
-                <div className="legend-item">
-                  <div className="legend-color terpasang"></div>
-                  <span>Terpasang</span>
-                </div>
-                <div className="legend-item">
-                  <div className="legend-color menunggu"></div>
-                  <span>Menunggu</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -811,37 +1002,14 @@ function Dashboard() {
         {/* Agent Performance */}
         <div className="performance-card agents-performance">
           <div className="performance-header">
-            <div className="performance-title-row">
-              <div className="performance-title">
-                <i className="bi bi-trophy-fill"></i>
-                <h3>Dashboard Performa Agen</h3>
-              </div>
-              <div className="performance-filters">
-                <select 
-                  className="filter-select"
-                  value={agentFilterMonth}
-                  onChange={(e) => setAgentFilterMonth(e.target.value)}
-                >
-                  <option value="all">Semua Bulan</option>
-                  {monthNames.map((month, index) => (
-                    <option key={index} value={index}>{month}</option>
-                  ))}
-                </select>
-                <select 
-                  className="filter-select"
-                  value={agentFilterYear}
-                  onChange={(e) => setAgentFilterYear(parseInt(e.target.value))}
-                >
-                  {getYearOptions().map(year => (
-                    <option key={year} value={year}>{year}</option>
-                  ))}
-                </select>
-              </div>
+            <div className="performance-title">
+              <i className="bi bi-trophy-fill"></i>
+              <h3>Dashboard Performa Agen</h3>
             </div>
             <div className="performance-subtitle">
-              {agentFilterMonth === 'all' 
-                ? `Peringkat dan Statistik Pelanggan per Agen - Tahun ${agentFilterYear}`
-                : `Peringkat dan Statistik Pelanggan per Agen - ${monthNames[parseInt(agentFilterMonth)]} ${agentFilterYear}`
+              {filterMonth === 'all' 
+                ? `Peringkat dan Statistik Pelanggan per Agen - Tahun ${filterYear}`
+                : `Peringkat dan Statistik Pelanggan per Agen - ${monthNames[parseInt(filterMonth)]} ${filterYear}`
               }
             </div>
           </div>
@@ -914,37 +1082,14 @@ function Dashboard() {
         {/* Village Performance */}
         <div className="performance-card villages-performance">
           <div className="performance-header">
-            <div className="performance-title-row">
-              <div className="performance-title">
-                <i className="bi bi-geo-alt-fill"></i>
-                <h3>Statistik Desa</h3>
-              </div>
-              <div className="performance-filters">
-                <select 
-                  className="filter-select"
-                  value={villageFilterMonth}
-                  onChange={(e) => setVillageFilterMonth(e.target.value)}
-                >
-                  <option value="all">Semua Bulan</option>
-                  {monthNames.map((month, index) => (
-                    <option key={index} value={index}>{month}</option>
-                  ))}
-                </select>
-                <select 
-                  className="filter-select"
-                  value={villageFilterYear}
-                  onChange={(e) => setVillageFilterYear(parseInt(e.target.value))}
-                >
-                  {getYearOptions().map(year => (
-                    <option key={year} value={year}>{year}</option>
-                  ))}
-                </select>
-              </div>
+            <div className="performance-title">
+              <i className="bi bi-geo-alt-fill"></i>
+              <h3>Statistik Desa</h3>
             </div>
             <div className="performance-subtitle">
-              {villageFilterMonth === 'all' 
-                ? `Pemasangan per Desa - Tahun ${villageFilterYear}`
-                : `Pemasangan per Desa - ${monthNames[parseInt(villageFilterMonth)]} ${villageFilterYear}`
+              {filterMonth === 'all' 
+                ? `Pemasangan per Desa - Tahun ${filterYear}`
+                : `Pemasangan per Desa - ${monthNames[parseInt(filterMonth)]} ${filterYear}`
               }
             </div>
           </div>
